@@ -46,6 +46,9 @@ config TARGET_TH1520_LPI4A
 config TARGET_XILINX_MBV
 	bool "Support AMD/Xilinx MicroBlaze V"
 
+config TARGET_CODASIP_A70X
+	bool "Support Codasip A70X FPGA Platform"
+
 endchoice
 
 config SYS_ICACHE_OFF
@@ -91,6 +94,7 @@ source "board/sophgo/milkv_duo/Kconfig"
 source "board/starfive/visionfive2/Kconfig"
 source "board/thead/th1520_lpi4a/Kconfig"
 source "board/xilinx/mbv/Kconfig"
+source "board/codasip/a70x/Kconfig"
 
 # platform-specific options below
 source "arch/riscv/cpu/andes/Kconfig"
