@@ -335,10 +335,10 @@ static int xilinx_spi_xfer(struct udevice *dev, unsigned int bitlen,
 		goto done;
 	}
 
+	xilinx_spi_startup_block(dev);
+
 	if (flags & SPI_XFER_BEGIN)
 		spi_cs_activate(dev, slave_plat->cs);
-
-	xilinx_spi_startup_block(dev);
 
 	start_transfer(dev, dout, din, bytes);
 
