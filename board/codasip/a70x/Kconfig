@@ -15,4 +15,14 @@ config SYS_CONFIG_NAME
 config TEXT_BASE
 	default 0x80000000 if !RISCV_SMODE
 	default 0x80200000 if RISCV_SMODE
+
+config BOARD_SPECIFIC_OPTIONS # dummy
+	def_bool y
+	select GENERIC_RISCV
+	imply MMC
+	imply SPI
+	imply MMC_SPI
+	imply XILINX_GPIO
+	imply GPIO_HOG
+
 endif
