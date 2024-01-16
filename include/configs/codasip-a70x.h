@@ -3,7 +3,6 @@
 
 #include <linux/sizes.h>
 
-#define CONFIG_SYS_SDRAM_BASE		0x80000000
 #define CFG_EXTRA_ENV_SETTINGS \
 	"fdt_high=0xffffffffffffffff\0" \
 	"kernel_comp_addr_r=0x84000000\0" \
