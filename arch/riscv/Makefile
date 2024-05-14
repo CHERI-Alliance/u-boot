@@ -59,6 +59,10 @@ ifeq ($(toolchain-need-zicsr-zifencei),y)
 	RISCV_MARCH := $(RISCV_MARCH)_zicsr_zifencei
 endif
 
+ifeq ($(CONFIG_RISCV_ISA_ZICBOM),y)
+	RISCV_MARCH := $(RISCV_MARCH)_zicbom
+endif
+
 ARCH_FLAGS = -march=$(RISCV_MARCH) -mabi=$(ABI) \
 	     -mcmodel=$(CMODEL)
 

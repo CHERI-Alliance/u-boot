@@ -357,6 +357,14 @@ endmenu
 config RISCV_ISA_A
 	def_bool y
 
+config RISCV_ISA_ZICBOM
+	bool "Use Zicbom extension for data cache flushing"
+	default n
+	help
+	  Use the standard RISCV Zicbom extension for flushing the data cache. This
+	  will flush both the L1 and L2 cache if present. Necessary if DMA is not
+	  cache coherent with the CPU. Adds "zicbom"  to the ISA string
+
 config DMA_ADDR_T_64BIT
 	bool
 	default y if 64BIT
