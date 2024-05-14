@@ -764,7 +764,7 @@ static int axiemac_recv(struct udevice *dev, int flags, uchar **packetp)
 		length = rx_bd.status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
 
 #ifdef DEBUG
-	print_buffer(&rxframe, &rxframe[0], 1, length, 16);
+	print_buffer((ulong)(&rxframe), &rxframe[0], 1, length, 16);
 #endif
 
 	*packetp = rxframe;
