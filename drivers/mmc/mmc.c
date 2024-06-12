@@ -538,7 +538,7 @@ static int mmc_go_idle(struct mmc *mmc)
 	cmd.cmdarg = 0;
 	cmd.resp_type = MMC_RSP_NONE;
 
-	err = mmc_send_cmd(mmc, &cmd, NULL);
+	err = mmc_send_cmd_retry(mmc, &cmd, NULL, 3);
 
 	if (err)
 		return err;
