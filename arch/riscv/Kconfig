@@ -49,6 +49,9 @@ config TARGET_XILINX_MBV
 config TARGET_CODASIP_A730_HOBGOBLIN
 	bool "Support Codasip A730 Hobgoblin FPGA Platform"
 
+config TARGET_CODASIP_A730_HOBGOBLIN_PROFPGA
+	bool "Support Codasip A730 Hobgoblin proFPGA Platform"
+
 endchoice
 
 config SYS_ICACHE_OFF
