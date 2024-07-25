@@ -1,5 +1,5 @@
-#ifndef CODASIP_A70X_H
-#define CODASIP_A70X_H
+#ifndef CODASIP_A730_HOBGOBLIN_H
+#define CODASIP_A730_HOBGOBLIN_H
 
 #include <linux/sizes.h>
 
@@ -15,4 +15,4 @@
 	"kernel_comp_size=0x4000000\0" \
 	BOOTENV
 
-#endif /* CODASIP_A70X_H */
+#endif /* CCODASIP_A730_HOBGOBLIN_H */
