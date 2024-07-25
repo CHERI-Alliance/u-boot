@@ -64,6 +64,9 @@ config TARGET_ASPEED_AST2700_IBEX
 config TARGET_CODASIP_A730_HOBGOBLIN
 	bool "Support Codasip A730 Hobgoblin FPGA Platform"
 
+config TARGET_CODASIP_A730_HOBGOBLIN_PROFPGA
+	bool "Support Codasip A730 Hobgoblin proFPGA Platform"
+
 endchoice
 
 config SYS_ICACHE_OFF
