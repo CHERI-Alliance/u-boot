@@ -61,8 +61,8 @@ config TARGET_XILINX_MBV
 config TARGET_ASPEED_AST2700_IBEX
 	bool "Support Ibex RISC-V cores on Aspeed AST2700 SoC"
 
-config TARGET_CODASIP_A70X
-	bool "Support Codasip A70X FPGA Platform"
+config TARGET_CODASIP_A730_HOBGOBLIN
+	bool "Support Codasip A730 Hobgoblin FPGA Platform"
 
 endchoice
 
@@ -122,7 +122,7 @@ source "board/spacemit/bananapi-f3/Kconfig"
 source "board/starfive/visionfive2/Kconfig"
 source "board/thead/th1520_lpi4a/Kconfig"
 source "board/xilinx/mbv/Kconfig"
-source "board/codasip/a70x/Kconfig"
+source "board/codasip/a730-hobgoblin/Kconfig"
 
 # platform-specific options below
 source "arch/riscv/cpu/andes/Kconfig"
