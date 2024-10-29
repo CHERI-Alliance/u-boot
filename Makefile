@@ -970,8 +970,16 @@ quiet_cmd_static_rela =
 cmd_static_rela =
 endif
 
+is_llvm_objcopy := $(shell $(CONFIG_SHELL) $(srctree)/scripts/llvm-objcopy-check.sh $(OBJCOPY))
+ifeq ($(is_llvm_objcopy),y)
+llvm_objcopy_version := $(shell $(CONFIG_SHELL) $(srctree)/scripts/llvm-objcopy-version.sh $(OBJCOPY))
+endif
+
 # Always append INPUTS so that arch config.mk's can add custom ones
-INPUTS-y += u-boot.srec u-boot.bin u-boot.sym System.map binary_size_check
+INPUTS-y += u-boot.bin u-boot.sym System.map binary_size_check
+ifneq ($(is_llvm_objcopy),y)
+INPUTS-y += u-boot.srec
+endif
 
 ifeq ($(CONFIG_SPL_FSL_PBL),y)
 INPUTS-$(CONFIG_RAMBOOT_PBL) += u-boot-with-spl-pbl.bin
@@ -1053,9 +1061,22 @@ CHECKFLAGS += $(if $(CONFIG_SYS_BIG_ENDIAN),-mbig-endian,-mlittle-endian)
 # the checker needs the correct machine size
 CHECKFLAGS += $(if $(CONFIG_64BIT),-m64,-m32)
 
+OBJCOPYFLAGS_GAP_FILL_FF = --gap-fill=0xff
+OBJCOPYFLAGS_GAP_FILL_00 = --gap-fill=0x00
+
+# llvm-objcopy older than 18.1.0 does not support --gap-fill
+ifeq ($(is_llvm_objcopy),y)
+clang_before_v18 = $(shell if [ $(llvm_objcopy_version) -le 180100 ] ; \
+	then echo y; else echo n; fi ;)
+ifeq ($(clang_before_v18),y)
+OBJCOPYFLAGS_GAP_FILL_FF =
+OBJCOPYFLAGS_GAP_FILL_00 =
+endif
+endif
+
 # Normally we fill empty space with 0xff
 quiet_cmd_objcopy = OBJCOPY $@
-cmd_objcopy = $(OBJCOPY) --gap-fill=0xff $(OBJCOPYFLAGS) \
+cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS_GAP_FILL_FF) $(OBJCOPYFLAGS) \
 	$(OBJCOPYFLAGS_$(@F)) $< $@
 
 # Provide a version which does not do this, for use by EFI
@@ -1598,8 +1619,8 @@ spl/u-boot-spl.img: spl/u-boot-spl.bin FORCE
 
 ifneq ($(CONFIG_ARCH_SOCFPGA),)
 quiet_cmd_gensplx4 = GENSPLX4 $@
-cmd_gensplx4 = $(OBJCOPY) -I binary -O binary --gap-fill=0x0		\
-			--pad-to=$(CONFIG_SPL_PAD_TO)			\
+cmd_gensplx4 = $(OBJCOPY) -I binary -O binary		\
+			$(OBJCOPYFLAGS_GAP_FILL_00) --pad-to=$(CONFIG_SPL_PAD_TO)
 			spl/u-boot-spl.sfp spl/u-boot-spl.sfp &&        \
 		cat	spl/u-boot-spl.sfp spl/u-boot-spl.sfp		\
 			spl/u-boot-spl.sfp spl/u-boot-spl.sfp > $@ || { rm -f $@; false; }
@@ -1696,7 +1717,7 @@ UBOOT_BINLOAD := u-boot.bin
 endif
 
 OBJCOPYFLAGS_u-boot-with-spl-pbl.bin = -I binary -O binary --pad-to=$(CONFIG_SPL_PAD_TO) \
-			  --gap-fill=0xff
+			  $(OBJCOPYFLAGS_GAP_FILL_FF)
 
 u-boot-with-spl-pbl.bin: spl/u-boot-spl.pbl $(UBOOT_BINLOAD) FORCE
 	$(call if_changed,pad_cat)
