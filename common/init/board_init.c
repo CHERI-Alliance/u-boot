@@ -13,13 +13,13 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-/* Unfortunately x86 or ARM can't compile this code as gd cannot be assigned */
-#if !defined(CONFIG_X86) && !defined(CONFIG_ARM)
+/* Unfortunately x86 or ARM or RISCV can't compile this code as gd cannot be assigned */
+#if !defined(CONFIG_X86) && !defined(CONFIG_ARM) && !defined(CONFIG_RISCV)
 __weak void arch_setup_gd(struct global_data *gd_ptr)
 {
 	gd = gd_ptr;
 }
-#endif /* !CONFIG_X86 && !CONFIG_ARM */
+#endif /* !CONFIG_X86 && !CONFIG_ARM && !CONFIG_RISCV */
 
 /**
  * This function is called from board_init_f_init_reserve to set up

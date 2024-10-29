@@ -201,3 +201,8 @@ void reset_cpu(void)
 	hang();
 }
 #endif
+
+void arch_setup_gd(struct global_data *gd_ptr)
+{
+	set_gd(gd_ptr);
+}
