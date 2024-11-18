@@ -226,6 +226,34 @@ config RISCV_ISA_ZBB
 	  of bit-specific operations (count bit population, sign extending,
 	  bitrotation, etc) and enables optimized string routines.
 
+config RISCV_ISA_ZCHERIPURECAP
+	bool "Zcheripurecap extension support"
+	select RISCV_ISA_ZCHERIPURECAP_ABI if !RISCV_ISA_ZCHERIHYBRID
+	help
+	  Adds "Zcheripurecap" to the ISA subsets that the toolchain will
+	  emit Zcheri code based on the Zcheripurecap extension options.
+
+menu "Zcheripurecap extension options"
+	depends on RISCV_ISA_ZCHERIPURECAP
+
+config RISCV_ISA_ZCHERIHYBRID
+	bool "Zcherihybrid extension support"
+	help
+	  Adds "zcherihybrid" to the ISA string passed to the compiler.
+	  The "zcherihybrid" is an optional extension to  "zcheripurecap"
+	  which enables fine-grained memory protection by using CHERI
+	  capability pointer and also backward compatible to integer pointer.
+
+config RISCV_ISA_ZCHERIPURECAP_ABI
+	bool "Zcheripurecap ABI"
+	depends on RISCV_ISA_ZCHERIPURECAP
+	help
+	  Canges the riscv32 base ABI from ilp32 to il32pc64 and the riscv64
+	  base ABI from lp64 to l64pc128. The compiler will only emit
+	  Zcheripurecap instruction.
+
+endmenu
+
 menu "Use assembly optimized implementation of string routines"
 
 config USE_ARCH_STRLEN
