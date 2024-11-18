@@ -28,14 +28,26 @@ SECTIONS
 		*(.text*)
 	}
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	. = ALIGN(16);
+#else
 	. = ALIGN(4);
+#endif
 	.rodata : { *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*))) }
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	. = ALIGN(16);
+#else
 	. = ALIGN(4);
+#endif
 	.data : {
 		*(.data*)
 	}
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	. = ALIGN(16);
+#else
 	. = ALIGN(4);
+#endif
 
 	.got : {
 		__got_start = .;
@@ -43,13 +55,21 @@ SECTIONS
 		__got_end = .;
 	}
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	. = ALIGN(16);
+#else
 	. = ALIGN(4);
+#endif
 
 	__u_boot_list : {
 		KEEP(*(SORT(__u_boot_list*)));
 	}
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	. = ALIGN(16);
+#else
 	. = ALIGN(8);
+#endif
 
 	.efi_runtime_rel : {
 		__efi_runtime_rel_start = .;
@@ -60,6 +80,22 @@ SECTIONS
 
 	__image_copy_end = .;
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	. = ALIGN(16);
+	__cap_relocs : {
+		__cap_relocs_start = .;
+		*(__cap_relocs)
+		__cap_relocs_end = .;
+	}
+
+	. = ALIGN(16);
+	.captable : {
+		__captable_start = .;
+		*(.captable)
+		__captable_end = .;
+	}
+	. = ALIGN(16);
+#else
 	/DISCARD/ : { *(.rela.plt*) }
 	.rela.dyn : {
 		__rel_dyn_start = .;
@@ -76,6 +112,7 @@ SECTIONS
 	}
 
 	. = ALIGN(8);
+#endif
 
 	_end = .;
 
