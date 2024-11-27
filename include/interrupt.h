@@ -10,6 +10,11 @@ struct resume_data {
 	jmp_buf jump;
 	/** @code: exception code */
 	ulong code;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP
+	/** @tval: trap value */
+	ulong tval;
+	ulong tval2;
+#endif
 };
 
 /**
