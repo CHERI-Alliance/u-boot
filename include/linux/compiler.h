@@ -303,7 +303,7 @@ unsigned long read_word_at_a_time(const void *addr)
  */
 static inline void *offset_to_ptr(const int *off)
 {
-	return (void *)((unsigned long)off + *off);
+	return (void *)((uintptr_t)off + *off);
 }
 
 #endif /* __ASSEMBLY__ */
