@@ -8,30 +8,33 @@
  */
 
 #include <errno.h>
+#include <asm/asm.h>
 #include <asm/encoding.h>
 #include <asm/sbi.h>
 
-struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
-			unsigned long arg1, unsigned long arg2,
-			unsigned long arg3, unsigned long arg4,
-			unsigned long arg5)
+struct sbiret sbi_ecall(int ext, int fid, uintptr_t arg0,
+			uintptr_t arg1, uintptr_t arg2,
+			uintptr_t arg3, uintptr_t arg4,
+			uintptr_t arg5)
 {
 	struct sbiret ret;
 
-	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);
-	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);
-	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);
-	register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);
-	register uintptr_t a4 asm ("a4") = (uintptr_t)(arg4);
-	register uintptr_t a5 asm ("a5") = (uintptr_t)(arg5);
-	register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);
-	register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);
+	register uintptr_t a0 asm (REG(a0)) = (uintptr_t)(arg0);
+	register uintptr_t a1 asm (REG(a1)) = (uintptr_t)(arg1);
+	register uintptr_t a2 asm (REG(a2)) = (uintptr_t)(arg2);
+	register uintptr_t a3 asm (REG(a3)) = (uintptr_t)(arg3);
+	register uintptr_t a4 asm (REG(a4)) = (uintptr_t)(arg4);
+	register uintptr_t a5 asm (REG(a5)) = (uintptr_t)(arg5);
+	register uintptr_t a6 asm (REG(a6)) = (uintptr_t)(fid);
+	register uintptr_t a7 asm (REG(a7)) = (uintptr_t)(ext);
 	asm volatile ("ecall"
-		      : "+r" (a0), "+r" (a1)
-		      : "r" (a2), "r" (a3), "r" (a4), "r" (a5), "r" (a6), "r" (a7)
+		      : "+" PTR_REG(a0), "+" PTR_REG(a1)
+		      : PTR_REG(a2), PTR_REG(a3),
+			PTR_REG(a4), PTR_REG(a5),
+			PTR_REG(a6), PTR_REG(a7)
 		      : "memory");
-	ret.error = a0;
-	ret.value = a1;
+	ret.error = (long)a0;
+	ret.value = (long)a1;
 
 	return ret;
 }
@@ -275,7 +278,7 @@ void sbi_shutdown(void)
  */
 void sbi_send_ipi(const unsigned long *hart_mask)
 {
-	sbi_ecall(SBI_EXT_SEND_IPI, SBI_FID_SEND_IPI, (unsigned long)hart_mask,
+	sbi_ecall(SBI_EXT_SEND_IPI, SBI_FID_SEND_IPI, (uintptr_t)hart_mask,
 		  0, 0, 0, 0, 0);
 }
 
@@ -288,7 +291,7 @@ void sbi_send_ipi(const unsigned long *hart_mask)
 void sbi_remote_fence_i(const unsigned long *hart_mask)
 {
 	sbi_ecall(SBI_EXT_REMOTE_FENCE_I, SBI_FID_REMOTE_FENCE_I,
-		  (unsigned long)hart_mask, 0, 0, 0, 0, 0);
+		  (uintptr_t)hart_mask, 0, 0, 0, 0, 0);
 }
 
 /**
@@ -305,7 +308,7 @@ void sbi_remote_sfence_vma(const unsigned long *hart_mask,
 			   unsigned long size)
 {
 	sbi_ecall(SBI_EXT_REMOTE_SFENCE_VMA, SBI_FID_REMOTE_SFENCE_VMA,
-		  (unsigned long)hart_mask, start, size, 0, 0, 0);
+		  (uintptr_t)hart_mask, start, size, 0, 0, 0);
 }
 
 /**
@@ -326,7 +329,7 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
 {
 	sbi_ecall(SBI_EXT_REMOTE_SFENCE_VMA_ASID,
 		  SBI_FID_REMOTE_SFENCE_VMA_ASID,
-		  (unsigned long)hart_mask, start, size, asid, 0, 0);
+		  (uintptr_t)hart_mask, start, size, asid, 0, 0);
 }
 
 #endif /* CONFIG_SBI_V01 */
