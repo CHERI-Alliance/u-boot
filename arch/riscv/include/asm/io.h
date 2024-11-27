@@ -420,6 +420,20 @@ static inline void unmap_physmem(void *vaddr, unsigned long flags)
 }
 #define unmap_physmem unmap_physmem
 
+static inline void __iomem *ioremap(resource_size_t offset,
+				    resource_size_t size)
+{
+	void *ptr = cheri_address_set(cheri_infinite_cap_get(), offset);
+
+	if (cheri_is_invalid(ptr))
+		ptr = NULL;
+
+	return (void __iomem *)ptr;
+}
+
+static inline void iounmap(void __iomem *addr)
+{
+}
 #endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #include <asm-generic/io.h>
