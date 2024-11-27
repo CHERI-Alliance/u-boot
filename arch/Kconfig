@@ -6,6 +6,7 @@ config CREATE_ARCH_SYMLINK
 	bool
 
 config HAVE_ARCH_IOREMAP
+	default y if RISCV_ISA_ZCHERIPURECAP_ABI
 	bool
 
 config SUPPORT_BIG_ENDIAN
