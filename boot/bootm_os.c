@@ -20,6 +20,9 @@
 #include <mapmem.h>
 #include <vxworks.h>
 #include <tee/optee.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -32,7 +35,11 @@ static int do_bootm_standalone(int flag, struct bootm_info *bmi)
 		env_set_hex("filesize", images->os.image_len);
 		return 0;
 	}
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	appl = (int (*)(int, char * const []))cheri_build_infinite_cap(images->ep);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	appl = (int (*)(int, char * const []))images->ep;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	appl(bmi->argc, bmi->argv);
 	return 0;
 }
@@ -116,7 +123,12 @@ static int do_bootm_netbsd(int flag, struct bootm_info *bmi)
 			cmdline = "";
 	}
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	void *loader_ptr = cheri_build_infinite_cap(images->ep);
+	loader = (void (*)(struct bd_info *, struct legacy_img_hdr *, char *, char *))loader_ptr;
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	loader = (void (*)(struct bd_info *, struct legacy_img_hdr *, char *, char *))images->ep;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 	printf("## Transferring control to NetBSD stage-2 loader (at address %08lx) ...\n",
 	       (ulong)loader);
@@ -152,7 +164,11 @@ static int do_bootm_rtems(int flag, struct bootm_info *bmi)
 	}
 #endif
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	entry_point = (void (*)(struct bd_info *))cheri_build_infinite_cap(images->ep);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	entry_point = (void (*)(struct bd_info *))images->ep;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 	printf("## Transferring control to RTEMS (at address %08lx) ...\n",
 	       (ulong)entry_point);
@@ -233,7 +249,11 @@ static int do_bootm_plan9(int flag, struct bootm_info *bmi)
 		}
 	}
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	entry_point = (void (*)(void))cheri_build_infinite_cap(images->ep);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	entry_point = (void (*)(void))images->ep;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 	printf("## Transferring control to Plan 9 (at address %08lx) ...\n",
 	       (ulong)entry_point);
