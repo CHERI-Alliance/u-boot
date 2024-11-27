@@ -91,11 +91,36 @@
 #define EXC_LOAD_PAGE_FAULT	13
 #define EXC_STORE_PAGE_FAULT	15
 
+#define EXC_CHERI_FAULT		28
+
+/* XTVAL */
+/* CHERI xtval2 defination */
+#define XTVAL2_CHERI_TYPE(xtval)	((xtval) >> 16 & _AC(0xF, UL))
+#define XTVAL2_CHERI_CAUSE(xtval)	((xtval) & _AC(0x1F, UL))
+
+#define EXC_CHERI_TYPE_INST		0x00
+#define EXC_CHERI_TYPE_DATA		0x01
+#define EXC_CHERI_TYPE_JMP_BRANCH	0x02
+
+#define EXC_CHERI_CAUSE_TAG		0x00
+#define EXC_CHERI_CAUSE_SEAL		0x01
+#define EXC_CHERI_CAUSE_PERM		0x02
+#define EXC_CHERI_CAUSE_INVALID_ADDR	0x03
+#define EXC_CHERI_CAUSE_BOUNDS		0x04
+
 /* SIE (Interrupt Enable) and SIP (Interrupt Pending) flags */
 #define MIE_MSIE		(_AC(0x1, UL) << IRQ_M_SOFT)
 #define SIE_SSIE		(_AC(0x1, UL) << IRQ_S_SOFT)
 #define SIE_STIE		(_AC(0x1, UL) << IRQ_S_TIMER)
 #define SIE_SEIE		(_AC(0x1, UL) << IRQ_S_EXT)
+
+/* Security configuration flags */
+#define SC_MML		_AC(0x00000001, UL)
+#define SC_MMWP		_AC(0x00000002, UL)
+#define SR_RLB		_AC(0x00000004, UL)
+#define SR_CRE		_AC(0x00000008, UL)
+#define SR_USEED	_AC(0x00000100, UL)
+#define SR_SSEED	_AC(0x00000200, UL)
 
 #define CSR_FCSR		0x003
 #define CSR_CYCLE		0xc00
