@@ -2042,7 +2042,9 @@ ifeq ($(CONFIG_KALLSYMS),y)
 endif
 
 ifeq ($(CONFIG_RISCV),y)
+ifneq ($(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI),y)
 	@tools/prelink-riscv $@
+endif
 endif
 
 quiet_cmd_sym ?= SYM     $@
