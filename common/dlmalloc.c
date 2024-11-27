@@ -21,6 +21,10 @@
 #include <asm/io.h>
 #include <valgrind/memcheck.h>
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+
 #ifdef DEBUG
 #if __STD_C
 static void malloc_update_mallinfo (void);
@@ -601,6 +605,10 @@ void *sbrk(ptrdiff_t increment)
 void mem_malloc_init(ulong start, ulong size)
 {
 	mem_malloc_start = (uintptr_t)map_sysmem(start, size);
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	mem_malloc_start = cheri_perms_and(mem_malloc_start, CHERI_PERM_HEAP);
+	mem_malloc_start = cheri_bounds_set(mem_malloc_start, size);
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	mem_malloc_end = mem_malloc_start + size;
 	mem_malloc_brk = mem_malloc_start;
 
