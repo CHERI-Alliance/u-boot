@@ -115,7 +115,7 @@ EVENT_SPY_SIMPLE(EVT_DM_POST_INIT_R, riscv_cpu_probe);
  * that is handled by the sending of an ipi itself.
  */
 #if CONFIG_IS_ENABLED(SMP)
-static void dummy_pending_ipi_clear(ulong hart, ulong arg0, ulong arg1)
+static void dummy_pending_ipi_clear(uintptr_t hart, uintptr_t arg0, uintptr_t arg1)
 {
 }
 #endif
@@ -163,7 +163,7 @@ int riscv_cpu_setup(void)
 	 * the boot hart, since we never send an IPI to ourselves, and no
 	 * interrupts are enabled
 	 */
-	ret = smp_call_function((ulong)dummy_pending_ipi_clear, 0, 0, 0);
+	ret = smp_call_function((uintptr_t)dummy_pending_ipi_clear, 0, 0, 0);
 	if (ret)
 		return ret;
 #endif
