@@ -7,11 +7,21 @@
 #include <linux/linkage.h>
 
 #ifdef CONFIG_ARCH_RV64I
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#define STORE_IDX(reg, idx)	sc c ##reg, (idx*16)(ca0)
+#define LOAD_IDX(reg, idx)	lc c ##reg, (idx*16)(ca0)
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #define STORE_IDX(reg, idx)	sd reg, (idx*8)(a0)
 #define LOAD_IDX(reg, idx)	ld reg, (idx*8)(a0)
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #else
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#define STORE_IDX(reg, idx)	sc c ##reg, (idx*8)(ca0)
+#define LOAD_IDX(reg, idx)	lc c ##reg, (idx*8)(ca0)
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #define STORE_IDX(reg, idx)	sw reg, (idx*4)(a0)
 #define LOAD_IDX(reg, idx)	lw reg, (idx*4)(a0)
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #endif
 
 .pushsection .text.setjmp, "ax"
