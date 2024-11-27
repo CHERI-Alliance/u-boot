@@ -5,6 +5,7 @@
 
 #ifndef __ASSEMBLY__
 #include <cheriintrin.h>
+#include <asm/global_data.h>
 #else /* __ASSEMBLY__ */
 /* Capability permissions definition for assembly */
 #if defined(__riscv_zcheripurecap)
@@ -37,4 +38,12 @@
 /* Capability permissions for IO*/
 #define CHERI_PERM_IO		(~(CHERI_PERM_EXECUTE | CHERI_PERM_CAP))
 
+#ifndef __ASSEMBLY__
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+static inline void *cheri_infinite_cap_get(void)
+{
+	return gd->arch.infinite_cap;
+}
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* __ASSEMBLY__ */
 #endif /* _ASM_RISCV_CHERI_H */
