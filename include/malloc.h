@@ -977,9 +977,9 @@ struct mallinfo mALLINFo();
 /*
  * Begin and End of memory area for malloc(), and current "brk"
  */
-extern ulong mem_malloc_start;
-extern ulong mem_malloc_end;
-extern ulong mem_malloc_brk;
+extern uintptr_t mem_malloc_start;
+extern uintptr_t mem_malloc_end;
+extern uintptr_t mem_malloc_brk;
 
 /**
  * mem_malloc_init() - Set up the malloc() pool
