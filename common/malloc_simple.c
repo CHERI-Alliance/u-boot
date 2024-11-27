@@ -32,7 +32,7 @@ static void *alloc_simple(size_t bytes, int align)
 	}
 
 	ptr = map_sysmem(addr, bytes);
-	gd->malloc_ptr = ALIGN(new_ptr, sizeof(new_ptr));
+	gd->malloc_ptr = ALIGN(new_ptr, sizeof(uintptr_t));
 
 	return ptr;
 }
@@ -41,7 +41,7 @@ void *malloc_simple(size_t bytes)
 {
 	void *ptr;
 
-	ptr = alloc_simple(bytes, 1);
+	ptr = alloc_simple(bytes, sizeof(uintptr_t));
 	if (!ptr)
 		return ptr;
 
