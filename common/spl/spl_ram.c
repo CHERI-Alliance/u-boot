@@ -15,6 +15,7 @@
 #include <mapmem.h>
 #include <spl.h>
 #include <linux/libfdt.h>
+#include <asm/io.h>
 
 static ulong spl_ram_load_read(struct spl_load_info *load, ulong sector,
 			       ulong count, void *buf)
@@ -32,7 +33,7 @@ static ulong spl_ram_load_read(struct spl_load_info *load, ulong sector,
 	if (CONFIG_IS_ENABLED(IMAGE_PRE_LOAD))
 		addr += image_load_offset;
 
-	memcpy(buf, (void *)addr, count);
+	memcpy(buf, (void *)map_physmem(addr, count, MAP_RO_DATA), count);
 
 	return count;
 }

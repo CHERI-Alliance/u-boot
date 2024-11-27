@@ -20,6 +20,9 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+/* FDT expaned size for injecting details on the loadables */
+#define SPL_FDT_EXPANDED_SIZE	8192
+
 struct spl_fit_info {
 	const void *fit;	/* Pointer to a valid FIT blob */
 	size_t ext_data_offset;	/* Offset to FIT external data (end of FIT) */
@@ -389,14 +392,17 @@ static int spl_fit_append_fdt(struct spl_image_info *spl_image,
 		 * framework
 		 */
 		size = fdt_totalsize(gd->fdt_blob);
-		spl_image->fdt_addr = map_sysmem(image_info.load_addr, size);
+		spl_image->fdt_addr = map_physmem(image_info.load_addr,
+						  size + SPL_FDT_EXPANDED_SIZE, MAP_DATA);
 		memcpy(spl_image->fdt_addr, gd->fdt_blob, size);
 	} else {
 		ret = load_simple_fit(info, offset, ctx, node, &image_info);
 		if (ret < 0)
 			return ret;
 
-		spl_image->fdt_addr = phys_to_virt(image_info.load_addr);
+		spl_image->fdt_addr = map_physmem(image_info.load_addr,
+						  image_info.size + SPL_FDT_EXPANDED_SIZE,
+						  MAP_DATA);
 	}
 
 	if (CONFIG_IS_ENABLED(FIT_IMAGE_TINY))
@@ -470,7 +476,7 @@ static int spl_fit_append_fdt(struct spl_image_info *spl_image,
 			return ret;
 #endif
 	/* Try to make space, so we can inject details on the loadables */
-	ret = fdt_shrink_to_minimum(spl_image->fdt_addr, 8192);
+	ret = fdt_shrink_to_minimum(spl_image->fdt_addr, SPL_FDT_EXPANDED_SIZE);
 	if (ret < 0)
 		return ret;
 
@@ -612,8 +618,9 @@ static int spl_fit_upload_fpga(struct spl_fit_info *ctx, int node,
 			      compatible);
 	}
 
-	ret = fpga_load(devnum, (void *)fpga_image->load_addr,
-			fpga_image->size, BIT_FULL, flags);
+	ret = fpga_load(devnum, (void *)map_physmem(fpga_image->load_addr,
+						    fpga_image->size, MAP_RO_DATA),
+						    fpga_image->size, BIT_FULL, flags);
 	if (ret) {
 		printf("%s: Cannot load the image to the FPGA\n", __func__);
 		return ret;
@@ -857,7 +864,7 @@ int spl_load_fit_image(struct spl_image_info *spl_image,
 {
 	struct bootm_headers images;
 	const char *fit_uname_config = NULL;
-	uintptr_t fdt_hack;
+	unsigned long fdt_hack;
 	const char *uname;
 	ulong fw_data = 0, dt_data = 0, img_data = 0;
 	ulong fw_len = 0, dt_len = 0, img_len = 0;
@@ -909,14 +916,16 @@ int spl_load_fit_image(struct spl_image_info *spl_image,
 			     &fit_uname_config, IH_ARCH_DEFAULT, IH_TYPE_FLATDT,
 			     -1, FIT_LOAD_OPTIONAL, &dt_data, &dt_len);
 	if (ret >= 0) {
-		spl_image->fdt_addr = (void *)dt_data;
+		spl_image->fdt_addr = (void *)map_physmem(dt_data, dt_len, MAP_RO_DATA);
 
 		if (spl_image->os == IH_OS_U_BOOT) {
 			/* HACK: U-Boot expects FDT at a specific address */
+			void *fdt_hack_ptr = NULL;
 			fdt_hack = spl_image->load_addr + spl_image->size;
 			fdt_hack = (fdt_hack + 3) & ~3;
+			fdt_hack_ptr = map_physmem(fdt_hack, dt_len, MAP_DATA);
 			debug("Relocating FDT to %p\n", spl_image->fdt_addr);
-			memcpy((void *)fdt_hack, spl_image->fdt_addr, dt_len);
+			memcpy((void *)fdt_hack_ptr, spl_image->fdt_addr, dt_len);
 		}
 	}
 

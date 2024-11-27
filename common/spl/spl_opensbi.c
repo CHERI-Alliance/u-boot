@@ -101,7 +101,11 @@ void __noreturn spl_invoke_opensbi(struct spl_image_info *spl_image)
 	opensbi_info.options = CONFIG_SPL_OPENSBI_SCRATCH_OPTIONS;
 	opensbi_info.boot_hart = gd->arch.boot_hart;
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	opensbi_entry = (opensbi_entry_t)cheri_build_infinite_cap(spl_image->entry_point);
+#else
 	opensbi_entry = (opensbi_entry_t)spl_image->entry_point;
+#endif
 	invalidate_icache_all();
 
 #ifdef CONFIG_SPL_SMP
@@ -115,9 +119,9 @@ void __noreturn spl_invoke_opensbi(struct spl_image_info *spl_image)
 	 * Otherwise, code corruption can occur if the link address ranges of
 	 * U-Boot SPL and OpenSBI overlap.
 	 */
-	ret = smp_call_function((ulong)spl_image->entry_point,
-				(ulong)spl_image->fdt_addr,
-				(ulong)&opensbi_info, 1);
+	ret = smp_call_function((uintptr_t)opensbi_entry,
+				(uintptr_t)spl_image->fdt_addr,
+				(uintptr_t)&opensbi_info, 1);
 	if (ret)
 		hang();
 #endif

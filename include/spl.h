@@ -256,8 +256,8 @@ enum spl_sandbox_flags {
 struct spl_image_info {
 	const char *name;
 	u8 os;
-	uintptr_t load_addr;
-	uintptr_t entry_point;
+	unsigned long load_addr;
+	unsigned long entry_point;
 #if CONFIG_IS_ENABLED(LOAD_FIT) || CONFIG_IS_ENABLED(LOAD_FIT_FULL)
 	void *fdt_addr;
 #endif

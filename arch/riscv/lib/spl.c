@@ -11,6 +11,7 @@
 #include <asm/global_data.h>
 #include <asm/smp.h>
 #include <asm/system.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -49,7 +50,7 @@ void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 #endif
 
 	image_entry_riscv_t image_entry =
-		(image_entry_riscv_t)spl_image->entry_point;
+		(image_entry_riscv_t)map_physmem(spl_image->entry_point, 0, MAP_EXE);
 	invalidate_icache_all();
 
 	debug("image entry point: 0x%lX\n", spl_image->entry_point);

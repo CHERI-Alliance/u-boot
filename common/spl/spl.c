@@ -23,6 +23,7 @@
 #include <system-constants.h>
 #include <asm/global_data.h>
 #include <asm-generic/gpio.h>
+#include <asm/io.h>
 #include <nand.h>
 #include <fat.h>
 #include <u-boot/crc.h>
@@ -42,6 +43,9 @@
 #include <bootcount.h>
 #include <wdt.h>
 #include <video.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif
 
 DECLARE_GLOBAL_DATA_PTR;
 DECLARE_BINMAN_MAGIC_SYM;
@@ -384,8 +388,14 @@ __weak void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 {
 	typedef void __noreturn (*image_entry_noargs_t)(void);
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	void *image_entry_ptr = cheri_build_infinite_cap(spl_image->entry_point);
+
+	image_entry_noargs_t image_entry = (image_entry_noargs_t)image_entry_ptr;
+#else
 	image_entry_noargs_t image_entry =
 		(image_entry_noargs_t)spl_image->entry_point;
+#endif
 
 	debug("image entry point: 0x%lx\n", spl_image->entry_point);
 	image_entry();
