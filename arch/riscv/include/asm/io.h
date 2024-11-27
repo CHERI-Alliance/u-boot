@@ -10,6 +10,9 @@
 #include <linux/types.h>
 #include <asm/barrier.h>
 #include <asm/byteorder.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif
 
 static inline void sync(void)
 {
@@ -381,6 +384,43 @@ static inline void writesl(volatile void __iomem *addr, const void *data,
 #define readq_relaxed(c)	({ u64 __v; __io_rbr(); __v = readq_cpu(c); __io_rar(); __v; })
 #define writeq_relaxed(v, c)	({ __io_rbw(); writeq_cpu((v), (c)); __io_raw(); })
 #endif
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+static inline void *phys_to_virt(phys_addr_t paddr)
+{
+	void *ptr = cheri_address_set(cheri_infinite_cap_get(), paddr);
+
+	if (cheri_is_invalid(ptr))
+		ptr = NULL;
+
+	return ptr;
+}
+#define phys_to_virt phys_to_virt
+
+static inline phys_addr_t virt_to_phys(void *vaddr)
+{
+	return (phys_addr_t)cheri_address_get(vaddr);
+}
+#define virt_to_phys virt_to_phys
+
+static inline void *map_physmem(phys_addr_t paddr, unsigned long len,
+				unsigned long flags)
+{
+	void *ptr = cheri_address_set(cheri_infinite_cap_get(), paddr);
+
+	if (cheri_is_invalid(ptr))
+		ptr = NULL;
+
+	return ptr;
+}
+#define map_physmem map_physmem
+
+static inline void unmap_physmem(void *vaddr, unsigned long flags)
+{
+}
+#define unmap_physmem unmap_physmem
+
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #include <asm-generic/io.h>
 
