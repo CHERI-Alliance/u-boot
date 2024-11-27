@@ -22,6 +22,9 @@
 #include <dm/device.h>
 #include <dm/root.h>
 #include <u-boot/zlib.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -84,7 +87,13 @@ static void boot_jump_linux(struct bootm_headers *images, int flag)
 	int ret;
 #endif
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	void *kernel_ptr = cheri_build_infinite_cap(images->ep);
+
+	kernel = (void (*)(ulong, void *))kernel_ptr;
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	kernel = (void (*)(ulong, void *))images->ep;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 	bootstage_mark(BOOTSTAGE_ID_RUN_OS);
 
@@ -96,8 +105,8 @@ static void boot_jump_linux(struct bootm_headers *images, int flag)
 	if (!fake) {
 		if (CONFIG_IS_ENABLED(OF_LIBFDT) && images->ft_len) {
 #ifdef CONFIG_SMP
-			ret = smp_call_function(images->ep,
-						(ulong)images->ft_addr, 0, 0);
+			ret = smp_call_function((uintptr_t)kernel,
+						(uintptr_t)images->ft_addr, 0, 0);
 			if (ret)
 				hang();
 #endif
