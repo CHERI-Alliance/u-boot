@@ -31,9 +31,9 @@
  * @valid: Whether this IPI is valid
  */
 struct ipi_data {
-	ulong addr;
-	ulong arg0;
-	ulong arg1;
+	uintptr_t addr;
+	uintptr_t arg0;
+	uintptr_t arg1;
 	unsigned int valid;
 };
 
@@ -58,7 +58,7 @@ void handle_ipi(ulong hart);
  * @wait: Wait for harts to acknowledge request
  * Return: 0 if OK, -ve on error
  */
-int smp_call_function(ulong addr, ulong arg0, ulong arg1, int wait);
+int smp_call_function(uintptr_t addr, uintptr_t arg0, uintptr_t arg1, int wait);
 
 /**
  * riscv_init_ipi() - Initialize inter-process interrupt (IPI) driver

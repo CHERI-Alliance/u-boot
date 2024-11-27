@@ -87,7 +87,7 @@ static int send_ipi_many(struct ipi_data *ipi, int wait)
 void handle_ipi(ulong hart)
 {
 	int ret;
-	void (*smp_function)(ulong hart, ulong arg0, ulong arg1);
+	void (*smp_function)(uintptr_t hart, uintptr_t arg0, uintptr_t arg1);
 
 	if (hart >= CONFIG_NR_CPUS)
 		return;
@@ -100,7 +100,8 @@ void handle_ipi(ulong hart)
 	if (!__smp_load_acquire(&gd->arch.ipi[hart].valid))
 		return;
 
-	smp_function = (void (*)(ulong, ulong, ulong))gd->arch.ipi[hart].addr;
+	smp_function =
+		(void (*)(uintptr_t, uintptr_t, uintptr_t))gd->arch.ipi[hart].addr;
 	invalidate_icache_all();
 
 	/*
@@ -116,7 +117,7 @@ void handle_ipi(ulong hart)
 	smp_function(hart, gd->arch.ipi[hart].arg0, gd->arch.ipi[hart].arg1);
 }
 
-int smp_call_function(ulong addr, ulong arg0, ulong arg1, int wait)
+int smp_call_function(uintptr_t addr, uintptr_t arg0, uintptr_t arg1, int wait)
 {
 	struct ipi_data ipi = {
 		.addr = addr,
