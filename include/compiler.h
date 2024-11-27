@@ -125,7 +125,11 @@ typedef __u32 u32;
 #else /* !USE_HOSTCC */
 
 /* Type for `void *' pointers. */
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+typedef __UINTPTR_TYPE__ uintptr_t;
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 typedef unsigned long int uintptr_t;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #include <linux/string.h>
 #include <linux/types.h>
