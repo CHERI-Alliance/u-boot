@@ -493,6 +493,7 @@ config RISCV_PRIV_1_9
 
 config STACK_SIZE_SHIFT
 	int
+	default 15 if RISCV_ISA_ZCHERIPURECAP_ABI
 	default 14
 
 config OF_BOARD_FIXUP
