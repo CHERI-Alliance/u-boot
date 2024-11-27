@@ -67,6 +67,18 @@ static inline phys_addr_t virt_to_phys(void *vaddr)
 #ifndef MAP_WRTHROUGH
 # define MAP_WRTHROUGH	0	/* Map using write-through caching */
 #endif
+#ifndef MAP_IO
+# define MAP_IO		0	/* Map for memory mapped IO */
+#endif
+#ifndef MAP_DATA
+# define MAP_DATA	0	/* Map for data */
+#endif
+#ifndef MAP_RO_DATA
+# define MAP_RO_DATA	0	/* Map for read only data */
+#endif
+#ifndef MAP_EXE
+# define MAP_EXE	0	/* Map for executable */
+#endif
 
 /**
  * map_physmem() - Return a virtual address mapped to a given physical address
