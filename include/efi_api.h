@@ -19,6 +19,9 @@
 #include <efi.h>
 #include <charset.h>
 #include <pe.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <stdalign.h>
+#endif
 
 /* UEFI spec version 2.9 */
 #define EFI_SPECIFICATION_VERSION (2 << 16 | 100)
@@ -268,7 +271,12 @@ struct efi_memory_range_capsule {
 	enum efi_memory_type os_requested_memory_type;
 	u64 number_of_memory_ranges;
 	struct efi_memory_range memory_ranges[];
-} __packed;
+}
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+__packed __aligned(alignof(void *));
+#else
+__packed;
+#endif
 
 struct efi_firmware_management_capsule_header {
 	u32 version;
@@ -477,7 +485,12 @@ struct efi_runtime_services {
 struct efi_configuration_table {
 	efi_guid_t guid;
 	void *table;
-} __packed;
+}
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+__packed __attribute__((annotate("underaligned_capability")));
+#else
+__packed;
+#endif
 
 #define EFI_SYSTEM_TABLE_SIGNATURE ((u64)0x5453595320494249ULL)
 
