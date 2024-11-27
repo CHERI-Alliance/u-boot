@@ -56,6 +56,9 @@
 #include <trace.h>
 #include <watchdog.h>
 #include <xen.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif
 #include <asm/sections.h>
 #include <dm/root.h>
 #include <dm/ofnode.h>
@@ -189,7 +192,13 @@ static int initr_barrier(void)
 
 static int initr_malloc(void)
 {
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	ulong total_malloc_size = cheri_representable_length(TOTAL_MALLOC_LEN);
+	ulong start = (gd->relocaddr - total_malloc_size) &
+		cheri_representable_alignment_mask(total_malloc_size);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	ulong start;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #if CONFIG_IS_ENABLED(SYS_MALLOC_F)
 	debug("Pre-reloc malloc() used %#lx bytes (%ld KB)\n", gd->malloc_ptr,
@@ -200,10 +209,16 @@ static int initr_malloc(void)
 	 * This value MUST match the value of gd->start_addr_sp in board_f.c:
 	 * reserve_noncached().
 	 */
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	gd_set_malloc_start(start);
+	mem_malloc_init((uintptr_t)map_sysmem(start, total_malloc_size),
+			total_malloc_size);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	start = gd->relocaddr - TOTAL_MALLOC_LEN;
 	gd_set_malloc_start(start);
 	mem_malloc_init((uintptr_t)map_sysmem(start, TOTAL_MALLOC_LEN),
 			TOTAL_MALLOC_LEN);
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	return 0;
 }
 

@@ -43,6 +43,9 @@
 #include <video.h>
 #include <watchdog.h>
 #include <asm/cache.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif
 #include <asm/global_data.h>
 #include <asm/io.h>
 #include <asm/sections.h>
@@ -532,9 +535,20 @@ static int reserve_noncached(void)
 /* reserve memory for malloc() area */
 static int reserve_malloc(void)
 {
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	size_t size = cheri_representable_length(TOTAL_MALLOC_LEN);
+	size_t malloc_start = (gd->start_addr_sp - size) &
+		cheri_representable_alignment_mask(size);
+	size = gd->start_addr_sp - malloc_start;
+
+	gd->start_addr_sp = reserve_stack_aligned(size);
+	debug("Reserving %ldk for malloc() at: %08lx\n",
+	      size >> 10, (ulong)gd->start_addr_sp);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	gd->start_addr_sp = reserve_stack_aligned(TOTAL_MALLOC_LEN);
 	debug("Reserving %dk for malloc() at: %08lx\n",
 	      TOTAL_MALLOC_LEN >> 10, gd->start_addr_sp);
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #ifdef CONFIG_SYS_NONCACHED_MEMORY
 	reserve_noncached();
 #endif
