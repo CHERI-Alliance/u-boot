@@ -11,6 +11,7 @@
 #define __ASM_GBL_DATA_H
 
 #include <linux/types.h>
+#include <asm/asm.h>
 #include <asm/smp.h>
 #include <asm/u-boot.h>
 #include <compiler.h>
@@ -55,24 +56,20 @@ static inline gd_t *get_gd(void)
 {
 	gd_t *gd_ptr;
 
-	__asm__ volatile("mv %0, gp\n" : "=r" (gd_ptr));
+	__asm__ volatile("mv %0, " PREG(gp) "\n" : "=" PTR_REG(gd_ptr));
 
 	return gd_ptr;
 }
 
 #else
 
-#define DECLARE_GLOBAL_DATA_PTR register gd_t *gd asm ("gp")
+#define DECLARE_GLOBAL_DATA_PTR register gd_t *gd asm (PREG(gp))
 
 #endif
 
 static inline void set_gd(volatile gd_t *gd_ptr)
 {
-#ifdef CONFIG_64BIT
-	asm volatile("ld gp, %0\n" : : "m"(gd_ptr));
-#else
-	asm volatile("lw gp, %0\n" : : "m"(gd_ptr));
-#endif
+	asm volatile(PREG_L " " PREG(gp) ", %0\n" : : "m"(gd_ptr));
 }
 
 #endif /* __ASM_GBL_DATA_H */
