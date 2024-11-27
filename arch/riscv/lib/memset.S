@@ -10,7 +10,7 @@
 /* void *memset(void *, int, size_t) */
 ENTRY(__memset)
 WEAK(memset)
-	move t0, a0  /* Preserve return value */
+	mv PREG(t0), PREG(a0)  /* Preserve return value */
 
 	/* Defer to byte-oriented fill for small sizes */
 	sltiu a3, a2, 16
@@ -20,14 +20,14 @@ WEAK(memset)
 	 * Round to nearest XLEN-aligned address
 	 * greater than or equal to start address
 	 */
-	addi a3, t0, SZREG-1
-	andi a3, a3, ~(SZREG-1)
+	addi a3, t0, SZXREG-1
+	andi a3, a3, ~(SZXREG-1)
 	beq a3, t0, 2f  /* Skip if already aligned */
 	/* Handle initial misalignment */
 	sub a4, a3, t0
 1:
-	sb a1, 0(t0)
-	addi t0, t0, 1
+	sb a1, 0(PREG(t0))
+	add PREG(t0), PREG(t0), 1
 	bltu t0, a3, 1b
 	sub a2, a2, a4  /* Update count */
 
@@ -44,70 +44,76 @@ WEAK(memset)
 #endif
 
 	/* Calculate end address */
-	andi a4, a2, ~(SZREG-1)
+	andi a4, a2, ~(SZXREG-1)
 	add a3, t0, a4
 
-	andi a4, a4, 31*SZREG  /* Calculate remainder */
+	andi a4, a4, 31*SZXREG  /* Calculate remainder */
 	beqz a4, 3f            /* Shortcut if no remainder */
 	neg a4, a4
-	addi a4, a4, 32*SZREG  /* Calculate initial offset */
+	addi a4, a4, 32*SZXREG  /* Calculate initial offset */
 
 	/* Adjust start address with offset */
-	sub t0, t0, a4
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	neg t1, a4
+	add PREG(t0), PREG(t0), t1
+#else
+	sub PREG(t0), PREG(t0), a4
+#endif
 
 	/* Jump into loop body */
 	/* Assumes 32-bit instruction lengths */
-	la a5, 3f
+	PC_PTR_L PREG(a5), 3f
 #ifdef CONFIG_64BIT
 	srli a4, a4, 1
 #endif
-	add a5, a5, a4
-	jr a5
+	add PREG(a5), PREG(a5), a4
+	jr PREG(a5)
 3:
-	REG_S a1,        0(t0)
-	REG_S a1,    SZREG(t0)
-	REG_S a1,  2*SZREG(t0)
-	REG_S a1,  3*SZREG(t0)
-	REG_S a1,  4*SZREG(t0)
-	REG_S a1,  5*SZREG(t0)
-	REG_S a1,  6*SZREG(t0)
-	REG_S a1,  7*SZREG(t0)
-	REG_S a1,  8*SZREG(t0)
-	REG_S a1,  9*SZREG(t0)
-	REG_S a1, 10*SZREG(t0)
-	REG_S a1, 11*SZREG(t0)
-	REG_S a1, 12*SZREG(t0)
-	REG_S a1, 13*SZREG(t0)
-	REG_S a1, 14*SZREG(t0)
-	REG_S a1, 15*SZREG(t0)
-	REG_S a1, 16*SZREG(t0)
-	REG_S a1, 17*SZREG(t0)
-	REG_S a1, 18*SZREG(t0)
-	REG_S a1, 19*SZREG(t0)
-	REG_S a1, 20*SZREG(t0)
-	REG_S a1, 21*SZREG(t0)
-	REG_S a1, 22*SZREG(t0)
-	REG_S a1, 23*SZREG(t0)
-	REG_S a1, 24*SZREG(t0)
-	REG_S a1, 25*SZREG(t0)
-	REG_S a1, 26*SZREG(t0)
-	REG_S a1, 27*SZREG(t0)
-	REG_S a1, 28*SZREG(t0)
-	REG_S a1, 29*SZREG(t0)
-	REG_S a1, 30*SZREG(t0)
-	REG_S a1, 31*SZREG(t0)
-	addi t0, t0, 32*SZREG
+	XREG_S a1,        0(PREG(t0))
+	XREG_S a1,    SZXREG(PREG(t0))
+	XREG_S a1,  2*SZXREG(PREG(t0))
+	XREG_S a1,  3*SZXREG(PREG(t0))
+	XREG_S a1,  4*SZXREG(PREG(t0))
+	XREG_S a1,  5*SZXREG(PREG(t0))
+	XREG_S a1,  6*SZXREG(PREG(t0))
+	XREG_S a1,  7*SZXREG(PREG(t0))
+	XREG_S a1,  8*SZXREG(PREG(t0))
+	XREG_S a1,  9*SZXREG(PREG(t0))
+	XREG_S a1, 10*SZXREG(PREG(t0))
+	XREG_S a1, 11*SZXREG(PREG(t0))
+	XREG_S a1, 12*SZXREG(PREG(t0))
+	XREG_S a1, 13*SZXREG(PREG(t0))
+	XREG_S a1, 14*SZXREG(PREG(t0))
+	XREG_S a1, 15*SZXREG(PREG(t0))
+	XREG_S a1, 16*SZXREG(PREG(t0))
+	XREG_S a1, 17*SZXREG(PREG(t0))
+	XREG_S a1, 18*SZXREG(PREG(t0))
+	XREG_S a1, 19*SZXREG(PREG(t0))
+	XREG_S a1, 20*SZXREG(PREG(t0))
+	XREG_S a1, 21*SZXREG(PREG(t0))
+	XREG_S a1, 22*SZXREG(PREG(t0))
+	XREG_S a1, 23*SZXREG(PREG(t0))
+	XREG_S a1, 24*SZXREG(PREG(t0))
+	XREG_S a1, 25*SZXREG(PREG(t0))
+	XREG_S a1, 26*SZXREG(PREG(t0))
+	XREG_S a1, 27*SZXREG(PREG(t0))
+	XREG_S a1, 28*SZXREG(PREG(t0))
+	XREG_S a1, 29*SZXREG(PREG(t0))
+	XREG_S a1, 30*SZXREG(PREG(t0))
+	XREG_S a1, 31*SZXREG(PREG(t0))
+	add PREG(t0), PREG(t0), 32*SZXREG
 	bltu t0, a3, 3b
-	andi a2, a2, SZREG-1  /* Update count */
+	andi a2, a2, SZXREG-1  /* Update count */
 
 4:
 	/* Handle trailing misalignment */
 	beqz a2, 6f
 	add a3, t0, a2
 5:
-	sb a1, 0(t0)
-	addi t0, t0, 1
+	sb a1, 0(PREG(t0))
+	add PREG(t0), PREG(t0), 1
 	bltu t0, a3, 5b
 6:
 	ret
-END(__memset)
+ENDPROC(__memset)
+ENDPROC(memset)
