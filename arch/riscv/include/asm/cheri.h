@@ -39,6 +39,18 @@
 #define CHERI_PERM_IO		(~(CHERI_PERM_EXECUTE | CHERI_PERM_CAP))
 
 #ifndef __ASSEMBLY__
+
+/* Getting the alignment for a length (x) which a base address
+ * must be aligned to for a capability representable bounds.
+ */
+#define cheri_representable_alignment(x)		\
+	(1 + ~cheri_representable_alignment_mask(x))
+/* Check if an base address (base) is aligned for a representable
+ * length (x).
+ */
+#define cheri_is_representable_aligned(x, base)		\
+	(!(~cheri_representable_alignment_mask(x) & (base)))
+
 #ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
 static inline void *cheri_infinite_cap_get(void)
 {
