@@ -37,7 +37,19 @@ void malloc_stats();
 
 DECLARE_GLOBAL_DATA_PTR;
 
-#ifdef MCHECK_HEAP_PROTECTION
+#if defined(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI)
+ #define STATIC_IF_MCHECK static
+ #undef MALLOC_COPY
+ #undef MALLOC_ZERO
+static inline void MALLOC_ZERO(void *p, size_t sz) { memset(p, 0, sz); }
+static inline void MALLOC_COPY(void *dest, const void *src, size_t sz) { memcpy(dest, src, sz); }
+ #define STATIC_IF_MCHECK
+ #define mALLOc_impl mALLOc
+ #define fREe_impl fREe
+ #define rEALLOc_impl rEALLOc
+ #define mEMALIGn_impl mEMALIGn
+ #define cALLOc_impl cALLOc
+#elif defined(MCHECK_HEAP_PROTECTION)
  #define STATIC_IF_MCHECK static
  #undef MALLOC_COPY
  #undef MALLOC_ZERO
@@ -675,8 +687,8 @@ void mem_malloc_init(ulong start, ulong size)
 /* bin<->block macros */
 
 #define idx2binblock(ix)    ((unsigned)1 << (ix / BINBLOCKWIDTH))
-#define mark_binblock(ii)   (binblocks_w = (mbinptr)(binblocks_r | idx2binblock(ii)))
-#define clear_binblock(ii)  (binblocks_w = (mbinptr)(binblocks_r & ~(idx2binblock(ii))))
+#define mark_binblock(ii)   (binblocks_w = (mbinptr)(uintptr_t)(binblocks_r | idx2binblock(ii)))
+#define clear_binblock(ii)  (binblocks_w = (mbinptr)(uintptr_t)(binblocks_r & ~(idx2binblock(ii))))
 
 /*  Other static bookkeeping data */
 
@@ -1455,7 +1467,7 @@ Void_t* mALLOc_impl(bytes) size_t bytes;
       {
 	if ((startidx & (BINBLOCKWIDTH - 1)) == 0)
 	{
-	  av_[1] = (mbinptr)(binblocks_r & ~block);
+	  av_[1] = (mbinptr)(uintptr_t)(binblocks_r & ~block);
 	  break;
 	}
 	--startidx;
@@ -2008,7 +2020,7 @@ Void_t* mEMALIGn_impl(alignment, bytes) size_t alignment; size_t bytes;
       this is always possible.
     */
 
-    brk = (char*)mem2chunk(((unsigned long)(m + alignment - 1)) & -((signed) alignment));
+    brk = (char *)mem2chunk(ALIGN((uintptr_t)m, alignment));
     if ((long)(brk - (char*)(p)) < MINSIZE) brk = brk + alignment;
 
     newp = (mchunkptr)brk;
