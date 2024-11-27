@@ -22,7 +22,7 @@
 
 static inline void *ERR_PTR(long error)
 {
-	return (void *)(CONFIG_ERR_PTR_OFFSET + error);
+	return (void *)(uintptr_t)(CONFIG_ERR_PTR_OFFSET + error);
 }
 
 static inline long PTR_ERR(const void *ptr)
