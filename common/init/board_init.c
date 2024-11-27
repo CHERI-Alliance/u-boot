@@ -131,7 +131,7 @@ ulong board_init_f_alloc_reserve(ulong top)
  * (seemingly useless) incrementation causes no code increase.
  */
 
-void board_init_f_init_reserve(ulong base)
+void board_init_f_init_reserve(uintptr_t base)
 {
 	struct global_data *gd_ptr;
 
@@ -149,7 +149,7 @@ void board_init_f_init_reserve(ulong base)
 #endif
 
 	if (CONFIG_IS_ENABLED(SYS_REPORT_STACK_F_USAGE))
-		board_init_f_init_stack_protection_addr(base);
+		board_init_f_init_stack_protection_addr((ulong)base);
 
 	/* next alloc will be higher by one GD plus 16-byte alignment */
 	base += roundup(sizeof(struct global_data), 16);
@@ -161,7 +161,7 @@ void board_init_f_init_reserve(ulong base)
 
 #if CONFIG_IS_ENABLED(SYS_MALLOC_F)
 	/* go down one 'early malloc arena' */
-	gd->malloc_base = base;
+	gd->malloc_base = (unsigned long)base;
 #if CONFIG_IS_ENABLED(ZERO_MEM_BEFORE_USE)
 	memset((void *)base, '\0', CONFIG_VAL(SYS_MALLOC_F_LEN));
 #endif
