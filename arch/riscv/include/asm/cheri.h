@@ -69,6 +69,14 @@ static inline enum cheri_execution_mode cheri_execution_mode_get(const void *cap
 	return mode;
 }
 
+static inline void *cheri_execution_mode_set(const void *cap, enum cheri_execution_mode mode)
+{
+#ifdef CONFIG_RISCV_ISA_ZCHERIHYBRID
+	__asm__ __volatile__("scmode %0, %0, %1\n" : "+C" (cap) : "r" (mode));
+#endif
+	return (void *)cap;
+}
+
 static inline void *cheri_infinite_cap_get(void)
 {
 	return gd->arch.infinite_cap;
