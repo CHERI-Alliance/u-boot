@@ -1,5 +1,5 @@
 config ARCH_MAP_SYSMEM
-	depends on SANDBOX
+	depends on SANDBOX || RISCV_ISA_ZCHERIPURECAP_ABI
 	def_bool y
 
 config CREATE_ARCH_SYMLINK
