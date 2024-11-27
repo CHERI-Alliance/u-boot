@@ -279,6 +279,10 @@ call_harts_early_init:
 	mv PREG(a0), PREG(s0)
 	jal	board_init_f_init_reserve
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	PREG_S	PREG(s6), GD_CHERI_INFINITE_CAP(PREG(gp))
+#endif
+
 	XREG_S	s1, GD_FIRMWARE_FDT_ADDR(PREG(gp))
 	/* save the boot hart id to global_data */
 	XREG_S	tp, GD_BOOT_HART(PREG(gp))
