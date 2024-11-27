@@ -429,7 +429,7 @@ struct efi_entry_systable {
 static inline struct efi_mem_desc *efi_get_next_mem_desc(
 		struct efi_mem_desc *desc, int desc_size)
 {
-	return (struct efi_mem_desc *)((ulong)desc + desc_size);
+	return (struct efi_mem_desc *)((uintptr_t)desc + desc_size);
 }
 
 /**
