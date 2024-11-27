@@ -388,7 +388,18 @@ static inline void writesl(volatile void __iomem *addr, const void *data,
 #ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
 static inline void *phys_to_virt(phys_addr_t paddr)
 {
+	/*
+	 * TODO: Remove use of phys_to_virt() from CHERI as currently
+	 * phys_to_virt() is used in few u-boot drivers which should be
+	 * replaced by map_physmem() for better memory safety.
+	 *
+	 * To support backward compatible, CHERI version of phys_to_virt()
+	 * is implemeneted returning a capability pointer with data
+	 * read/write permission (CHERI_PERM_IO) and unlimited bounds.
+	 */
 	void *ptr = cheri_address_set(cheri_infinite_cap_get(), paddr);
+
+	ptr = cheri_perms_and(ptr, CHERI_PERM_IO);
 
 	if (cheri_is_invalid(ptr))
 		ptr = NULL;
@@ -403,10 +414,48 @@ static inline phys_addr_t virt_to_phys(void *vaddr)
 }
 #define virt_to_phys virt_to_phys
 
+#define MAP_PREM_MASK		(0x0000000FUL)
+#define MAP_IO			(0x00000001UL)
+#define MAP_DATA		(0x00000002UL)
+#define MAP_RO_DATA		(0x00000004UL)
+#define MAP_EXE			(0x00000008UL)
+
 static inline void *map_physmem(phys_addr_t paddr, unsigned long len,
 				unsigned long flags)
 {
 	void *ptr = cheri_address_set(cheri_infinite_cap_get(), paddr);
+
+	/*
+	 * TODO: Should consider to enforce len should not be zero for
+	 * better memory safety. Currently some code giving zero to len
+	 * as it does not take effect on non-CHERI system. If zero is
+	 * given on CHERI system, a capability with unlimited bounds will be
+	 * returned for backward compatible.
+	 */
+	if (len)
+		ptr = cheri_bounds_set(ptr, len);
+
+	/*
+	 * TODO: Should consider to enforce permission flag for all
+	 * map_physmem() for better memory safety. For backward compatible,
+	 * a capability with data/cpabability read/write permission
+	 * (CHERI_PERM_DATA) will be returned if permission flags was not
+	 * given.
+	 */
+	flags &= MAP_PREM_MASK;
+	switch (flags) {
+	case MAP_IO:
+		ptr = cheri_perms_and(ptr, CHERI_PERM_IO);
+		break;
+	case MAP_RO_DATA:
+		ptr = cheri_perms_and(ptr, CHERI_PERM_R_DATA);
+		break;
+	case MAP_EXE:
+		ptr = cheri_perms_and(ptr, CHERI_PERM_EXECUTABLE);
+		break;
+	default:
+		ptr = cheri_perms_and(ptr, CHERI_PERM_DATA);
+	}
 
 	if (cheri_is_invalid(ptr))
 		ptr = NULL;
@@ -423,6 +472,21 @@ static inline void unmap_physmem(void *vaddr, unsigned long flags)
 static inline void *map_sysmem(phys_addr_t paddr, unsigned long len)
 {
 	void *ptr = cheri_address_set(cheri_infinite_cap_get(), paddr);
+
+	/*
+	 * TODO: Should consider to enforce len should not be zero for
+	 * better memory safety. Currently some code giving zero to len
+	 * as it does not take effect on non-CHERI system. If zero is
+	 * given on CHERI system, a capability with unlimited bounds will
+	 * be returned for backward compatible. Should also consider to
+	 * replace map_sysmem() with should be map_physmem() and enforce
+	 * permission flag. A capability pointer with data/cpabability
+	 * read/write permission (CHERI_PERM_DATA) is returned.
+	 */
+	if (len)
+		ptr = cheri_bounds_set(ptr, len);
+
+	ptr = cheri_perms_and(ptr, CHERI_PERM_DATA);
 
 	if (cheri_is_invalid(ptr))
 		ptr = NULL;
@@ -453,6 +517,18 @@ static inline void __iomem *ioremap(resource_size_t offset,
 				    resource_size_t size)
 {
 	void *ptr = cheri_address_set(cheri_infinite_cap_get(), offset);
+
+	/*
+	 * TODO: Should consider to enforce len should not be zero for
+	 * better memory safety. Currently some code giving zero to len
+	 * as it does not take effect on non-CHERI system. If zero is
+	 * given on CHERI system, a capability with unlimited bounds
+	 * will be returned for backward compatible.
+	 */
+	if (size)
+		ptr = cheri_bounds_set(ptr, size);
+
+	ptr = cheri_perms_and(ptr, CHERI_PERM_IO);
 
 	if (cheri_is_invalid(ptr))
 		ptr = NULL;
