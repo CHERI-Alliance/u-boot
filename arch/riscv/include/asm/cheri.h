@@ -81,6 +81,11 @@ static inline void *cheri_infinite_cap_get(void)
 {
 	return gd->arch.infinite_cap;
 }
+
+static inline void *cheri_build_infinite_cap(unsigned long offset)
+{
+	return (void *)cheri_address_set(cheri_infinite_cap_get(), offset);
+}
 #endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #endif /* __ASSEMBLY__ */
 #endif /* _ASM_RISCV_CHERI_H */
