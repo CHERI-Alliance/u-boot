@@ -10,42 +10,42 @@
 #define __ASM_RISCV_PTRACE_H
 
 struct pt_regs {
-	unsigned long sepc;
-	unsigned long ra;
-	unsigned long sp;
-	unsigned long gp;
-	unsigned long tp;
-	unsigned long t0;
-	unsigned long t1;
-	unsigned long t2;
-	unsigned long s0;
-	unsigned long s1;
-	unsigned long a0;
-	unsigned long a1;
-	unsigned long a2;
-	unsigned long a3;
-	unsigned long a4;
-	unsigned long a5;
-	unsigned long a6;
-	unsigned long a7;
-	unsigned long s2;
-	unsigned long s3;
-	unsigned long s4;
-	unsigned long s5;
-	unsigned long s6;
-	unsigned long s7;
-	unsigned long s8;
-	unsigned long s9;
-	unsigned long s10;
-	unsigned long s11;
-	unsigned long t3;
-	unsigned long t4;
-	unsigned long t5;
-	unsigned long t6;
+	uintptr_t sepc;
+	uintptr_t ra;
+	uintptr_t sp;
+	uintptr_t gp;
+	uintptr_t tp;
+	uintptr_t t0;
+	uintptr_t t1;
+	uintptr_t t2;
+	uintptr_t s0;
+	uintptr_t s1;
+	uintptr_t a0;
+	uintptr_t a1;
+	uintptr_t a2;
+	uintptr_t a3;
+	uintptr_t a4;
+	uintptr_t a5;
+	uintptr_t a6;
+	uintptr_t a7;
+	uintptr_t s2;
+	uintptr_t s3;
+	uintptr_t s4;
+	uintptr_t s5;
+	uintptr_t s6;
+	uintptr_t s7;
+	uintptr_t s8;
+	uintptr_t s9;
+	uintptr_t s10;
+	uintptr_t s11;
+	uintptr_t t3;
+	uintptr_t t4;
+	uintptr_t t5;
+	uintptr_t t6;
 	/* Supervisor CSRs */
-	unsigned long sstatus;
-	unsigned long sbadaddr;
-	unsigned long scause;
+	uintptr_t sstatus;
+	uintptr_t sbadaddr;
+	uintptr_t scause;
 };
 
 #ifdef CONFIG_64BIT
@@ -65,7 +65,7 @@ static inline unsigned long instruction_pointer(struct pt_regs *regs)
 	return GET_IP(regs);
 }
 
-static inline void instruction_pointer_set(struct pt_regs *regs, ulong val)
+static inline void instruction_pointer_set(struct pt_regs *regs, uintptr_t val)
 {
 	SET_IP(regs, val);
 }
@@ -81,7 +81,7 @@ static inline unsigned long user_stack_pointer(struct pt_regs *regs)
 	return GET_USP(regs);
 }
 
-static inline void user_stack_pointer_set(struct pt_regs *regs, ulong val)
+static inline void user_stack_pointer_set(struct pt_regs *regs, uintptr_t val)
 {
 	SET_USP(regs, val);
 }
@@ -95,7 +95,7 @@ static inline unsigned long frame_pointer(struct pt_regs *regs)
 	return GET_FP(regs);
 }
 
-static inline void frame_pointer_set(struct pt_regs *regs, ulong val)
+static inline void frame_pointer_set(struct pt_regs *regs, uintptr_t val)
 {
 	SET_FP(regs, val);
 }
