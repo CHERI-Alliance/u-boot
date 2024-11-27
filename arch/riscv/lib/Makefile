@@ -27,6 +27,7 @@ obj-$(CONFIG_$(SPL_)SMP) += smp.o
 obj-$(CONFIG_SPL_BUILD)	+= spl.o
 obj-y   += fdt_fixup.o
 obj-$(CONFIG_$(SPL)CMD_BDI) += bdinfo.o
+obj-$(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI)	+= stack.o
 
 # For building EFI apps
 CFLAGS_NON_EFI := -fstack-protector-strong
