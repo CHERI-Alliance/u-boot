@@ -35,18 +35,13 @@ void malloc_stats();
 
 DECLARE_GLOBAL_DATA_PTR;
 
-#if defined(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI)
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
  #define STATIC_IF_MCHECK static
  #undef MALLOC_COPY
  #undef MALLOC_ZERO
 static inline void MALLOC_ZERO(void *p, size_t sz) { memset(p, 0, sz); }
 static inline void MALLOC_COPY(void *dest, const void *src, size_t sz) { memcpy(dest, src, sz); }
- #define STATIC_IF_MCHECK
- #define mALLOc_impl mALLOc
- #define fREe_impl fREe
- #define rEALLOc_impl rEALLOc
- #define mEMALIGn_impl mEMALIGn
- #define cALLOc_impl cALLOc
+static Void_t *mEMALIGn_impl(size_t alignment, size_t bytes);
 #elif defined(MCHECK_HEAP_PROTECTION)
  #define STATIC_IF_MCHECK static
  #undef MALLOC_COPY
@@ -260,6 +255,11 @@ struct malloc_chunk
   INTERNAL_SIZE_T size;      /* Size in bytes, including overhead. */
   struct malloc_chunk* fd;   /* double links -- used only if free. */
   struct malloc_chunk* bk;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+  /* The padding is used to make sure MINSIZE (i.e. sizeof(malloc_chunk) = 0x40) is */
+  /* always aligned to representable_alignment */
+  INTERNAL_SIZE_T pad[2];
+#endif
 } __attribute__((__may_alias__)) ;
 
 typedef struct malloc_chunk* mchunkptr;
@@ -1700,6 +1700,13 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
   mchunkptr bck;              /* misc temp for linking */
   mchunkptr fwd;              /* misc temp for linking */
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+  char            *cap_offset_brk = NULL;      /* pointer points to cap bound alignment */
+  mchunkptr       cap_offsetp = NULL;         /* chunk corresponding to cap bound alignment */
+  Void_t          *cap_offsetmem  = NULL;      /* mem corresponding to cap bound alignment */
+  INTERNAL_SIZE_T cap_offsetsize = 0UL;       /* chunk size corresponding to cap bound alignment */
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+
 #ifdef REALLOC_ZERO_BYTES_FREES
   if (!bytes) {
 	fREe_impl(oldmem);
@@ -1710,7 +1717,13 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
   if ((long)bytes < 0) return NULL;
 
   /* realloc of null is supposed to be same as malloc */
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	if (oldmem == NULL)
+		return mEMALIGn_impl(cheri_representable_alignment(bytes),
+				     cheri_representable_length(bytes));
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
   if (oldmem == NULL) return mALLOc_impl(bytes);
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #if CONFIG_IS_ENABLED(SYS_MALLOC_F)
 	if (!(gd->flags & GD_FLG_FULL_MALLOC_INIT)) {
@@ -1718,6 +1731,10 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
 		panic("pre-reloc realloc() is not supported");
 	}
 #endif
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+  bytes = cheri_representable_length(bytes);
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
   newp    = oldp    = mem2chunk(oldmem);
   newsize = oldsize = chunksize(oldp);
@@ -1758,7 +1775,33 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
       /* Forward into top only if a remainder */
       if (next == top)
       {
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	if (!cheri_is_representable_aligned(bytes, cheri_address_get(oldmem))) {
+	  size_t cap_bound_alignment = cheri_representable_alignment(bytes);
+
+	  cap_offsetp = oldp;
+	  cap_offsetmem = oldmem;
+	  cap_offset_brk = (char *)mem2chunk(ALIGN((uintptr_t)(cap_offsetmem + MINSIZE),
+						   cap_bound_alignment));
+	  cap_offsetsize = cap_offset_brk - (char *)(cap_offsetp);
+
+	  if (((long)(nextsize + newsize) >= (long)(nb + cap_offsetsize + MINSIZE))) {
+	    newsize += nextsize - cap_offsetsize;
+	    newp = (mchunkptr)cap_offset_brk;
+	    newmem = chunk2mem(newp);
+
+	    memmove(newmem, oldmem, oldsize - SIZE_SZ);
+	    top = chunk_at_offset(newp, nb);
+	    set_head(top, (newsize - nb) | PREV_INUSE);
+	    set_head(newp, nb | PREV_INUSE);
+	    set_head_size(cap_offsetp, cap_offsetsize);
+	    fREe_impl(cap_offsetmem);
+	    return newmem;
+	  }
+	} else if ((long)(nextsize + newsize) >= (long)(nb + MINSIZE))
+#else  /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	if ((long)(nextsize + newsize) >= (long)(nb + MINSIZE))
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	{
 	  newsize += nextsize;
 	  top = chunk_at_offset(oldp, nb);
@@ -1771,6 +1814,31 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
       }
 
       /* Forward into next chunk */
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+      else if (!cheri_is_representable_aligned(bytes, cheri_address_get(oldmem))) {
+	size_t cap_bound_alignment = cheri_representable_alignment(bytes);
+
+	cap_offsetp = oldp;
+	cap_offsetmem = oldmem;
+	cap_offset_brk = (char *)mem2chunk(ALIGN((uintptr_t)(cap_offsetmem + MINSIZE), cap_bound_alignment));
+	cap_offsetsize = cap_offset_brk - (char *)(cap_offsetp);
+
+	if (((long)(nextsize + newsize) >= (long)(nb + cap_offsetsize))) {
+	  unlink(next, bck, fwd);
+
+	  newsize += nextsize - cap_offsetsize;
+	  newp = (mchunkptr)cap_offset_brk;
+	  newmem = chunk2mem(newp);
+
+	  memmove(newmem, oldmem, oldsize - SIZE_SZ);
+	  set_head_size(cap_offsetp, cap_offsetsize);
+	  set_head(newp, newsize | PREV_INUSE);
+	  set_inuse_bit_at_offset(newp, newsize);
+	  fREe_impl(cap_offsetmem);
+	  goto split;
+	}
+      }
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
       else if (((long)(nextsize + newsize) >= (long)(nb)))
       {
 	unlink(next, bck, fwd);
@@ -1800,7 +1868,35 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
 	/* into top */
 	if (next == top)
 	{
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	  if (!cheri_is_representable_aligned(bytes, cheri_address_get(chunk2mem(prev)))) {
+	    size_t cap_bound_alignment = cheri_representable_alignment(bytes);
+
+	    cap_offsetp = prev;
+	    cap_offsetmem = chunk2mem(cap_offsetp);
+	    cap_offset_brk = (char *)mem2chunk(ALIGN((uintptr_t)(cap_offsetmem + MINSIZE),
+						     cap_bound_alignment));
+	    cap_offsetsize = cap_offset_brk - (char *)(cap_offsetp);
+
+	    if (((long)(nextsize + prevsize + newsize) >= (long)(nb + cap_offsetsize + MINSIZE))) {
+	      unlink(prev, bck, fwd);
+
+	      newsize += prevsize + nextsize - cap_offsetsize;
+	      newp = (mchunkptr)cap_offset_brk;
+	      newmem = chunk2mem(newp);
+
+	      memmove(newmem, oldmem, oldsize - SIZE_SZ);
+	      top = chunk_at_offset(newp, nb);
+	      set_head_size(cap_offsetp, cap_offsetsize);
+	      set_head(top, (newsize - nb) | PREV_INUSE);
+	      set_head(newp, nb | PREV_INUSE);
+	      fREe_impl(cap_offsetmem);
+	      return newmem;
+	    }
+	  } else if ((long)(nextsize + prevsize + newsize) >= (long)(nb + MINSIZE))
+#else  /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	  if ((long)(nextsize + prevsize + newsize) >= (long)(nb + MINSIZE))
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	  {
 	    unlink(prev, bck, fwd);
 	    newp = prev;
@@ -1817,6 +1913,32 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
 	}
 
 	/* into next chunk */
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	else if (!cheri_is_representable_aligned(bytes, cheri_address_get(chunk2mem(prev)))) {
+	  size_t cap_bound_alignment = cheri_representable_alignment(bytes);
+
+	  cap_offsetp = prev;
+	  cap_offsetmem = chunk2mem(cap_offsetp);
+	  cap_offset_brk = (char *)mem2chunk(ALIGN((uintptr_t)(cap_offsetmem + MINSIZE), cap_bound_alignment));
+	  cap_offsetsize = cap_offset_brk - (char *)(cap_offsetp);
+
+	  if (((long)(nextsize + prevsize + newsize) >= (long)(nb + cap_offsetsize))) {
+	    unlink(next, bck, fwd);
+	    unlink(prev, bck, fwd);
+
+	    newsize += nextsize + prevsize - cap_offsetsize;
+	    newp = (mchunkptr)cap_offset_brk;
+	    newmem = chunk2mem(newp);
+
+	    memmove(newmem, oldmem, oldsize - SIZE_SZ);
+	    set_head_size(cap_offsetp, cap_offsetsize);
+	    set_head(newp, newsize | PREV_INUSE);
+	    set_inuse_bit_at_offset(newp, newsize);
+	    fREe_impl(cap_offsetmem);
+	    goto split;
+	  }
+	}
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	else if (((long)(nextsize + prevsize + newsize) >= (long)(nb)))
 	{
 	  unlink(next, bck, fwd);
@@ -1831,7 +1953,33 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
       }
 
       /* backward only */
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+      if (!cheri_is_representable_aligned(bytes, cheri_address_get(chunk2mem(prev)))) {
+	size_t cap_bound_alignment = cheri_representable_alignment(bytes);
+
+	cap_offsetp = prev;
+	cap_offsetmem = chunk2mem(cap_offsetp);
+
+	cap_offset_brk = (char *)mem2chunk(ALIGN((uintptr_t)(cap_offsetmem + MINSIZE), cap_bound_alignment));
+	cap_offsetsize = cap_offset_brk - (char *)(cap_offsetp);
+
+	if (((long)(prevsize + newsize) >= (long)(nb + cap_offsetsize))) {
+	  unlink(prev, bck, fwd);
+
+	  newsize += prevsize - cap_offsetsize;
+	  newp = (mchunkptr)cap_offset_brk;
+	  newmem = chunk2mem(newp);
+
+	  memmove(newmem, oldmem, oldsize - SIZE_SZ);
+	  set_head_size(cap_offsetp, cap_offsetsize);
+	  set_head(newp, newsize | PREV_INUSE);
+	  fREe_impl(cap_offsetmem);
+	  goto split;
+	}
+      } else if (prev != NULL && (long)(prevsize + newsize) >= (long)nb)
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
       if (prev != NULL && (long)(prevsize + newsize) >= (long)nb)
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
       {
 	unlink(prev, bck, fwd);
 	newp = prev;
@@ -1845,7 +1993,11 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
 
     /* Must allocate */
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+    newmem = mEMALIGn_impl (cheri_representable_alignment(bytes), cheri_representable_length(bytes));
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
     newmem = mALLOc_impl (bytes);
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
     if (newmem == NULL)  /* propagate failure */
       return NULL;
@@ -1855,6 +2007,28 @@ Void_t* rEALLOc_impl(oldmem, bytes) Void_t* oldmem; size_t bytes;
 
     if ( (newp = mem2chunk(newmem)) == next_chunk(oldp))
     {
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+      if (!cheri_is_representable_aligned(bytes, cheri_address_get(oldmem))) {
+	/* Could not avoid copy in CHERI if it's not bound aligned but it can still avoid fragmentation */
+	size_t cap_bound_alignment = cheri_representable_alignment(bytes);
+
+	cap_offsetp = oldp;
+	cap_offsetmem = oldmem;
+	cap_offset_brk = (char *)mem2chunk(ALIGN((uintptr_t)(cap_offsetmem + MINSIZE), cap_bound_alignment));
+	cap_offsetsize = cap_offset_brk - (char *)(cap_offsetp);
+
+	newsize += chunksize(newp) - cap_offsetsize;
+	newp = (mchunkptr)cap_offset_brk;
+	newmem = chunk2mem(newp);
+
+	memmove(newmem, oldmem, oldsize - SIZE_SZ);
+	set_head_size(cap_offsetp, cap_offsetsize);
+	set_head(newp, newsize | PREV_INUSE);
+	set_inuse_bit_at_offset(newp, newsize);
+	fREe_impl(cap_offsetmem);
+	goto split;
+      }
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
       newsize += chunksize(newp);
       newp = oldp;
       goto split;
@@ -1928,6 +2102,11 @@ Void_t* mEMALIGn_impl(alignment, bytes) size_t alignment; size_t bytes;
   long      remainder_size;   /* its size */
 
   if ((long)bytes < 0) return NULL;
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+  bytes = cheri_representable_length(bytes);
+  alignment = (alignment < cheri_representable_alignment(bytes)) ? cheri_representable_alignment(bytes) : alignment;
+#endif
 
 #if CONFIG_IS_ENABLED(SYS_MALLOC_F)
 	if (!(gd->flags & GD_FLG_FULL_MALLOC_INIT)) {
@@ -2113,7 +2292,12 @@ Void_t* cALLOc_impl(n, elem_size) size_t n; size_t elem_size;
   INTERNAL_SIZE_T oldtopsize = chunksize(top);
 #endif
 #endif
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+  Void_t *mem = mEMALIGn_impl (cheri_representable_alignment(sz), cheri_representable_length(sz));
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
   Void_t* mem = mALLOc_impl (sz);
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
   if ((long)n < 0) return NULL;
 
@@ -2171,7 +2355,69 @@ void cfree(mem) Void_t *mem;
 }
 #endif
 
-#ifdef MCHECK_HEAP_PROTECTION
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+/*
+  Memory allocation functions:
+
+  The orignal set of dlmalloc memory allocation functions is used internally for
+  memory chuck manipulation without concerning the limited of capability boundary.
+
+  When RISCV_ISA_ZCHERIPURECAP_ABI is enabled
+    1. Using mEMALIGn_impl() instead of mALLOc_impl() to perform memory allocation
+       to make sure the allocated memory is aligned representable bound with the
+       coressponding representable bound size.
+    2. Set capability pointer boundary before return to caller.
+    3. Set capability poiner boundary to heap (unbound) before returning to
+       memory chuck as the pointer may used to access a large boundary area when
+       merging with other chuck.
+
+*/
+static inline void *set_bound(void *ptr, size_t bytes)
+{
+	return ptr ? cheri_bounds_set(ptr, bytes) : ptr;
+}
+
+static inline void *reset_bound(void *ptr)
+{
+	return ptr ? cheri_address_set((void *)mem_malloc_start, cheri_address_get(ptr)) : ptr;
+}
+
+Void_t *mALLOc(size_t bytes)
+{
+	void *ptr = mEMALIGn_impl (cheri_representable_alignment(bytes), cheri_representable_length(bytes));
+	return set_bound(ptr, bytes);
+}
+
+void fREe(Void_t *mem)
+{
+	if (mem && (cheri_tag_get(mem) != 1UL || cheri_offset_get(mem) != 0UL))
+		panic("free() an invalid capability: %#p\n", mem);
+
+	fREe_impl(reset_bound(mem));
+}
+
+Void_t *rEALLOc(Void_t *oldmem, size_t bytes)
+{
+	if (oldmem && (cheri_tag_get(oldmem) != 1UL || cheri_offset_get(oldmem) != 0UL))
+		panic("realloc() an invalid capability: %#p\n", oldmem);
+
+	return set_bound(rEALLOc_impl(reset_bound(oldmem), bytes), bytes);
+}
+
+Void_t *mEMALIGn(size_t alignment, size_t bytes)
+{
+	return set_bound(mEMALIGn_impl(alignment, bytes), bytes);
+}
+
+// pvALLOc, vALLOc - redirect to mEMALIGn, defined here, so they need no wrapping.
+
+Void_t *cALLOc(size_t n, size_t elem_size)
+{
+	return set_bound(cALLOc_impl(n, elem_size), n * elem_size);
+}
+
+/* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#elif defined(MCHECK_HEAP_PROTECTION)
  #include "mcheck_core.inc.h"
  #if !__STD_C
   #error "must have __STD_C"
@@ -2351,12 +2597,21 @@ size_t malloc_usable_size(Void_t* mem)
 size_t malloc_usable_size(mem) Void_t* mem;
 #endif
 {
-  mchunkptr p;
   if (mem == NULL)
     return 0;
   else
   {
-    p = mem2chunk(mem);
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+    /*
+     *  When RISCV_ISA_ZCHERIPURECAP_ABI is enabled, the usable size
+     *  is the capability bound size rather than the availibilty in chunk.
+     */
+    if (cheri_offset_get(mem))
+      return 0;
+
+    return cheri_length_get(mem);
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+    mchunkptr p = mem2chunk(mem);
     if(!chunk_is_mmapped(p))
     {
       if (!inuse(p)) return 0;
@@ -2364,6 +2619,7 @@ size_t malloc_usable_size(mem) Void_t* mem;
       return chunksize(p) - SIZE_SZ;
     }
     return chunksize(p) - 2*SIZE_SZ;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
   }
 }
 
