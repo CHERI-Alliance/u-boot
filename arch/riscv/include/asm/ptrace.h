@@ -48,6 +48,10 @@ struct pt_regs {
 	uintptr_t scause;
 };
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#define CREG_FMT "%#p"
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+
 #ifdef CONFIG_64BIT
 #define REG_FMT "%016lx"
 #else
