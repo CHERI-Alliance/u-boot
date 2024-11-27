@@ -259,7 +259,7 @@ ulong board_init_f_alloc_reserve(ulong top);
  * This function is called once the C runtime has allocated the reserved
  * area on the stack. It must initialize the GD at the base of that area.
  */
-void board_init_f_init_reserve(ulong base);
+void board_init_f_init_reserve(uintptr_t base);
 
 struct global_data;
 
