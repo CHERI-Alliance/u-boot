@@ -420,6 +420,35 @@ static inline void unmap_physmem(void *vaddr, unsigned long flags)
 }
 #define unmap_physmem unmap_physmem
 
+static inline void *map_sysmem(phys_addr_t paddr, unsigned long len)
+{
+	void *ptr = cheri_address_set(cheri_infinite_cap_get(), paddr);
+
+	if (cheri_is_invalid(ptr))
+		ptr = NULL;
+
+	return ptr;
+}
+
+static inline void unmap_sysmem(const void *vaddr)
+{
+}
+
+static inline phys_addr_t map_to_sysmem(const void *ptr)
+{
+	return (phys_addr_t)cheri_address_get(ptr);
+}
+
+static inline void *nomap_sysmem(phys_addr_t paddr, unsigned long len)
+{
+	return map_sysmem(paddr, len);
+}
+
+static inline phys_addr_t nomap_to_sysmem(const void *ptr)
+{
+	return map_to_sysmem(ptr);
+}
+
 static inline void __iomem *ioremap(resource_size_t offset,
 				    resource_size_t size)
 {
