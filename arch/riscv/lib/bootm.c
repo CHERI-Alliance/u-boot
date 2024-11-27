@@ -90,6 +90,9 @@ static void boot_jump_linux(struct bootm_headers *images, int flag)
 #ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
 	void *kernel_ptr = cheri_build_infinite_cap(images->ep);
 
+	if (IS_ENABLED(CONFIG_BOOT_LINUX_KERNEL_IN_CAP_PTR_MODE))
+		kernel_ptr = cheri_execution_mode_set(kernel_ptr, RISCV_CHERI_CAP_PTR_EXE_MODE);
+
 	kernel = (void (*)(ulong, void *))kernel_ptr;
 #else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 	kernel = (void (*)(ulong, void *))images->ep;

@@ -252,6 +252,12 @@ config RISCV_ISA_ZCHERIPURECAP_ABI
 	  base ABI from lp64 to l64pc128. The compiler will only emit
 	  Zcheripurecap instruction.
 
+config BOOT_LINUX_KERNEL_IN_CAP_PTR_MODE
+	bool "Boot Linux kernel in capability pointer mode"
+	depends on RISCV_ISA_ZCHERIPURECAP_ABI && RISCV_ISA_ZCHERIHYBRID
+	help
+	  Boot Linux Kernel in capability pointer mode rather than integer
+	  pointer mode.
 endmenu
 
 menu "Use assembly optimized implementation of string routines"
