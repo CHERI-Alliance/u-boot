@@ -293,6 +293,7 @@ typedef struct {
 	char decoded_buf[256];	/* disassembled strings */
 #endif
 } X86EMU_regs;
+#pragma pack()
 
 /****************************************************************************
 REMARKS:
@@ -311,7 +312,7 @@ typedef struct {
 	void *private;
 } X86EMU_sysEnv;
 
-#pragma pack()
+
 
 /*----------------------------- Global Variables --------------------------*/
 
