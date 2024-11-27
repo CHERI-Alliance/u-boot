@@ -246,6 +246,7 @@ proftool-objs = proftool.o generated/lib/abuf.o
 
 hostprogs-always-$(CONFIG_STATIC_RELA) += relocate-rela
 hostprogs-always-$(CONFIG_RISCV) += prelink-riscv
+hostprogs-always-$(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI) += prerelocs-riscv-cheri
 
 hostprogs-always-$(CONFIG_ARCH_OCTEON) += update_octeon_header
 update_octeon_header-objs := update_octeon_header.o generated/lib/crc32.o

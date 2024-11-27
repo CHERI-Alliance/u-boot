@@ -171,6 +171,17 @@ cheri_captable_init:
 
 2:	XREG_L	t3, 0(PREG(t1))	/* t3 <-- capreloc:capability_location */
 	scaddr	PREG(t3), PREG(s6), t3 	/* t3 <-- W permission capability points to capability */
+#ifdef CONFIG_RISCV_ZCHERI_PRE_CAP_RELOCS_INIT
+	PREG_L	PREG(t5), 0(PREG(t3))	/* t5 <-- pre initialized capability */
+	sceq 	t4, PREG(t5), PREG_NULL
+	bnez	t4, 10f
+#ifdef CONFIG_RISCV_ISA_ZCHERIHYBRID
+	scmode	PREG(t4), PREG(s6), zero
+	cbld	PREG(t5), PREG(t4), PREG(t5) /* set tag for pre initialized capability by cbld */
+#else /* !CONFIG_RISCV_ISA_ZCHERIHYBRID */
+	cbld	PREG(t5), PREG(s6), PREG(t5) /* set tag for pre initialized capability by cbld */
+#endif /* !CONFIG_RISCV_ISA_ZCHERIHYBRID */
+#else /* !CONFIG_RISCV_ZCHERI_PRE_CAP_RELOCS_INIT */
 	XREG_L	t4, SZXREG(PREG(t1))	/* t4 <-- capreloc:capability_base */
 	bnez	t4, 3f		/* write cnull if capreloc:capability_base is zero */
 
@@ -221,6 +232,7 @@ cheri_captable_init:
 	/* Seal entry */
 	sentry	PREG(t5), PREG(t5)
 9:
+#endif /* !CONFIG_RISCV_ZCHERI_PRE_CAP_RELOCS_INIT */
 	PREG_S	PREG(t5), 0(PREG(t3))
 10:
 	add	PREG(t1), PREG(t1), (SZXREG * 5)
