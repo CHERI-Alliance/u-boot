@@ -24,7 +24,11 @@ typedef __kernel_gid32_t	gid_t;
 typedef __kernel_uid16_t        uid16_t;
 typedef __kernel_gid16_t        gid16_t;
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+typedef __UINTPTR_TYPE__	uintptr_t;
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 typedef unsigned long		uintptr_t;
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #ifdef CONFIG_UID16
 /* This is defined by include/asm-{arch}/posix_types.h */
