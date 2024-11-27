@@ -43,6 +43,10 @@ struct arch_global_data {
 #ifdef CONFIG_SMBIOS
 	ulong smbios_start;		/* Start address of SMBIOS table */
 #endif
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	void *infinite_cap;
+#endif
 };
 
 #include <asm-generic/global_data.h>
