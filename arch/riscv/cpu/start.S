@@ -13,20 +13,15 @@
 #include <config.h>
 #include <elf.h>
 #include <system-constants.h>
+#include <asm/asm.h>
 #include <asm/encoding.h>
 #include <generated/asm-offsets.h>
 
 #ifdef CONFIG_32BIT
-#define LREG			lw
-#define SREG			sw
-#define REGBYTES		4
 #define RELOC_TYPE		R_RISCV_32
 #define SYM_INDEX		0x8
 #define SYM_SIZE		0x10
 #else
-#define LREG			ld
-#define SREG			sd
-#define REGBYTES		8
 #define RELOC_TYPE		R_RISCV_64
 #define SYM_INDEX		0x20
 #define SYM_SIZE		0x18
@@ -117,8 +112,8 @@ clear_stack:
 	slli	t1, t1, CONFIG_STACK_SIZE_SHIFT
 	sub	t1, sp, t1
 clear_stack_loop:
-	SREG	zero, 0(t1)		/* t1 is always 16 byte aligned */
-	addi	t1, t1, REGBYTES
+	REG_S	zero, 0(t1)		/* t1 is always 16 byte aligned */
+	addi	t1, t1, SZREG
 	blt	t1, sp, clear_stack_loop
 #endif
 
@@ -166,13 +161,13 @@ call_harts_early_init:
 	bnez	tp, secondary_hart_loop
 #endif
 #endif
-	
+
 	mv      a0, s0
 	jal	board_init_f_init_reserve
 
-	SREG	s1, GD_FIRMWARE_FDT_ADDR(gp)
+	REG_S	s1, GD_FIRMWARE_FDT_ADDR(gp)
 	/* save the boot hart id to global_data */
-	SREG	tp, GD_BOOT_HART(gp)
+	REG_S	tp, GD_BOOT_HART(gp)
 
 #if !CONFIG_IS_ENABLED(XIP)
 #ifdef CONFIG_AVAILABLE_HARTS
@@ -196,9 +191,9 @@ wait_for_gd_init:
 	/* register available harts in the available_harts mask */
 	li	t1, 1
 	sll	t1, t1, tp
-	LREG	t2, GD_AVAILABLE_HARTS(gp)
+	REG_L	t2, GD_AVAILABLE_HARTS(gp)
 	or	t2, t2, t1
-	SREG	t2, GD_AVAILABLE_HARTS(gp)
+	REG_S	t2, GD_AVAILABLE_HARTS(gp)
 
 	amoswap.w.rl zero, zero, 0(t0)
 #endif
@@ -225,8 +220,8 @@ spl_clear_bss:
 	beq	t0, t1, spl_stack_gd_setup
 
 spl_clear_bss_loop:
-	SREG	zero, 0(t0)
-	addi	t0, t0, REGBYTES
+	REG_S	zero, 0(t0)
+	addi	t0, t0, SZREG
 	blt	t0, t1, spl_clear_bss_loop
 
 spl_stack_gd_setup:
@@ -305,10 +300,10 @@ stack_setup:
 	la	t2, __bss_start		/* t2 <- source end address */
 
 copy_loop:
-	LREG	t5, 0(t0)
-	addi	t0, t0, REGBYTES
-	SREG	t5, 0(t1)
-	addi	t1, t1, REGBYTES
+	REG_L	t5, 0(t0)
+	addi	t0, t0, SZREG
+	REG_S	t5, 0(t1)
+	addi	t1, t1, SZREG
 	blt	t0, t2, copy_loop
 
 /*
@@ -322,14 +317,14 @@ fix_rela_dyn:
 	add	t2, t2, t6		/* t2 <- rela_dyn_end in RAM */
 
 6:
-	LREG	t5, REGBYTES(t1)	/* t5 <-- relocation info:type */
+	REG_L	t5, SZREG(t1)	/* t5 <-- relocation info:type */
 	li	t3, R_RISCV_RELATIVE	/* reloc type R_RISCV_RELATIVE */
 	bne	t5, t3, 8f		/* skip non-RISCV_RELOC entries */
-	LREG	t3, 0(t1)
-	LREG	t5, (REGBYTES * 2)(t1)	/* t5 <-- addend */
+	REG_L	t3, 0(t1)
+	REG_L	t5, (SZREG * 2)(t1)	/* t5 <-- addend */
 	add	t5, t5, t6		/* t5 <-- location to fix up in RAM */
 	add	t3, t3, t6		/* t3 <-- location to fix up in RAM */
-	SREG	t5, 0(t3)
+	REG_S	t5, 0(t3)
 	j	10f
 
 8:
@@ -342,18 +337,18 @@ fix_rela_dyn:
 	li	t3, RELOC_TYPE
 	bne	t5, t3, 10f		/* skip non-addned entries */
 
-	LREG	t3, 0(t1)
+	REG_L	t3, 0(t1)
 	li	t5, SYM_SIZE
 	mul	t0, t0, t5
 	add	s5, t4, t0
-	LREG	t0, (REGBYTES * 2)(t1)	/* t0 <-- addend */
-	LREG	t5, REGBYTES(s5)
+	REG_L	t0, (SZREG * 2)(t1)	/* t0 <-- addend */
+	REG_L	t5, SZREG(s5)
 	add	t5, t5, t0
 	add	t5, t5, t6		/* t5 <-- location to fix up in RAM */
 	add	t3, t3, t6		/* t3 <-- location to fix up in RAM */
-	SREG	t5, 0(t3)
+	REG_S	t5, 0(t3)
 10:
-	addi	t1, t1, (REGBYTES * 3)
+	addi	t1, t1, (SZREG * 3)
 	blt	t1, t2, 6b
 
 /*
@@ -371,8 +366,8 @@ clear_bss:
 	beq	t0, t1, relocate_secondary_harts
 
 clbss_l:
-	SREG	zero, 0(t0)		/* clear loop... */
-	addi	t0, t0, REGBYTES
+	REG_S	zero, 0(t0)		/* clear loop... */
+	addi	t0, t0, SZREG
 	blt	t0, t1, clbss_l
 
 relocate_secondary_harts:
