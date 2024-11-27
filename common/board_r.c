@@ -202,7 +202,7 @@ static int initr_malloc(void)
 	 */
 	start = gd->relocaddr - TOTAL_MALLOC_LEN;
 	gd_set_malloc_start(start);
-	mem_malloc_init((ulong)map_sysmem(start, TOTAL_MALLOC_LEN),
+	mem_malloc_init((uintptr_t)map_sysmem(start, TOTAL_MALLOC_LEN),
 			TOTAL_MALLOC_LEN);
 	return 0;
 }

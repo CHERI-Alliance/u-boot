@@ -208,7 +208,7 @@ void board_init_f(ulong dummy)
 	if (!pool_addr)
 		panic("ERROR: Can't allocate full malloc pool!\n");
 
-	mem_malloc_init((ulong)pool_addr, (ulong)pool_size);
+	mem_malloc_init((uintptr_t)pool_addr, (ulong)pool_size);
 	gd->flags |= GD_FLG_FULL_MALLOC_INIT;
 	debug("%s: initialized an early full malloc pool at 0x%08lx of 0x%lx bytes\n",
 	      __func__, (unsigned long)pool_addr, (unsigned long)pool_size);

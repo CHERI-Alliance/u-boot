@@ -681,8 +681,8 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 	spl_set_bd();
 
 	if (IS_ENABLED(CONFIG_SPL_SYS_MALLOC)) {
-		mem_malloc_init((ulong)map_sysmem(SPL_SYS_MALLOC_START,
-						  SPL_SYS_MALLOC_SIZE),
+		mem_malloc_init((uintptr_t)map_sysmem(SPL_SYS_MALLOC_START,
+						      SPL_SYS_MALLOC_SIZE),
 				SPL_SYS_MALLOC_SIZE);
 		gd->flags |= GD_FLG_FULL_MALLOC_INIT;
 	}

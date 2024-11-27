@@ -569,17 +569,17 @@ static mbinptr av_[NAV * 2 + 2] = {
 static void malloc_init(void);
 #endif
 
-ulong mem_malloc_start = 0;
-ulong mem_malloc_end = 0;
-ulong mem_malloc_brk = 0;
+uintptr_t mem_malloc_start = 0;
+uintptr_t mem_malloc_end = 0;
+uintptr_t mem_malloc_brk = 0;
 
 static bool malloc_testing;	/* enable test mode */
 static int malloc_max_allocs;	/* return NULL after this many calls to malloc() */
 
 void *sbrk(ptrdiff_t increment)
 {
-	ulong old = mem_malloc_brk;
-	ulong new = old + increment;
+	uintptr_t old = mem_malloc_brk;
+	uintptr_t new = old + increment;
 
 	/*
 	 * if we are giving memory back make sure we clear it out since
@@ -596,7 +596,7 @@ void *sbrk(ptrdiff_t increment)
 	return (void *)old;
 }
 
-void mem_malloc_init(ulong start, ulong size)
+void mem_malloc_init(uintptr_t start, ulong size)
 {
 	mem_malloc_start = start;
 	mem_malloc_end = start + size;
@@ -606,8 +606,8 @@ void mem_malloc_init(ulong start, ulong size)
 	malloc_init();
 #endif
 
-	debug("using memory %#lx-%#lx for malloc()\n", mem_malloc_start,
-	      mem_malloc_end);
+	debug("using memory %#lx-%#lx for malloc()\n", (ulong)mem_malloc_start,
+	      (ulong)mem_malloc_end);
 #if CONFIG_IS_ENABLED(SYS_MALLOC_CLEAR_ON_INIT)
 	memset((void *)mem_malloc_start, 0x0, size);
 #endif
@@ -1957,7 +1957,7 @@ Void_t* mEMALIGn_impl(alignment, bytes) size_t alignment; size_t bytes;
     /*
      * m might not be the same as before. Validate that the previous value of
      * extra still works for the current value of m.
-     * If (!m), extra2=alignment so 
+     * If (!m), extra2=alignment so
      */
     if (m) {
       extra2 = alignment - (((unsigned long)(m)) % alignment);
