@@ -46,11 +46,18 @@
 
 #define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#define ALIGN(x, a)			__builtin_align_up(x, a)
+#define ALIGN_DOWN(x, a)	__builtin_align_down(x, a)
+#define PTR_ALIGN(p, a)		__builtin_align_up(p, a)
+#define IS_ALIGNED(x, a)	__builtin_is_aligned(x, a)
+#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #define ALIGN(x,a)		__ALIGN_MASK((x),(typeof(x))(a)-1)
 #define ALIGN_DOWN(x, a)	ALIGN((x) - ((a) - 1), (a))
 #define __ALIGN_MASK(x,mask)	(((x)+(mask))&~(mask))
 #define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
 #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
+#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
