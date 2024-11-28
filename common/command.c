@@ -19,6 +19,9 @@
 #include <time.h>
 #include <asm/global_data.h>
 #include <linux/ctype.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -501,35 +504,57 @@ void fixup_cmdtable(struct cmd_tbl *cmdtp, int size)
 		return;
 
 	for (i = 0; i < size; i++) {
-		ulong addr;
-
-		addr = (ulong)(cmdtp->cmd_rep) + gd->reloc_off;
+		uintptr_t addr;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+		addr = (uintptr_t)cheri_cap_reloc(cmdtp->cmd_rep, gd->reloc_off);
+#else
+		addr = (uintptr_t)(cmdtp->cmd_rep) + gd->reloc_off;
+#endif
 		cmdtp->cmd_rep =
 			(int (*)(struct cmd_tbl *, int, int,
 				 char * const [], int *))addr;
-
-		addr = (ulong)(cmdtp->cmd) + gd->reloc_off;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+		addr = (uintptr_t)cheri_cap_reloc(cmdtp->cmd, gd->reloc_off);
+#else
+		addr = (uintptr_t)(cmdtp->cmd) + gd->reloc_off;
+#endif
 #ifdef DEBUG_COMMANDS
 		printf("Command \"%s\": 0x%08lx => 0x%08lx\n",
 		       cmdtp->name, (ulong)(cmdtp->cmd), addr);
 #endif
 		cmdtp->cmd = (int (*)(struct cmd_tbl *, int, int,
 				      char *const []))addr;
-		addr = (ulong)(cmdtp->name) + gd->reloc_off;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+		addr = (uintptr_t)cheri_cap_reloc(cmdtp->name, gd->reloc_off);
+#else
+		addr = (uintptr_t)(cmdtp->name) + gd->reloc_off;
+#endif
 		cmdtp->name = (char *)addr;
 		if (cmdtp->usage) {
-			addr = (ulong)(cmdtp->usage) + gd->reloc_off;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+			addr = (uintptr_t)cheri_cap_reloc(cmdtp->usage, gd->reloc_off);
+#else
+			addr = (uintptr_t)(cmdtp->usage) + gd->reloc_off;
+#endif
 			cmdtp->usage = (char *)addr;
 		}
 #ifdef	CONFIG_SYS_LONGHELP
 		if (cmdtp->help) {
-			addr = (ulong)(cmdtp->help) + gd->reloc_off;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+			addr = (uintptr_t)cheri_cap_reloc(cmdtp->help, gd->reloc_off);
+#else
+			addr = (uintptr_t)(cmdtp->help) + gd->reloc_off;
+#endif
 			cmdtp->help = (char *)addr;
 		}
 #endif
 #ifdef CONFIG_AUTO_COMPLETE
 		if (cmdtp->complete) {
-			addr = (ulong)(cmdtp->complete) + gd->reloc_off;
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+			addr = (uintptr_t)cheri_cap_reloc(cmdtp->complete, gd->reloc_off);
+#else
+			addr = (uintptr_t)(cmdtp->complete) + gd->reloc_off;
+#endif
 			cmdtp->complete =
 				(int (*)(int, char * const [], char, int, char * []))addr;
 		}
