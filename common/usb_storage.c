@@ -1180,7 +1180,7 @@ static unsigned long usb_stor_read(struct blk_desc *block_dev, lbaint_t blknr,
 	blks = blkcnt;
 
 	debug("\nusb_read: dev %d startblk " LBAF ", blccnt " LBAF " buffer %lx\n",
-	      block_dev->devnum, start, blks, buf_addr);
+	      block_dev->devnum, start, blks, (unsigned long)buf_addr);
 
 	do {
 		/* XXX need some comment here */
@@ -1210,7 +1210,7 @@ retry_it:
 	} while (blks != 0);
 
 	debug("usb_read: end startblk " LBAF ", blccnt %x buffer %lx\n",
-	      start, smallblks, buf_addr);
+	      start, smallblks, (unsigned long)buf_addr);
 
 	usb_lock_async(udev, 0);
 	usb_disable_asynch(0); /* asynch transfer allowed */
@@ -1265,7 +1265,7 @@ static unsigned long usb_stor_write(struct blk_desc *block_dev, lbaint_t blknr,
 	blks = blkcnt;
 
 	debug("\nusb_write: dev %d startblk " LBAF ", blccnt " LBAF " buffer %lx\n",
-	      block_dev->devnum, start, blks, buf_addr);
+	      block_dev->devnum, start, blks, (unsigned long)buf_addr);
 
 	do {
 		/* If write fails retry for max retry count else
@@ -1297,7 +1297,7 @@ retry_it:
 	} while (blks != 0);
 
 	debug("usb_write: end startblk " LBAF ", blccnt %x buffer %lx\n",
-	      start, smallblks, buf_addr);
+	      start, smallblks, (unsigned long)buf_addr);
 
 	usb_lock_async(udev, 0);
 	usb_disable_asynch(0); /* asynch transfer allowed */

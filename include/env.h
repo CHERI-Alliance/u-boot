@@ -212,7 +212,7 @@ int env_set_hex(const char *varname, ulong value);
  */
 static inline int env_set_addr(const char *varname, const void *addr)
 {
-	return env_set_hex(varname, (ulong)addr);
+	return env_set_hex(varname, (ulong)(uintptr_t)addr);
 }
 
 /**
