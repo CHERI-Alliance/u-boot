@@ -20,6 +20,7 @@
 #include <mapmem.h>
 #include <vxworks.h>
 #include <tee/optee.h>
+#include <asm/io.h>
 #ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
 #include <asm/cheri.h>
 #endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
@@ -238,7 +239,7 @@ static int do_bootm_plan9(int flag, struct bootm_info *bmi)
 	/* See README.plan9 */
 	s = env_get("confaddr");
 	if (s != NULL) {
-		char *confaddr = (char *)hextoul(s, NULL);
+		char *confaddr = (char *)map_physmem(hextoul(s, NULL), 0, MAP_DATA);
 
 		if (bmi->argc) {
 			copy_args(confaddr, bmi->argc, bmi->argv, '\n');
