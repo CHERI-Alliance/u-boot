@@ -143,7 +143,7 @@ static int pci_generic_ecam_of_to_plat(struct udevice *dev)
 	}
 
 	pcie->size = resource_size(&reg_res);
-	pcie->cfg_base = map_physmem(reg_res.start, pcie->size, MAP_NOCACHE);
+	pcie->cfg_base = map_physmem(reg_res.start, pcie->size, MAP_NOCACHE | MAP_IO);
 
 	return 0;
 }

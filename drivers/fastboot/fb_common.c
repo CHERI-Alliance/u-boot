@@ -16,6 +16,7 @@
 #include <fastboot.h>
 #include <net.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 
 /**
  * fastboot_buf_addr - base address of the fastboot download buffer
@@ -239,9 +240,10 @@ void fastboot_init(void *buf_addr, u32 buf_size)
 		printf("Warning: the fastboot block backend features are limited, consider using the MMC backend\n");
 #endif
 
-	fastboot_buf_addr = buf_addr ? buf_addr :
-				       (void *)CONFIG_FASTBOOT_BUF_ADDR;
 	fastboot_buf_size = buf_size ? buf_size : CONFIG_FASTBOOT_BUF_SIZE;
+	fastboot_buf_addr = map_physmem(buf_addr ? (unsigned long)buf_addr :
+					CONFIG_FASTBOOT_BUF_ADDR,
+					fastboot_buf_size, MAP_DATA);
 	fastboot_set_progress_callback(NULL);
 
 }
