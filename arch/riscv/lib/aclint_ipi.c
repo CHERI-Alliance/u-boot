@@ -18,7 +18,7 @@
 #include <linux/err.h>
 
 /* MSIP registers */
-#define MSIP_REG(base, hart)		((ulong)(base) + (hart) * 4)
+#define MSIP_REG(base, hart)		((uintptr_t)(base) + (hart) * 4)
 
 DECLARE_GLOBAL_DATA_PTR;
 
