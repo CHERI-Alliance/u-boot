@@ -486,8 +486,8 @@ static int ipu_load(struct udevice *dev, ulong addr, ulong size)
 	int pa;
 	int i;
 
-	ehdr = (Elf32_Ehdr *)addr;
-	phdr = (Elf32_Phdr *)(addr + ehdr->e_phoff);
+	ehdr = (Elf32_Ehdr *)map_physmem(addr, sizeof(Elf32_Ehdr), MAP_RO_DATA);
+	phdr = (Elf32_Phdr *)map_physmem(addr + ehdr->e_phoff, sizeof(Elf32_Phdr), MAP_RO_DATA);
 	/*
 	 * Load each program header
 	 */
@@ -504,8 +504,9 @@ static int ipu_load(struct udevice *dev, ulong addr, ulong size)
 		if (pa)
 			proghdr.p_paddr = pa;
 
-		void *dst = (void *)(uintptr_t)proghdr.p_paddr;
-		void *src = (void *)addr + proghdr.p_offset;
+		void *dst = (void *)map_physmem(proghdr.p_paddr, proghdr.p_memsz, MAP_DATA);
+		void *src = (void *)map_physmem(addr + proghdr.p_offset, proghdr.p_filesz,
+						MAP_RO_DATA);
 
 		debug("Loading phdr %i to 0x%p (%i bytes)\n", i, dst,
 		      proghdr.p_filesz);

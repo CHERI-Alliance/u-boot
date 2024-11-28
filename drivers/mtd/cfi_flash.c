@@ -212,7 +212,7 @@ flash_map(flash_info_t *info, flash_sect_t sect, uint offset)
 {
 	unsigned int byte_offset = offset * info->portwidth;
 
-	return (void *)(info->start[sect] + (byte_offset << info->chip_lsb));
+	return (void *)map_physmem(info->start[sect] + (byte_offset << info->chip_lsb), 0, MAP_IO);
 }
 
 static inline void flash_unmap(flash_info_t *info, flash_sect_t sect,
@@ -786,7 +786,7 @@ static flash_sect_t find_sector(flash_info_t *info, ulong addr)
  */
 static int flash_write_cfiword(flash_info_t *info, ulong dest, cfiword_t cword)
 {
-	void *dstaddr = (void *)dest;
+	void *dstaddr = (void *)map_physmem(dest, 0, MAP_IO);
 	int flag;
 	flash_sect_t sect = 0;
 	char sect_found = 0;
@@ -1347,7 +1347,7 @@ int write_buff(flash_info_t *info, uchar *src, ulong addr, ulong cnt)
 	aln = addr - wp;
 	if (aln != 0) {
 		cword.w32 = 0;
-		p = (uchar *)wp;
+		p = (uchar *)map_physmem(wp, 0, MAP_IO);
 		for (i = 0; i < aln; ++i)
 			flash_add_byte(info, &cword, flash_read8(p + i));
 
@@ -1424,7 +1424,7 @@ int write_buff(flash_info_t *info, uchar *src, ulong addr, ulong cnt)
 	 * handle unaligned tail bytes
 	 */
 	cword.w32 = 0;
-	p = (uchar *)wp;
+	p = (uchar *)map_physmem(wp, 0, MAP_IO);
 	for (i = 0; (i < info->portwidth) && (cnt > 0); ++i) {
 		flash_add_byte(info, &cword, *src++);
 		--cnt;
@@ -1820,7 +1820,7 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 				info->start[0] =
 					(ulong)map_physmem(base,
 							   info->portwidth,
-							   MAP_NOCACHE);
+							   MAP_NOCACHE | MAP_IO);
 				if (info->portwidth == FLASH_CFI_8BIT &&
 				    info->interface == FLASH_CFI_X8X16) {
 					info->addr_unlock1 = 0x2AAA;
@@ -2118,7 +2118,7 @@ ulong flash_get_size(phys_addr_t base, int banknum)
 	info->legacy_unlock = 0;
 #endif
 
-	info->start[0] = (ulong)map_physmem(base, info->portwidth, MAP_NOCACHE);
+	info->start[0] = (ulong)map_physmem(base, info->portwidth, MAP_NOCACHE | MAP_IO);
 
 	if (flash_detect_cfi(info, &qry)) {
 		info->vendor = le16_to_cpu(get_unaligned(&qry.p_id));
@@ -2237,7 +2237,7 @@ ulong flash_get_size(phys_addr_t base, int banknum)
 				info->start[sect_cnt] =
 					(ulong)map_physmem(sector,
 							   info->portwidth,
-							   MAP_NOCACHE);
+							   MAP_NOCACHE | MAP_IO);
 				sector += (erase_region_size * size_ratio);
 
 				/*
