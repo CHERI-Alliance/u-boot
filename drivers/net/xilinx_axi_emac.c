@@ -903,9 +903,10 @@ static int axi_emac_of_to_plat(struct udevice *dev)
 	ret = dev_read_phandle_with_args(dev, "axistream-connected", NULL, 0, 0,
 					 &axistream_node);
 	if (!ret)
-		plat->dmatx = (struct axidma_reg *)ofnode_get_addr(axistream_node.node);
+		plat->dmatx = (struct axidma_reg *)ioremap(ofnode_get_addr(axistream_node.node),
+							   sizeof(struct axidma_reg));
 	else
-		plat->dmatx = (struct axidma_reg *)dev_read_addr_index(dev, 1);
+		plat->dmatx = (struct axidma_reg *)dev_read_addr_index_ptr(dev, 1);
 
 	if (!plat->dmatx) {
 		printf("%s: axi_dma register space not found\n", __func__);

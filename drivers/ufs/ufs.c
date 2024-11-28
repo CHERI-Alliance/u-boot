@@ -2012,7 +2012,7 @@ static int ufs_scsi_buffer_aligned(struct udevice *scsi_dev, struct bounce_buffe
 	if ((hba->quirks & UFSHCD_QUIRK_BROKEN_64BIT_ADDRESS) &&
 	    ((ubuf >> 32) || (ubuf + len) >> 32)) {
 		dev_dbg(scsi_dev, "Buffer above 32bit boundary %lx-%lx\n",
-			ubuf, ubuf + len);
+			(unsigned long)ubuf, (unsigned long)ubuf + len);
 		return 0;
 	}
 #endif

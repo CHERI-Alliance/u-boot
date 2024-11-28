@@ -13,6 +13,7 @@
 #include <linux/compiler.h>
 #include <serial.h>
 #include <linux/err.h>
+#include <linux/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -143,12 +144,12 @@ static int htif_serial_of_to_plat(struct udevice *dev)
 	addr = dev_read_addr_index(dev, 0);
 	if (addr == FDT_ADDR_T_NONE)
 		return -ENODEV;
-	plat->fromhost = (void *)(uintptr_t)addr;
+	plat->fromhost = (void *)ioremap(addr, sizeof(u64) * 2);
 	plat->tohost = plat->fromhost + sizeof(u64);
 
 	addr = dev_read_addr_index(dev, 1);
 	if (addr != FDT_ADDR_T_NONE)
-		plat->tohost = (void *)(uintptr_t)addr;
+		plat->tohost = (void *)ioremap(addr, sizeof(u64));
 
 	plat->console_char = -1;
 

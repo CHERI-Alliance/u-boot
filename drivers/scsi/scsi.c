@@ -135,7 +135,7 @@ static ulong scsi_read(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 	/* Setup device */
 	pccb->target = block_dev->target;
 	pccb->lun = block_dev->lun;
-	buf_addr = (unsigned long)buffer;
+	buf_addr = (uintptr_t)buffer;
 	start = blknr;
 	blks = blkcnt;
 	if (uc_plat->max_bytes_per_req)
@@ -174,7 +174,7 @@ static ulong scsi_read(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 		}
 		debug("scsi_read_ext: startblk " LBAF
 		      ", blccnt %x buffer %lX\n",
-		      start, smallblks, buf_addr);
+		      start, smallblks, (unsigned long)buf_addr);
 		if (scsi_exec(bdev, pccb)) {
 			scsi_print_error(pccb);
 			blkcnt -= blks;
@@ -183,7 +183,7 @@ static ulong scsi_read(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 		buf_addr += pccb->datalen;
 	} while (blks != 0);
 	debug("scsi_read_ext: end startblk " LBAF
-	      ", blccnt %x buffer %lX\n", start, smallblks, buf_addr);
+	      ", blccnt %x buffer %lX\n", start, smallblks, (unsigned long)buf_addr);
 	return blkcnt;
 }
 
@@ -205,7 +205,7 @@ static ulong scsi_write(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 	/* Setup device */
 	pccb->target = block_dev->target;
 	pccb->lun = block_dev->lun;
-	buf_addr = (unsigned long)buffer;
+	buf_addr = (uintptr_t)buffer;
 	start = blknr;
 	blks = blkcnt;
 	if (uc_plat->max_bytes_per_req)
@@ -232,7 +232,7 @@ static ulong scsi_write(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 			blks = 0;
 		}
 		debug("%s: startblk " LBAF ", blccnt %x buffer %lx\n",
-		      __func__, start, smallblks, buf_addr);
+		      __func__, start, smallblks, (unsigned long)buf_addr);
 		if (scsi_exec(bdev, pccb)) {
 			scsi_print_error(pccb);
 			blkcnt -= blks;
@@ -241,7 +241,7 @@ static ulong scsi_write(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 		buf_addr += pccb->datalen;
 	} while (blks != 0);
 	debug("%s: end startblk " LBAF ", blccnt %x buffer %lX\n",
-	      __func__, start, smallblks, buf_addr);
+	      __func__, start, smallblks, (unsigned long)buf_addr);
 	return blkcnt;
 }
 

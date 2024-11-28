@@ -852,7 +852,7 @@ static int zynq_gem_probe(struct udevice *dev)
 
 	/* Initialize the bd spaces for tx and rx bd's */
 	priv->tx_bd = (struct emac_bd *)bd_space;
-	priv->rx_bd = (struct emac_bd *)((ulong)bd_space + BD_SEPRN_SPACE);
+	priv->rx_bd = (struct emac_bd *)((uintptr_t)bd_space + BD_SEPRN_SPACE);
 
 	ret = clk_get_by_name(dev, "tx_clk", &priv->tx_clk);
 	if (ret < 0) {
@@ -956,7 +956,7 @@ static int zynq_gem_of_to_plat(struct udevice *dev)
 	struct ofnode_phandle_args phandle_args;
 
 	pdata->iobase = (phys_addr_t)dev_read_addr(dev);
-	priv->iobase = (struct zynq_gem_regs *)pdata->iobase;
+	priv->iobase = (struct zynq_gem_regs *)ioremap(pdata->iobase, sizeof(struct zynq_gem_regs));
 	priv->mdiobase = priv->iobase;
 	/* Hardcode for now */
 	priv->phyaddr = -1;
@@ -983,7 +983,9 @@ static int zynq_gem_of_to_plat(struct udevice *dev)
 		addr = ofnode_get_addr(parent);
 		if (addr != FDT_ADDR_T_NONE) {
 			debug("MDIO bus not found %s\n", dev->name);
-			priv->mdiobase = (struct zynq_gem_regs *)addr;
+			priv->mdiobase =
+				(struct zynq_gem_regs *)ioremap(addr,
+								sizeof(struct zynq_gem_regs));
 		}
 	}
 
