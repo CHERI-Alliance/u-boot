@@ -438,12 +438,12 @@ static void process_fdt_options(void)
 	/* Add an env variable to point to a kernel payload, if available */
 	addr = ofnode_conf_read_int("kernel-offset", 0);
 	if (addr)
-		env_set_addr("kernaddr", (void *)(CONFIG_TEXT_BASE + addr));
+		env_set_addr("kernaddr", (void *)(uintptr_t)(CONFIG_TEXT_BASE + addr));
 
 	/* Add an env variable to point to a root disk, if available */
 	addr = ofnode_conf_read_int("rootdisk-offset", 0);
 	if (addr)
-		env_set_addr("rootaddr", (void *)(CONFIG_TEXT_BASE + addr));
+		env_set_addr("rootaddr", (void *)(uintptr_t)(CONFIG_TEXT_BASE + addr));
 #endif /* CONFIG_TEXT_BASE */
 }
 
