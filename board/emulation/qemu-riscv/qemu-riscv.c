@@ -14,6 +14,7 @@
 #include <usb.h>
 #include <virtio_types.h>
 #include <virtio.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -68,5 +69,5 @@ void *board_fdt_blob_setup(int *err)
 {
 	*err = 0;
 	/* Stored the DTB address there during our init */
-	return (void *)(ulong)gd->arch.firmware_fdt_addr;
+	return (void *)map_physmem(gd->arch.firmware_fdt_addr, 0, MAP_DATA);
 }
