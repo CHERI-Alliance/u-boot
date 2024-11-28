@@ -7,6 +7,7 @@
 #include <command.h>
 #include <malloc.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 #include <asm/byteorder.h>
 #include <linux/compiler.h>
 #if defined(CONFIG_ARCH_MX6) || defined(CONFIG_ARCH_MX7) || \
@@ -75,9 +76,9 @@ static int do_blob(struct cmd_tbl *cmdtp, int flag, int argc,
 	len = hextoul(argv[4], NULL);
 	key_addr = hextoul(argv[5], NULL);
 
-	km_ptr = (uint8_t *)(uintptr_t)key_addr;
-	src_ptr = (uint8_t *)(uintptr_t)src_addr;
-	dst_ptr = (uint8_t *)(uintptr_t)dst_addr;
+	km_ptr = (uint8_t *)map_physmem(key_addr, 0, MAP_RO_DATA);
+	src_ptr = (uint8_t *)map_physmem(src_addr, 0, MAP_RO_DATA);
+	dst_ptr = (uint8_t *)map_physmem(dst_addr, 0, MAP_DATA);
 
 #if defined(CONFIG_ARCH_MX6) || defined(CONFIG_ARCH_MX7) || \
 	defined(CONFIG_ARCH_MX7ULP) || defined(CONFIG_ARCH_IMX8M)

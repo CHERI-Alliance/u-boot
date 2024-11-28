@@ -25,6 +25,7 @@
 #include <xyzModem.h>
 #include <asm/cache.h>
 #include <asm/global_data.h>
+#include <asm/io.h>
 #include <linux/delay.h>
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -559,7 +560,7 @@ static ulong load_serial_bin(ulong offset)
 {
 	int size, i;
 
-	set_kerm_bin_mode((ulong *) offset);
+	set_kerm_bin_mode((ulong *)map_physmem(offset, 0, MAP_DATA));
 	size = k_recv();
 
 	/*
@@ -992,7 +993,7 @@ START:
 				done = 1;
 		}
 	}
-	return ((ulong) os_data_addr - (ulong) bin_start_address);
+	return ((uintptr_t)(os_data_addr) - (uintptr_t)(bin_start_address));
 }
 
 static int getcxmodem(void) {
@@ -1037,8 +1038,8 @@ static ulong load_serial_ymodem(ulong offset, int mode)
 			} else
 #endif
 			{
-				memcpy((char *)(store_addr), ymodemBuf,
-					res);
+				memcpy((char *)map_physmem(store_addr, res, MAP_DATA),
+				       ymodemBuf, res);
 			}
 
 		}
