@@ -10,6 +10,7 @@
 #include <command.h>
 #include <net.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 
 #ifdef CONFIG_CMD_GO
 
@@ -38,7 +39,8 @@ static int do_go(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 	 * pass address parameter as argv[0] (aka command name),
 	 * and all remaining args
 	 */
-	rc = do_go_exec ((void *)addr, argc - 1, argv + 1);
+	rc = do_go_exec(map_physmem(addr, 0, MAP_EXE), argc - 1,
+			argv + 1);
 	if (rc != 0) rcode = 1;
 
 	printf ("## Application terminated, rc = 0x%lX\n", rc);

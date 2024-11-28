@@ -10,6 +10,7 @@
 #include <mapmem.h>
 #include <part.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 
 static int do_unzip(struct cmd_tbl *cmdtp, int flag, int argc,
 		    char *const argv[])

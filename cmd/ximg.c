@@ -68,14 +68,15 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 		dest = hextoul(argv[3], NULL);
 	}
 
-	switch (genimg_get_format((void *)addr)) {
+	switch (genimg_get_format((void *)map_physmem(addr, 0, MAP_RO_DATA))) {
 #if defined(CONFIG_LEGACY_IMAGE_FORMAT)
 	case IMAGE_FORMAT_LEGACY:
 
 		printf("## Copying part %d from legacy image "
 			"at %08lx ...\n", part, addr);
 
-		hdr = (struct legacy_img_hdr *)addr;
+		hdr = (struct legacy_img_hdr *)map_physmem(addr, sizeof(struct legacy_img_hdr),
+							   MAP_RO_DATA);
 		if (!image_check_magic(hdr)) {
 			printf("Bad Magic Number\n");
 			return 1;
@@ -132,7 +133,7 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 		printf("## Copying '%s' subimage from FIT image "
 			"at %08lx ...\n", uname, addr);
 
-		fit_hdr = (const void *)addr;
+		fit_hdr = (const void *)map_physmem(addr, 0, MAP_RO_DATA);
 		if (fit_check_format(fit_hdr, IMAGE_SIZE_INVAL)) {
 			puts("Bad FIT image format\n");
 			return 1;
@@ -186,8 +187,8 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 			{
 				size_t l = len;
 				size_t tail;
-				void *to = (void *) dest;
-				void *from = (void *)data;
+				void *to = (void *)map_physmem(dest, len, MAP_DATA);
+				void *from = (void *)map_physmem(data, len, MAP_RO_DATA);
 
 				printf("   Loading part %d ... ", part);
 
@@ -202,7 +203,8 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 			}
 #else	/* !(CONFIG_HW_WATCHDOG || CONFIG_WATCHDOG) */
 			printf("   Loading part %d ... ", part);
-			memmove((char *) dest, (char *)data, len);
+			memmove((char *)map_physmem(dest, len, MAP_DATA),
+				(char *)map_physmem(data, len, MAP_RO_DATA), len);
 #endif	/* CONFIG_HW_WATCHDOG || CONFIG_WATCHDOG */
 			break;
 #ifdef CONFIG_GZIP
@@ -210,8 +212,8 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 			{
 				int ret = 0;
 				printf("   Uncompressing part %d ... ", part);
-				ret = gunzip((void *)dest, unc_len,
-					     (uchar *)data, &len);
+				ret = gunzip((void *)map_physmem(dest, unc_len, MAP_DATA), unc_len,
+					     (uchar *)map_physmem(data, len, MAP_DATA), &len);
 				if (ret == Z_BUF_ERROR) {
 					puts("Image too large: increase CONFIG_SYS_XIMG_LEN\n");
 					return 1;
@@ -254,8 +256,10 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 
 				printf("   Uncompressing part %d ... ", part);
 
-				abuf_init_set(&in, (void *)data, len);
-				abuf_init_set(&out, (void *)dest, unc_len);
+				abuf_init_set(&in,
+					      (void *)map_physmem(data, len, MAP_RO_DATA), len);
+				abuf_init_set(&out,
+					      (void *)map_physmem(dest, len, MAP_DATA), unc_len);
 				ret = zstd_decompress(&in, &out);
 				if (ret < 0) {
 					printf("ZSTD ERROR %d - "
