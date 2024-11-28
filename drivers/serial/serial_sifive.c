@@ -178,9 +178,9 @@ static int sifive_serial_of_to_plat(struct udevice *dev)
 {
 	struct sifive_uart_plat *plat = dev_get_plat(dev);
 
-	plat->regs = (struct uart_sifive *)(uintptr_t)dev_read_addr(dev);
-	if (IS_ERR(plat->regs))
-		return PTR_ERR(plat->regs);
+	plat->regs = (struct uart_sifive *)dev_read_addr_ptr(dev);
+	if (!plat->regs)
+		return -ENXIO;
 
 	return 0;
 }
@@ -211,7 +211,8 @@ U_BOOT_DRIVER(serial_sifive) = {
 static inline void _debug_uart_init(void)
 {
 	struct uart_sifive *regs =
-			(struct uart_sifive *)CONFIG_VAL(DEBUG_UART_BASE);
+		(struct uart_sifive *)ioremap(CONFIG_VAL(DEBUG_UART_BASE),
+					      sizeof(struct uart_sifive));
 
 	_sifive_serial_setbrg(regs, CONFIG_DEBUG_UART_CLOCK,
 			      CONFIG_BAUDRATE);
@@ -221,7 +222,8 @@ static inline void _debug_uart_init(void)
 static inline void _debug_uart_putc(int ch)
 {
 	struct uart_sifive *regs =
-			(struct uart_sifive *)CONFIG_VAL(DEBUG_UART_BASE);
+		(struct uart_sifive *)ioremap(CONFIG_VAL(DEBUG_UART_BASE),
+					      sizeof(struct uart_sifive));
 
 	while (_sifive_serial_putc(regs, ch) == -EAGAIN)
 		schedule();

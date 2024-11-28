@@ -1136,9 +1136,9 @@ static int ast2600_sdrammc_of_to_plat(struct udevice *dev)
 {
 	struct dram_info *priv = dev_get_priv(dev);
 
-	priv->regs = (void *)(uintptr_t)devfdt_get_addr_index(dev, 0);
-	priv->phy_setting = (void *)(uintptr_t)devfdt_get_addr_index(dev, 1);
-	priv->phy_status = (void *)(uintptr_t)devfdt_get_addr_index(dev, 2);
+	priv->regs = devfdt_get_addr_index_ptr(dev, 0));
+	priv->phy_setting = devfdt_get_addr_index_ptr(dev, 1));
+	priv->phy_status = devfdt_get_addr_index_ptr(dev, 2));
 
 	priv->clock_rate = fdtdec_get_int(gd->fdt_blob, dev_of_offset(dev),
 					  "clock-frequency", 0);

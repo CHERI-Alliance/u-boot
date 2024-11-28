@@ -17,7 +17,7 @@
 #define ACLINT_MTIME_OFFSET		0
 
 /* mtime register */
-#define MTIME_REG(base, offset)		((ulong)(base) + (offset))
+#define MTIME_REG(base, offset)		((uintptr_t)(base) + (offset))
 
 static u64 notrace riscv_aclint_timer_get_count(struct udevice *dev)
 {
@@ -40,8 +40,9 @@ unsigned long notrace timer_early_get_rate(void)
  */
 u64 notrace timer_early_get_count(void)
 {
-	return readq((void __iomem *)MTIME_REG(RISCV_MMODE_TIMERBASE,
-					       RISCV_MMODE_TIMEROFF));
+	return readq((void __iomem *)ioremap(MTIME_REG(RISCV_MMODE_TIMERBASE,
+						       RISCV_MMODE_TIMEROFF),
+					     sizeof(u64)));
 }
 #endif
 
@@ -58,8 +59,7 @@ ulong timer_get_boot_us(void)
 		timer_get_count(gd->timer, &ticks);
 	} else {
 		rate = RISCV_MMODE_TIMER_FREQ;
-		ticks = readq((void __iomem *)MTIME_REG(RISCV_MMODE_TIMERBASE,
-							RISCV_MMODE_TIMEROFF));
+		ticks = timer_early_get_count();
 	}
 
 	/* Below is converted from time(us) = (tick / rate) * 10000000 */

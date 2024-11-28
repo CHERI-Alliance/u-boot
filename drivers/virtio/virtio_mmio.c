@@ -337,8 +337,8 @@ static int virtio_mmio_of_to_plat(struct udevice *udev)
 {
 	struct virtio_mmio_priv *priv = dev_get_priv(udev);
 
-	priv->base = (void __iomem *)(ulong)dev_read_addr(udev);
-	if (priv->base == (void __iomem *)FDT_ADDR_T_NONE)
+	priv->base = (void __iomem *)dev_read_addr_ptr(udev);
+	if (!priv->base)
 		return -EINVAL;
 
 	return 0;
