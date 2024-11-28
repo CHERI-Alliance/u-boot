@@ -175,8 +175,8 @@ static const struct mxs_regs imx28_regs = {
 };
 
 static const struct udevice_id mxs_pinctrl_match[] = {
-	{ .compatible = "fsl,imx23-pinctrl", .data = (ulong)&imx23_regs },
-	{ .compatible = "fsl,imx28-pinctrl", .data = (ulong)&imx28_regs },
+	{ .compatible = "fsl,imx23-pinctrl", .data = (uintptr_t)&imx23_regs },
+	{ .compatible = "fsl,imx28-pinctrl", .data = (uintptr_t)&imx28_regs },
 	{ /* sentinel */ }
 };
 

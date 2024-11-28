@@ -124,7 +124,7 @@ static const struct udevice_id f_sdh30_mmc_ids[] = {
 	},
 	{
 		.compatible = "socionext,f-sdh30-e51-mmc",
-		.data = (ulong)&f_sdh30_e51_data,
+		.data = (uintptr_t)&f_sdh30_e51_data,
 	},
 	{ }
 };

@@ -389,8 +389,8 @@ static const struct stm32_rng_data stm32_rng_data = {
 };
 
 static const struct udevice_id stm32_rng_match[] = {
-	{.compatible = "st,stm32mp13-rng", .data = (ulong)&stm32mp13_rng_data},
-	{.compatible = "st,stm32-rng", .data = (ulong)&stm32_rng_data},
+	{.compatible = "st,stm32mp13-rng", .data = (uintptr_t)&stm32mp13_rng_data},
+	{.compatible = "st,stm32-rng", .data = (uintptr_t)&stm32_rng_data},
 	{},
 };
 

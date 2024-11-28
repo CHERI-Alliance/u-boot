@@ -176,7 +176,7 @@ static const struct meson_sm_data meson_sm_gxbb_data = {
 static const struct udevice_id meson_sm_ids[] = {
 	{
 		.compatible = "amlogic,meson-gxbb-sm",
-		.data = (ulong)&meson_sm_gxbb_data,
+		.data = (uintptr_t)&meson_sm_gxbb_data,
 	},
 	{ }
 };

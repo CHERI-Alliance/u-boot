@@ -587,8 +587,8 @@ static struct pipe3_data data_sata = {
 };
 
 static const struct udevice_id pipe3_phy_ids[] = {
-	{ .compatible = "ti,phy-pipe3-sata", .data = (ulong)&data_sata },
-	{ .compatible = "ti,omap-usb3", .data = (ulong)&data_usb},
+	{ .compatible = "ti,phy-pipe3-sata", .data = (uintptr_t)&data_sata },
+	{ .compatible = "ti,omap-usb3", .data = (uintptr_t)&data_usb},
 	{ }
 };
 

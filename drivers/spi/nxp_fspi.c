@@ -1105,13 +1105,13 @@ static const struct dm_spi_ops nxp_fspi_ops = {
 };
 
 static const struct udevice_id nxp_fspi_ids[] = {
-	{ .compatible = "nxp,lx2160a-fspi", .data = (ulong)&lx2160a_data, },
-	{ .compatible = "nxp,imx8mm-fspi", .data = (ulong)&imx8mm_data, },
-	{ .compatible = "nxp,imx8mp-fspi", .data = (ulong)&imx8mm_data, },
-	{ .compatible = "nxp,imx8qxp-fspi", .data = (ulong)&imx8qxp_data, },
-	{ .compatible = "nxp,imx8dxl-fspi", .data = (ulong)&imx8dxl_data, },
-	{ .compatible = "nxp,imx8ulp-fspi", .data = (ulong)&imx8ulp_data, },
-	{ .compatible = "nxp,imxrt1170-fspi", .data = (ulong)&imxrt1170_data, },
+	{ .compatible = "nxp,lx2160a-fspi", .data = (uintptr_t)&lx2160a_data, },
+	{ .compatible = "nxp,imx8mm-fspi", .data = (uintptr_t)&imx8mm_data, },
+	{ .compatible = "nxp,imx8mp-fspi", .data = (uintptr_t)&imx8mm_data, },
+	{ .compatible = "nxp,imx8qxp-fspi", .data = (uintptr_t)&imx8qxp_data, },
+	{ .compatible = "nxp,imx8dxl-fspi", .data = (uintptr_t)&imx8dxl_data, },
+	{ .compatible = "nxp,imx8ulp-fspi", .data = (uintptr_t)&imx8ulp_data, },
+	{ .compatible = "nxp,imxrt1170-fspi", .data = (uintptr_t)&imxrt1170_data, },
 	{ }
 };
 

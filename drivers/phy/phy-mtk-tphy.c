@@ -908,15 +908,15 @@ static struct tphy_pdata mt8195_pdata = {
 static const struct udevice_id mtk_tphy_id_table[] = {
 	{
 		.compatible = "mediatek,generic-tphy-v1",
-		.data = (ulong)&tphy_v1_pdata,
+		.data = (uintptr_t)&tphy_v1_pdata,
 	},
 	{
 		.compatible = "mediatek,generic-tphy-v2",
-		.data = (ulong)&tphy_v2_pdata,
+		.data = (uintptr_t)&tphy_v2_pdata,
 	},
 	{
 		.compatible = "mediatek,mt8195-tphy",
-		.data = (ulong)&mt8195_pdata,
+		.data = (uintptr_t)&mt8195_pdata,
 	},
 	{ }
 };

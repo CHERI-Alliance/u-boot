@@ -118,27 +118,27 @@ static const struct dwc3_glue_ops uniphier_pxs2_dwc3_ops = {
 static const struct udevice_id uniphier_dwc3_match[] = {
 	{
 		.compatible = "socionext,uniphier-pro4-dwc3-glue",
-		.data = (ulong)&uniphier_pro4_dwc3_ops,
+		.data = (uintptr_t)&uniphier_pro4_dwc3_ops,
 	},
 	{
 		.compatible = "socionext,uniphier-pro5-dwc3-glue",
-		.data = (ulong)&uniphier_pro5_dwc3_ops,
+		.data = (uintptr_t)&uniphier_pro5_dwc3_ops,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs2-dwc3-glue",
-		.data = (ulong)&uniphier_pxs2_dwc3_ops,
+		.data = (uintptr_t)&uniphier_pxs2_dwc3_ops,
 	},
 	{
 		.compatible = "socionext,uniphier-ld20-dwc3-glue",
-		.data = (ulong)&uniphier_pxs2_dwc3_ops,
+		.data = (uintptr_t)&uniphier_pxs2_dwc3_ops,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs3-dwc3-glue",
-		.data = (ulong)&uniphier_pxs2_dwc3_ops,
+		.data = (uintptr_t)&uniphier_pxs2_dwc3_ops,
 	},
 	{
 		.compatible = "socionext,uniphier-nx1-dwc3-glue",
-		.data = (ulong)&uniphier_pxs2_dwc3_ops,
+		.data = (uintptr_t)&uniphier_pxs2_dwc3_ops,
 	},
 	{ /* sentinel */ }
 };

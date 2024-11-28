@@ -573,19 +573,19 @@ static const struct sun4i_spi_variant sun50i_r329_spi_variant = {
 static const struct udevice_id sun4i_spi_ids[] = {
 	{
 	  .compatible = "allwinner,sun4i-a10-spi",
-	  .data = (ulong)&sun4i_a10_spi_variant,
+	  .data = (uintptr_t)&sun4i_a10_spi_variant,
 	},
 	{
 	  .compatible = "allwinner,sun6i-a31-spi",
-	  .data = (ulong)&sun6i_a31_spi_variant,
+	  .data = (uintptr_t)&sun6i_a31_spi_variant,
 	},
 	{
 	  .compatible = "allwinner,sun8i-h3-spi",
-	  .data = (ulong)&sun8i_h3_spi_variant,
+	  .data = (uintptr_t)&sun8i_h3_spi_variant,
 	},
 	{
 	  .compatible = "allwinner,sun50i-r329-spi",
-	  .data = (ulong)&sun50i_r329_spi_variant,
+	  .data = (uintptr_t)&sun50i_r329_spi_variant,
 	},
 	{ /* sentinel */ }
 };

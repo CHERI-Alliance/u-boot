@@ -1365,15 +1365,15 @@ static const struct udevice_id macb_eth_ids[] = {
 	{ .compatible = "cdns,at91sam9260-macb" },
 	{ .compatible = "cdns,sam9x60-macb" },
 	{ .compatible = "cdns,sama7g5-gem",
-	  .data = (ulong)&sama7g5_gmac_config },
+	  .data = (uintptr_t)&sama7g5_gmac_config },
 	{ .compatible = "cdns,sama7g5-emac",
-	  .data = (ulong)&sama7g5_emac_config },
+	  .data = (uintptr_t)&sama7g5_emac_config },
 	{ .compatible = "atmel,sama5d2-gem" },
 	{ .compatible = "atmel,sama5d3-gem" },
-	{ .compatible = "atmel,sama5d4-gem", .data = (ulong)&sama5d4_config },
+	{ .compatible = "atmel,sama5d4-gem", .data = (uintptr_t)&sama5d4_config },
 	{ .compatible = "cdns,zynq-gem" },
 	{ .compatible = "sifive,fu540-c000-gem",
-	  .data = (ulong)&sifive_config },
+	  .data = (uintptr_t)&sifive_config },
 	{ }
 };
 

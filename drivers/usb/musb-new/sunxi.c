@@ -533,15 +533,15 @@ static const struct sunxi_musb_config suniv_f1c100s_cfg = {
 
 static const struct udevice_id sunxi_musb_ids[] = {
 	{ .compatible = "allwinner,sun4i-a10-musb",
-			.data = (ulong)&sun4i_a10_cfg },
+			.data = (uintptr_t)&sun4i_a10_cfg },
 	{ .compatible = "allwinner,sun6i-a31-musb",
-			.data = (ulong)&sun6i_a31_cfg },
+			.data = (uintptr_t)&sun6i_a31_cfg },
 	{ .compatible = "allwinner,sun8i-a33-musb",
-			.data = (ulong)&sun6i_a31_cfg },
+			.data = (uintptr_t)&sun6i_a31_cfg },
 	{ .compatible = "allwinner,sun8i-h3-musb",
-			.data = (ulong)&sun8i_h3_cfg },
+			.data = (uintptr_t)&sun8i_h3_cfg },
 	{ .compatible = "allwinner,suniv-f1c100s-musb",
-			.data = (ulong)&suniv_f1c100s_cfg },
+			.data = (uintptr_t)&suniv_f1c100s_cfg },
 	{ }
 };
 

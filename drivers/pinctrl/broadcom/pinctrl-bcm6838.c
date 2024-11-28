@@ -146,7 +146,7 @@ const struct pinctrl_ops bcm6838_pinctrl_ops = {
 static const struct udevice_id bcm6838_pinctrl_match[] = {
 	{
 		.compatible = "brcm,bcm6838-pinctrl",
-		.data = (ulong)&bcm6838_hw,
+		.data = (uintptr_t)&bcm6838_hw,
 	},
 	{ /* sentinel */ }
 };

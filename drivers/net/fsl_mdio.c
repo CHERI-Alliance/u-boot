@@ -203,11 +203,11 @@ static struct fsl_pq_mdio_data fman_data = {
 };
 
 static const struct udevice_id tsec_mdio_ids[] = {
-	{ .compatible = "fsl,gianfar-tbi", .data = (ulong)&gianfar_data },
-	{ .compatible = "fsl,gianfar-mdio", .data = (ulong)&gianfar_data },
-	{ .compatible = "fsl,etsec2-tbi", .data = (ulong)&etsec2_data },
-	{ .compatible = "fsl,etsec2-mdio", .data = (ulong)&etsec2_data },
-	{ .compatible = "fsl,fman-mdio", .data = (ulong)&fman_data },
+	{ .compatible = "fsl,gianfar-tbi", .data = (uintptr_t)&gianfar_data },
+	{ .compatible = "fsl,gianfar-mdio", .data = (uintptr_t)&gianfar_data },
+	{ .compatible = "fsl,etsec2-tbi", .data = (uintptr_t)&etsec2_data },
+	{ .compatible = "fsl,etsec2-mdio", .data = (uintptr_t)&etsec2_data },
+	{ .compatible = "fsl,fman-mdio", .data = (uintptr_t)&fman_data },
 	{}
 };
 

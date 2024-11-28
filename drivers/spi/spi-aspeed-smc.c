@@ -1193,12 +1193,12 @@ static const struct dm_spi_ops aspeed_spi_ops = {
 };
 
 static const struct udevice_id aspeed_spi_ids[] = {
-	{ .compatible = "aspeed,ast2400-fmc", .data = (ulong)&ast2400_fmc_info, },
-	{ .compatible = "aspeed,ast2400-spi", .data = (ulong)&ast2400_spi_info, },
-	{ .compatible = "aspeed,ast2500-fmc", .data = (ulong)&ast2500_fmc_info, },
-	{ .compatible = "aspeed,ast2500-spi", .data = (ulong)&ast2500_spi_info, },
-	{ .compatible = "aspeed,ast2600-fmc", .data = (ulong)&ast2600_fmc_info, },
-	{ .compatible = "aspeed,ast2600-spi", .data = (ulong)&ast2600_spi_info, },
+	{ .compatible = "aspeed,ast2400-fmc", .data = (uintptr_t)&ast2400_fmc_info, },
+	{ .compatible = "aspeed,ast2400-spi", .data = (uintptr_t)&ast2400_spi_info, },
+	{ .compatible = "aspeed,ast2500-fmc", .data = (uintptr_t)&ast2500_fmc_info, },
+	{ .compatible = "aspeed,ast2500-spi", .data = (uintptr_t)&ast2500_spi_info, },
+	{ .compatible = "aspeed,ast2600-fmc", .data = (uintptr_t)&ast2600_fmc_info, },
+	{ .compatible = "aspeed,ast2600-spi", .data = (uintptr_t)&ast2600_spi_info, },
 	{ }
 };
 

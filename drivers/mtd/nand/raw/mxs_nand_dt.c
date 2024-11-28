@@ -48,23 +48,23 @@ static const struct mxs_nand_dt_data mxs_nand_imx8qxp_data = {
 static const struct udevice_id mxs_nand_dt_ids[] = {
 	{
 		.compatible = "fsl,imx6q-gpmi-nand",
-		.data = (unsigned long)&mxs_nand_imx6q_data,
+		.data = (uintptr_t)&mxs_nand_imx6q_data,
 	},
 	{
 		.compatible = "fsl,imx6qp-gpmi-nand",
-		.data = (unsigned long)&mxs_nand_imx6q_data,
+		.data = (uintptr_t)&mxs_nand_imx6q_data,
 	},
 	{
 		.compatible = "fsl,imx6sx-gpmi-nand",
-		.data = (unsigned long)&mxs_nand_imx6sx_data,
+		.data = (uintptr_t)&mxs_nand_imx6sx_data,
 	},
 	{
 		.compatible = "fsl,imx7d-gpmi-nand",
-		.data = (unsigned long)&mxs_nand_imx7d_data,
+		.data = (uintptr_t)&mxs_nand_imx7d_data,
 	},
 	{
 		.compatible = "fsl,imx8qxp-gpmi-nand",
-		.data = (unsigned long)&mxs_nand_imx8qxp_data,
+		.data = (uintptr_t)&mxs_nand_imx8qxp_data,
 	},
 	{ /* sentinel */ }
 };

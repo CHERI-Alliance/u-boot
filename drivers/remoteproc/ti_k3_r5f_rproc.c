@@ -894,12 +894,12 @@ static const struct k3_r5f_ip_data am62_data = {
 };
 
 static const struct udevice_id k3_r5f_rproc_ids[] = {
-	{ .compatible = "ti,am654-r5f", .data = (ulong)&k3_data, },
-	{ .compatible = "ti,j721e-r5f", .data = (ulong)&k3_data, },
-	{ .compatible = "ti,j7200-r5f", .data = (ulong)&j7200_j721s2_data, },
-	{ .compatible = "ti,j721s2-r5f", .data = (ulong)&j7200_j721s2_data, },
-	{ .compatible = "ti,am62-r5f", .data = (ulong)&am62_data, },
-	{ .compatible = "ti,am64-r5f", .data = (ulong)&j7200_j721s2_data, },
+	{ .compatible = "ti,am654-r5f", .data = (uintptr_t)&k3_data, },
+	{ .compatible = "ti,j721e-r5f", .data = (uintptr_t)&k3_data, },
+	{ .compatible = "ti,j7200-r5f", .data = (uintptr_t)&j7200_j721s2_data, },
+	{ .compatible = "ti,j721s2-r5f", .data = (uintptr_t)&j7200_j721s2_data, },
+	{ .compatible = "ti,am62-r5f", .data = (uintptr_t)&am62_data, },
+	{ .compatible = "ti,am64-r5f", .data = (uintptr_t)&j7200_j721s2_data, },
 	{}
 };
 

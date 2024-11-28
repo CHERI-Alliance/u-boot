@@ -98,23 +98,23 @@ static const struct usb_phy_data am654_usb2_data = {
 static const struct udevice_id omap_usb2_id_table[] = {
 	{
 		.compatible = "ti,omap5-usb2",
-		.data = (ulong)&omap5_usb2_data,
+		.data = (uintptr_t)&omap5_usb2_data,
 	},
 	{
 		.compatible = "ti,dra7x-usb2",
-		.data = (ulong)&dra7x_usb2_data,
+		.data = (uintptr_t)&dra7x_usb2_data,
 	},
 	{
 		.compatible = "ti,dra7x-usb2-phy2",
-		.data = (ulong)&dra7x_usb2_phy2_data,
+		.data = (uintptr_t)&dra7x_usb2_phy2_data,
 	},
 	{
 		.compatible = "ti,am437x-usb2",
-		.data = (ulong)&am437x_usb2_data,
+		.data = (uintptr_t)&am437x_usb2_data,
 	},
 	{
 		.compatible = "ti,am654-usb2",
-		.data = (ulong)&am654_usb2_data,
+		.data = (uintptr_t)&am654_usb2_data,
 	},
 	{},
 };

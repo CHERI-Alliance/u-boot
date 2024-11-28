@@ -85,15 +85,15 @@ static const struct meson_reset_drvdata meson_a1_data = {
 static const struct udevice_id meson_reset_ids[] = {
 	{
 		.compatible = "amlogic,meson-gxbb-reset",
-		.data = (ulong)&meson_gxbb_data,
+		.data = (uintptr_t)&meson_gxbb_data,
 	},
 	{
 		.compatible = "amlogic,meson-axg-reset",
-		.data = (ulong)&meson_gxbb_data,
+		.data = (uintptr_t)&meson_gxbb_data,
 	},
 	{
 		.compatible = "amlogic,meson-a1-reset",
-		.data = (ulong)&meson_a1_data,
+		.data = (uintptr_t)&meson_a1_data,
 	},
 	{ }
 };

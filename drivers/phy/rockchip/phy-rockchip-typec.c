@@ -775,7 +775,7 @@ static const struct rockchip_usb3phy_port_cfg rk3399_typec_phy_cfgs[] = {
 static const struct udevice_id rockchip_typec_phy_ids[] = {
 	{
 		.compatible = "rockchip,rk3399-typec-phy",
-		.data = (ulong)&rk3399_typec_phy_cfgs,
+		.data = (uintptr_t)&rk3399_typec_phy_cfgs,
 	},
 	{ /* sentinel */ }
 };

@@ -427,8 +427,8 @@ static const struct omap_rtc_device_type omap_rtc_da830_type = {
 };
 
 static const struct udevice_id omap_rtc_ids[] = {
-	{.compatible = "ti,am3352-rtc", .data = (ulong)&omap_rtc_am3352_type},
-	{.compatible = "ti,da830-rtc", .data = (ulong)&omap_rtc_da830_type }
+	{.compatible = "ti,am3352-rtc", .data = (uintptr_t)&omap_rtc_am3352_type},
+	{.compatible = "ti,da830-rtc", .data = (uintptr_t)&omap_rtc_da830_type }
 };
 
 U_BOOT_DRIVER(omap_rtc) = {

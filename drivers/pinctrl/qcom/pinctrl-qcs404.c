@@ -112,7 +112,7 @@ static const struct msm_pinctrl_data qcs404_data = {
 };
 
 static const struct udevice_id msm_pinctrl_ids[] = {
-	{ .compatible = "qcom,qcs404-pinctrl", .data = (ulong)&qcs404_data },
+	{ .compatible = "qcom,qcs404-pinctrl", .data = (uintptr_t)&qcs404_data },
 	{ /* Sentinal */ }
 };
 

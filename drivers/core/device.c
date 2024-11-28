@@ -1079,7 +1079,7 @@ struct udevice *dev_get_parent(const struct udevice *child)
 	return child->parent;
 }
 
-ulong dev_get_driver_data(const struct udevice *dev)
+uintptr_t dev_get_driver_data(const struct udevice *dev)
 {
 	return dev->driver_data;
 }

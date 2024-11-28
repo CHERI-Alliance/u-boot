@@ -515,8 +515,8 @@ static int omap3_spi_of_to_plat(struct udevice *dev)
 }
 
 static const struct udevice_id omap3_spi_ids[] = {
-	{ .compatible = "ti,omap2-mcspi", .data = (ulong)&omap2_pdata },
-	{ .compatible = "ti,omap4-mcspi", .data = (ulong)&omap4_pdata },
+	{ .compatible = "ti,omap2-mcspi", .data = (uintptr_t)&omap2_pdata },
+	{ .compatible = "ti,omap4-mcspi", .data = (uintptr_t)&omap4_pdata },
 	{ }
 };
 #endif

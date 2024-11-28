@@ -307,15 +307,15 @@ static int sti_reset_probe(struct udevice *dev)
 static const struct udevice_id sti_reset_ids[] = {
 	{
 		.compatible = "st,stih407-picophyreset",
-		.data = (ulong)&stih407_picophyreset_controller,
+		.data = (uintptr_t)&stih407_picophyreset_controller,
 	},
 	{
 		.compatible = "st,stih407-powerdown",
-		.data = (ulong)&stih407_powerdown_controller,
+		.data = (uintptr_t)&stih407_powerdown_controller,
 	},
 	{
 		.compatible = "st,stih407-softreset",
-		.data = (ulong)&stih407_softreset_controller,
+		.data = (uintptr_t)&stih407_softreset_controller,
 	},
 	{ }
 };

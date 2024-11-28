@@ -298,9 +298,9 @@ static const struct atmel_pinctrl_data microchip_sama7g5_pinctrl_data = {
 
 static const struct udevice_id atmel_pinctrl_match[] = {
 	{ .compatible = "atmel,sama5d2-pinctrl",
-	  .data = (ulong)&atmel_sama5d2_pinctrl_data, },
+	  .data = (uintptr_t)&atmel_sama5d2_pinctrl_data, },
 	{ .compatible = "microchip,sama7g5-pinctrl",
-	  .data = (ulong)&microchip_sama7g5_pinctrl_data, },
+	  .data = (uintptr_t)&microchip_sama7g5_pinctrl_data, },
 	{}
 };
 

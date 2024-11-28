@@ -530,15 +530,15 @@ static const struct rockchip_usb2phy_cfg rk3588_phy_cfgs[] = {
 static const struct udevice_id rockchip_usb2phy_ids[] = {
 	{
 		.compatible = "rockchip,rk3308-usb2phy",
-		.data = (ulong)&rk3308_phy_cfgs,
+		.data = (uintptr_t)&rk3308_phy_cfgs,
 	},
 	{
 		.compatible = "rockchip,rk3328-usb2phy",
-		.data = (ulong)&rk3328_usb2phy_cfgs,
+		.data = (uintptr_t)&rk3328_usb2phy_cfgs,
 	},
 	{
 		.compatible = "rockchip,rk3399-usb2phy",
-		.data = (ulong)&rk3399_usb2phy_cfgs,
+		.data = (uintptr_t)&rk3399_usb2phy_cfgs,
 	},
 	{
 		.compatible = "rockchip,rk3528-usb2phy",
@@ -546,7 +546,7 @@ static const struct udevice_id rockchip_usb2phy_ids[] = {
 	},
 	{
 		.compatible = "rockchip,rk3568-usb2phy",
-		.data = (ulong)&rk3568_phy_cfgs,
+		.data = (uintptr_t)&rk3568_phy_cfgs,
 	},
 	{
 		.compatible = "rockchip,rk3576-usb2phy",
@@ -554,7 +554,7 @@ static const struct udevice_id rockchip_usb2phy_ids[] = {
 	},
 	{
 		.compatible = "rockchip,rk3588-usb2phy",
-		.data = (ulong)&rk3588_phy_cfgs,
+		.data = (uintptr_t)&rk3588_phy_cfgs,
 	},
 	{ /* sentinel */ }
 };

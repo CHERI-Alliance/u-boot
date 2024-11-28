@@ -192,8 +192,8 @@ static const struct imx8_pcie_phy_drvdata imx8mp_drvdata = {
 };
 
 static const struct udevice_id imx8_pcie_phy_of_match[] = {
-	{.compatible = "fsl,imx8mm-pcie-phy", .data = (ulong)&imx8mm_drvdata, },
-	{.compatible = "fsl,imx8mp-pcie-phy", .data = (ulong)&imx8mp_drvdata, },
+	{.compatible = "fsl,imx8mm-pcie-phy", .data = (uintptr_t)&imx8mm_drvdata, },
+	{.compatible = "fsl,imx8mp-pcie-phy", .data = (uintptr_t)&imx8mp_drvdata, },
 	{ },
 };
 

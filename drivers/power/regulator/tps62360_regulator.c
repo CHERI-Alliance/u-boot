@@ -106,10 +106,10 @@ static const struct dm_regulator_ops tps62360_regulator_ops = {
 };
 
 static const struct udevice_id tps62360_regulator_ids[] = {
-	{ .compatible = "ti,tps62360", .data = (ulong)&tps62360_data },
-	{ .compatible = "ti,tps62361", .data = (ulong)&tps62361_data },
-	{ .compatible = "ti,tps62362", .data = (ulong)&tps62360_data },
-	{ .compatible = "ti,tps62363", .data = (ulong)&tps62361_data },
+	{ .compatible = "ti,tps62360", .data = (uintptr_t)&tps62360_data },
+	{ .compatible = "ti,tps62361", .data = (uintptr_t)&tps62361_data },
+	{ .compatible = "ti,tps62362", .data = (uintptr_t)&tps62360_data },
+	{ .compatible = "ti,tps62363", .data = (uintptr_t)&tps62361_data },
 	{ },
 };
 
