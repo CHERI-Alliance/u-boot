@@ -63,5 +63,7 @@ int do_ut_str(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[]);
 int do_ut_time(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[]);
 int do_ut_unicode(struct cmd_tbl *cmdtp, int flag, int argc,
 		  char *const argv[]);
+int do_ut_zcheri(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[]);
+int do_ut_zcheri_pc_abi(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[]);
 
 #endif /* __TEST_SUITES_H__ */

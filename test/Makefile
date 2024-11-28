@@ -23,6 +23,8 @@ endif
 obj-$(CONFIG_$(SPL_)CMDLINE) += print_ut.o
 obj-$(CONFIG_$(SPL_)CMDLINE) += str_ut.o
 obj-$(CONFIG_UT_TIME) += time_ut.o
+obj-$(CONFIG_UT_ZCHERI) += zcheri_ut.o
+obj-$(CONFIG_UT_ZCHERI_PC_ABI) += zcheri_pc_abi_ut.o
 obj-y += ut.o
 
 ifeq ($(CONFIG_SPL_BUILD),)

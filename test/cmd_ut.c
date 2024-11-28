@@ -133,6 +133,12 @@ static struct cmd_tbl cmd_ut_sub[] = {
 #ifdef CONFIG_CMD_SEAMA
 	U_BOOT_CMD_MKENT(seama, CONFIG_SYS_MAXARGS, 1, do_ut_seama, "", ""),
 #endif
+#ifdef CONFIG_UT_ZCHERI
+	U_BOOT_CMD_MKENT(zcheri, CONFIG_SYS_MAXARGS, 1, do_ut_zcheri, "", ""),
+#endif
+#ifdef CONFIG_UT_ZCHERI_PC_ABI
+	U_BOOT_CMD_MKENT(zcheri_pc_abi, CONFIG_SYS_MAXARGS, 1, do_ut_zcheri_pc_abi, "", ""),
+#endif
 };
 
 static int do_ut_all(struct cmd_tbl *cmdtp, int flag, int argc,
@@ -255,6 +261,12 @@ U_BOOT_LONGHELP(ut,
 #if defined(CONFIG_UT_UNICODE) && \
 	!defined(CONFIG_SPL_BUILD) && !defined(API_BUILD)
 	"\nunicode - Unicode functions"
+#endif
+#ifdef CONFIG_UT_ZCHERI
+	"\nzcheri - basic test of RISCV zcheri extension"
+#endif
+#ifdef CONFIG_UT_ZCHERI_PC_ABI
+	"\nzcheri_pc_abi - basic test of RISCV zcheripurecap ABI"
 #endif
 	);
 
