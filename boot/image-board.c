@@ -23,6 +23,7 @@
 #include <watchdog.h>
 #include <asm/cache.h>
 #include <asm/global_data.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -44,7 +45,8 @@ DECLARE_GLOBAL_DATA_PTR;
 static const struct legacy_img_hdr *image_get_ramdisk(ulong rd_addr, u8 arch,
 						      int verify)
 {
-	const struct legacy_img_hdr *rd_hdr = (const struct legacy_img_hdr *)rd_addr;
+	const struct legacy_img_hdr *rd_hdr =
+		(const struct legacy_img_hdr *)map_physmem(rd_addr, 0, MAP_DATA);
 
 	if (!image_check_magic(rd_hdr)) {
 		puts("Bad Magic Number\n");
@@ -591,8 +593,9 @@ int boot_ramdisk_high(ulong rd_data, ulong rd_len, ulong *initrd_start,
 			printf("   Loading Ramdisk to %08lx, end %08lx ... ",
 			       *initrd_start, *initrd_end);
 
-			memmove_wd((void *)*initrd_start,
-				   (void *)rd_data, rd_len, CHUNKSZ);
+			memmove_wd((void *)map_physmem(*initrd_start, rd_len, MAP_DATA),
+				   (void *)map_physmem(rd_data, rd_len, MAP_RO_DATA),
+				   rd_len, CHUNKSZ);
 
 			/*
 			 * Ensure the image is flushed to memory to handle
@@ -695,17 +698,25 @@ int boot_get_fpga(struct bootm_headers *images)
 
 		if (!fpga_is_partial_data(devnum, img_len)) {
 			name = "full";
-			err = fpga_loadbitstream(devnum, (char *)img_data,
+			err = fpga_loadbitstream(devnum,
+						 (char *)map_physmem(img_data, img_len,
+								     MAP_RO_DATA),
 						 img_len, BIT_FULL);
 			if (err)
-				err = fpga_load(devnum, (const void *)img_data,
+				err = fpga_load(devnum,
+						(const void *)map_physmem(img_data, img_len,
+									  MAP_RO_DATA),
 						img_len, BIT_FULL, flags);
 		} else {
 			name = "partial";
-			err = fpga_loadbitstream(devnum, (char *)img_data,
+			err = fpga_loadbitstream(devnum,
+						 (char *)map_physmem(img_data, img_len,
+								     MAP_RO_DATA),
 						 img_len, BIT_PARTIAL);
 			if (err)
-				err = fpga_load(devnum, (const void *)img_data,
+				err = fpga_load(devnum,
+						(const void *)map_physmem(img_data, img_len,
+									  MAP_RO_DATA),
 						img_len, BIT_PARTIAL, flags);
 		}
 
@@ -854,7 +865,7 @@ int boot_get_cmdline(ulong *cmd_start, ulong *cmd_end)
 	if (err)
 		return -1;
 
-	cmdline = (char *)(uintptr_t)addr;
+	cmdline = (char *)map_physmem(addr, barg, MAP_DATA);
 
 	s = env_get("bootargs");
 	if (!s)
@@ -893,7 +904,7 @@ int boot_get_kbd(struct bd_info **kbd)
 	if (err)
 		return -1;
 
-	*kbd = (struct bd_info *)(uintptr_t)addr;
+	*kbd = (struct bd_info *)map_physmem(addr, sizeof(struct bd_info), MAP_DATA);
 	**kbd = *gd->bd;
 
 	debug("## kernel board info at 0x%08lx\n", (ulong)*kbd);
@@ -1016,7 +1027,9 @@ int image_locate_script(void *buf, int size, const char *fit_uname,
 			}
 
 			/* get length of script */
-			data = (u32 *)image_get_data(hdr);
+			data = (u32 *)map_physmem(image_get_data(hdr),
+						  image_get_data_size(hdr),
+						  MAP_DATA);
 
 			len = uimage_to_cpu(*data);
 			if (!len) {
