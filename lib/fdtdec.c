@@ -29,6 +29,7 @@
 #include <linux/libfdt.h>
 #include <serial.h>
 #include <asm/global_data.h>
+#include <asm/io.h>
 #include <asm/sections.h>
 #include <dm/ofnode.h>
 #include <dm/of_extra.h>
@@ -1855,7 +1856,7 @@ int fdtdec_decode_ram_size(const void *blob, const char *area, int board_id,
 			u64 new_size;
 
 			debug("Auto-sizing %llx, size %llx: ", addr, size);
-			new_size = get_ram_size((long *)(uintptr_t)addr, size);
+			new_size = get_ram_size((long *)map_physmem(addr, size, MAP_DATA), size);
 			if (new_size == size) {
 				debug("OK\n");
 			} else {

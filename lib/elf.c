@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <net.h>
 #include <vxworks.h>
+#include <asm/io.h>
 #ifdef CONFIG_X86
 #include <vesa.h>
 #include <asm/e820.h>
@@ -66,7 +67,7 @@ unsigned long bootelf(unsigned long addr, Bootelf_flags flags,
 		argv = args;
 	}
 
-	return bootelf_exec((void *)entry_addr, argc, argv);
+	return bootelf_exec(map_physmem(entry_addr, 0, MAP_EXE), argc, argv);
 }
 
 /*
@@ -82,13 +83,13 @@ unsigned long load_elf64_image_phdr(unsigned long addr)
 	Elf64_Phdr *phdr; /* Program header structure pointer */
 	int i;
 
-	ehdr = (Elf64_Ehdr *)addr;
-	phdr = (Elf64_Phdr *)(addr + (ulong)ehdr->e_phoff);
+	ehdr = (Elf64_Ehdr *)map_physmem(addr, sizeof(Elf64_Ehdr), MAP_RO_DATA);
+	phdr = (Elf64_Phdr *)map_physmem(addr + ehdr->e_phoff, sizeof(Elf64_Phdr), MAP_RO_DATA);
 
 	/* Load each program header */
 	for (i = 0; i < ehdr->e_phnum; ++i) {
-		void *dst = (void *)(ulong)phdr->p_paddr;
-		void *src = (void *)addr + phdr->p_offset;
+		void *dst = (void *)map_physmem(phdr->p_paddr, phdr->p_memsz, MAP_DATA);
+		void *src = (void *)map_physmem(addr + phdr->p_offset, phdr->p_filesz, MAP_RO_DATA);
 
 		debug("Loading phdr %i to 0x%p (%lu bytes)\n",
 		      i, dst, (ulong)phdr->p_filesz);
@@ -111,7 +112,7 @@ unsigned long load_elf64_image_phdr(unsigned long addr)
 		 */
 		uintptr_t addr = ehdr->e_entry;
 
-		return *(Elf64_Addr *)addr;
+		return *(Elf64_Addr *)map_physmem(addr, sizeof(Elf64_Addr), MAP_RO_DATA);
 	}
 
 	return ehdr->e_entry;
@@ -125,19 +126,21 @@ unsigned long load_elf64_image_shdr(unsigned long addr)
 	unsigned char *image; /* Binary image pointer */
 	int i; /* Loop counter */
 
-	ehdr = (Elf64_Ehdr *)addr;
+	ehdr = (Elf64_Ehdr *)map_physmem(addr, sizeof(Elf64_Ehdr), MAP_RO_DATA);
 
 	/* Find the section header string table for output info */
-	shdr = (Elf64_Shdr *)(addr + (ulong)ehdr->e_shoff +
-			     (ehdr->e_shstrndx * sizeof(Elf64_Shdr)));
+	shdr = (Elf64_Shdr *)map_physmem(addr + (ulong)ehdr->e_shoff +
+						(ehdr->e_shstrndx * sizeof(Elf64_Shdr)),
+					sizeof(Elf64_Shdr), MAP_RO_DATA);
 
 	if (shdr->sh_type == SHT_STRTAB)
-		strtab = (unsigned char *)(addr + (ulong)shdr->sh_offset);
+		strtab = (unsigned char *)map_physmem(addr + (ulong)shdr->sh_offset,
+						shdr->sh_size, MAP_RO_DATA);
 
 	/* Load each appropriate section */
 	for (i = 0; i < ehdr->e_shnum; ++i) {
-		shdr = (Elf64_Shdr *)(addr + (ulong)ehdr->e_shoff +
-				     (i * sizeof(Elf64_Shdr)));
+		shdr = (Elf64_Shdr *)map_physmem(addr + (ulong)ehdr->e_shoff +
+				     (i * sizeof(Elf64_Shdr)), sizeof(Elf64_Shdr), MAP_RO_DATA);
 
 		if (!(shdr->sh_flags & SHF_ALLOC) ||
 		    shdr->sh_addr == 0 || shdr->sh_size == 0) {
@@ -153,11 +156,12 @@ unsigned long load_elf64_image_shdr(unsigned long addr)
 		}
 
 		if (shdr->sh_type == SHT_NOBITS) {
-			memset((void *)(uintptr_t)shdr->sh_addr, 0,
+			memset((void *)map_physmem(shdr->sh_addr, shdr->sh_size, MAP_DATA), 0,
 			       shdr->sh_size);
 		} else {
-			image = (unsigned char *)addr + (ulong)shdr->sh_offset;
-			memcpy((void *)(uintptr_t)shdr->sh_addr,
+			image = (unsigned char *)map_physmem(addr + (ulong)shdr->sh_offset,
+							     shdr->sh_size, MAP_RO_DATA);
+			memcpy((void *)map_physmem(shdr->sh_addr, shdr->sh_size, MAP_DATA),
 			       (const void *)image, shdr->sh_size);
 		}
 		flush_cache(rounddown(shdr->sh_addr, ARCH_DMA_MINALIGN),
@@ -194,16 +198,16 @@ unsigned long load_elf_image_phdr(unsigned long addr)
 	Elf32_Phdr *phdr; /* Program header structure pointer */
 	int i;
 
-	ehdr = (Elf32_Ehdr *)addr;
+	ehdr = (Elf32_Ehdr *)map_physmem(addr, sizeof(Elf32_Ehdr), MAP_RO_DATA);
 	if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
 		return load_elf64_image_phdr(addr);
 
-	phdr = (Elf32_Phdr *)(addr + ehdr->e_phoff);
+	phdr = (Elf32_Phdr *)map_physmem(addr + ehdr->e_phoff, sizeof(Elf32_Phdr), MAP_RO_DATA);
 
 	/* Load each program header */
 	for (i = 0; i < ehdr->e_phnum; ++i) {
-		void *dst = (void *)(uintptr_t)phdr->p_paddr;
-		void *src = (void *)addr + phdr->p_offset;
+		void *dst = (void *)map_physmem(phdr->p_paddr, phdr->p_memsz, MAP_DATA);
+		void *src = (void *)map_physmem(addr + phdr->p_offset, phdr->p_filesz, MAP_RO_DATA);
 
 		debug("Loading phdr %i to 0x%p (%i bytes)\n",
 		      i, dst, phdr->p_filesz);
@@ -228,21 +232,24 @@ unsigned long load_elf_image_shdr(unsigned long addr)
 	unsigned char *image; /* Binary image pointer */
 	int i; /* Loop counter */
 
-	ehdr = (Elf32_Ehdr *)addr;
+	ehdr = (Elf32_Ehdr *)map_physmem(addr, sizeof(Elf32_Ehdr), MAP_RO_DATA);
 	if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
 		return load_elf64_image_shdr(addr);
 
 	/* Find the section header string table for output info */
-	shdr = (Elf32_Shdr *)(addr + ehdr->e_shoff +
-			     (ehdr->e_shstrndx * sizeof(Elf32_Shdr)));
+	shdr = (Elf32_Shdr *)map_physmem(addr + ehdr->e_shoff +
+						(ehdr->e_shstrndx * sizeof(Elf32_Shdr)),
+					 sizeof(Elf32_Shdr), MAP_RO_DATA);
 
 	if (shdr->sh_type == SHT_STRTAB)
-		strtab = (unsigned char *)(addr + shdr->sh_offset);
+		strtab = (unsigned char *)map_physmem(addr + shdr->sh_offset, shdr->sh_size,
+						      MAP_RO_DATA);
 
 	/* Load each appropriate section */
 	for (i = 0; i < ehdr->e_shnum; ++i) {
-		shdr = (Elf32_Shdr *)(addr + ehdr->e_shoff +
-				     (i * sizeof(Elf32_Shdr)));
+		shdr = (Elf32_Shdr *)map_physmem(addr + ehdr->e_shoff +
+							(i * sizeof(Elf32_Shdr)),
+						 sizeof(Elf32_Shdr), MAP_RO_DATA);
 
 		if (!(shdr->sh_flags & SHF_ALLOC) ||
 		    shdr->sh_addr == 0 || shdr->sh_size == 0) {
@@ -258,11 +265,12 @@ unsigned long load_elf_image_shdr(unsigned long addr)
 		}
 
 		if (shdr->sh_type == SHT_NOBITS) {
-			memset((void *)(uintptr_t)shdr->sh_addr, 0,
+			memset((void *)map_physmem(shdr->sh_addr, shdr->sh_size, MAP_DATA), 0,
 			       shdr->sh_size);
 		} else {
-			image = (unsigned char *)addr + shdr->sh_offset;
-			memcpy((void *)(uintptr_t)shdr->sh_addr,
+			image = (unsigned char *)map_physmem(addr + shdr->sh_offset,
+							     shdr->sh_size, MAP_RO_DATA);
+			memcpy((void *)map_physmem(shdr->sh_addr, shdr->sh_size, MAP_DATA),
 			       (const void *)image, shdr->sh_size);
 		}
 		flush_cache(rounddown(shdr->sh_addr, ARCH_DMA_MINALIGN),
@@ -283,7 +291,7 @@ int valid_elf_image(unsigned long addr)
 {
 	Elf32_Ehdr *ehdr; /* Elf header structure pointer */
 
-	ehdr = (Elf32_Ehdr *)addr;
+	ehdr = (Elf32_Ehdr *)map_physmem(addr, sizeof(Elf32_Ehdr), MAP_RO_DATA);
 
 	if (!IS_ELF(*ehdr)) {
 		printf("## No elf image at address 0x%08lx\n", addr);

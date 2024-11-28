@@ -7,13 +7,17 @@
 
 #include <errno.h>
 #include <smbios.h>
+#include <asm/io.h>
 #include <string.h>
 #include <tables_csum.h>
 #include <linux/kernel.h>
 
 const struct smbios_entry *smbios_entry(u64 address, u32 size)
 {
-	const struct smbios_entry *entry = (struct smbios_entry *)(uintptr_t)address;
+	const struct smbios_entry *entry =
+		(struct smbios_entry *)map_physmem(address,
+						   sizeof(struct smbios_entry),
+						   MAP_RO_DATA);
 
 	if (!address || !size)
 		return NULL;
@@ -49,7 +53,10 @@ static struct smbios_header *get_next_header(const struct smbios_header *curr)
 const struct smbios_header *smbios_header(const struct smbios_entry *entry, int type)
 {
 	const unsigned int num_header = entry->struct_count;
-	const struct smbios_header *header = (struct smbios_header *)((uintptr_t)entry->struct_table_address);
+	const struct smbios_header *header =
+		(struct smbios_header *)map_physmem(entry->struct_table_address,
+						    sizeof(struct smbios_header),
+						    MAP_RO_DATA);
 
 	for (unsigned int i = 0; i < num_header; i++) {
 		if (header->type == type)
