@@ -250,7 +250,9 @@ int image_check_dcrc(const struct legacy_img_hdr *hdr)
 {
 	ulong data = image_get_data(hdr);
 	ulong len = image_get_data_size(hdr);
-	ulong dcrc = crc32_wd(0, (unsigned char *)data, len, CHUNKSZ_CRC32);
+	ulong dcrc = crc32_wd(0, (unsigned char *)map_physmem(data, len, MAP_RO_DATA),
+						  len,
+						  CHUNKSZ_CRC32);
 
 	return (dcrc == image_get_dcrc(hdr));
 }
@@ -275,7 +277,7 @@ ulong image_multi_count(const struct legacy_img_hdr *hdr)
 
 	/* get start of the image payload, which in case of multi
 	 * component images that points to a table of component sizes */
-	size = (uint32_t *)image_get_data(hdr);
+	size = (uint32_t *)map_physmem(image_get_data(hdr), 0, MAP_RO_DATA);
 
 	/* count non empty slots */
 	for (i = 0; size[i]; ++i)
@@ -313,7 +315,7 @@ void image_multi_getimg(const struct legacy_img_hdr *hdr, ulong idx,
 
 	/* get start of the image payload, which in case of multi
 	 * component images that points to a table of component sizes */
-	size = (uint32_t *)image_get_data(hdr);
+	size = (uint32_t *)map_physmem(image_get_data(hdr), sizeof(uint32_t) * count, MAP_RO_DATA);
 
 	/* get address of the proper component data start, which means
 	 * skipping sizes table (add 1 for last, null entry) */

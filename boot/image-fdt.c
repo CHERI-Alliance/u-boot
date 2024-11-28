@@ -60,7 +60,9 @@ static const struct legacy_img_hdr *image_get_fdt(ulong fdt_addr)
 		fdt_error("uImage is compressed");
 		return NULL;
 	}
-	if (fdt_check_header((void *)image_get_data(fdt_hdr)) != 0) {
+	if (fdt_check_header((void *)map_physmem(image_get_data(fdt_hdr),
+						 image_get_image_size(fdt_hdr),
+						 MAP_RO_DATA)) != 0) {
 		fdt_error("uImage data is not a fdt");
 		return NULL;
 	}
@@ -389,8 +391,10 @@ static int select_fdt(struct bootm_headers *images, const char *select, u8 arch,
 			debug("   Loading FDT from 0x%08lx to 0x%08lx\n",
 			      image_data, load);
 
-			memmove((void *)load,
-				(void *)image_data,
+			memmove((void *)map_physmem(load, image_get_data_size(fdt_hdr), MAP_DATA),
+				(void *)map_physmem(image_data,
+						    image_get_data_size(fdt_hdr),
+						    MAP_RO_DATA),
 				image_get_data_size(fdt_hdr));
 
 			fdt_addr = load;
@@ -477,7 +481,7 @@ int boot_get_fdt(void *buf, const char *select, uint arch,
 		image_multi_getimg(images->legacy_hdr_os, 2, &fdt_data,
 				   &fdt_len);
 		if (fdt_len) {
-			fdt_blob = (char *)fdt_data;
+			fdt_blob = (char *)map_physmem(fdt_data, fdt_len, MAP_RO_DATA);
 			printf("   Booting using the fdt at 0x%p\n", fdt_blob);
 
 			if (fdt_check_header(fdt_blob) != 0) {
@@ -510,8 +514,8 @@ int boot_get_fdt(void *buf, const char *select, uint arch,
 
 			debug("## Using FDT in Android image dtb area with idx %u\n", dtb_idx);
 		} else if (!android_image_get_second(hdr, &fdt_data, &fdt_len) &&
-			!fdt_check_header((char *)fdt_data)) {
-			fdt_blob = (char *)fdt_data;
+			!fdt_check_header((char *)map_physmem(fdt_data, fdt_len, MAP_RO_DATA))) {
+			fdt_blob = (char *)map_physmem(fdt_data, fdt_len, MAP_RO_DATA);
 			if (fdt_totalsize(fdt_blob) != fdt_len)
 				goto error;
 

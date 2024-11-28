@@ -64,7 +64,10 @@ __weak void board_quiesce_devices(void)
  */
 static struct legacy_img_hdr *image_get_kernel(ulong img_addr, int verify)
 {
-	struct legacy_img_hdr *hdr = (struct legacy_img_hdr *)img_addr;
+	struct legacy_img_hdr *hdr =
+		(struct legacy_img_hdr *)map_physmem(img_addr,
+						     sizeof(struct legacy_img_hdr),
+						     MAP_DATA);
 
 	if (!image_check_magic(hdr)) {
 		puts("Bad Magic Number\n");
@@ -706,7 +709,8 @@ static int bootm_load_os(struct bootm_headers *images, int boot_progress)
 			printf("Moving Image from 0x%lx to 0x%lx, end=%lx\n",
 			       load, relocated_addr,
 			       relocated_addr + image_size);
-			memmove((void *)relocated_addr, load_buf, image_size);
+			memmove((void *)map_physmem(relocated_addr, image_size, MAP_DATA),
+				load_buf, image_size);
 		}
 
 		images->ep = relocated_addr;
