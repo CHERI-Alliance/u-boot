@@ -23,6 +23,7 @@
 #include <dm/ofnode.h>
 #include <net.h>
 #include <watchdog.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -301,7 +302,7 @@ int env_get_f(const char *name, char *buf, unsigned len)
 	if (gd->env_valid == ENV_INVALID)
 		env = default_environment;
 	else
-		env = (const char *)gd->env_addr;
+		env = (const char *)map_physmem(gd->env_addr, 0, MAP_RO_DATA);
 
 	return env_get_from_linear(env, name, buf, len);
 }

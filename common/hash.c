@@ -606,13 +606,15 @@ int hash_command(const char *algo_name, int flags, struct cmd_tbl *cmdtp,
 		ulong crc;
 		ulong *ptr;
 
-		crc = crc32_wd(0, (const uchar *)addr, len, CHUNKSZ_CRC32);
+		crc = crc32_wd(0, (const uchar *)map_physmem(addr, len, MAP_RO_DATA),
+			       len,
+			       CHUNKSZ_CRC32);
 
 		printf("CRC32 for %08lx ... %08lx ==> %08lx\n",
 				addr, addr + len - 1, crc);
 
 		if (argc >= 3) {
-			ptr = (ulong *)hextoul(argv[0], NULL);
+			ptr = (ulong *)map_physmem(hextoul(argv[0], NULL), sizeof(ulong), MAP_DATA);
 			*ptr = crc;
 		}
 	}

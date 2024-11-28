@@ -10,6 +10,7 @@
 #include <log.h>
 #include <uuid.h>
 #include <linux/string.h>
+#include <asm/io.h>
 
 #include <mtd/cfi_flash.h>
 
@@ -127,7 +128,8 @@ flash_write(char *src, ulong addr, ulong cnt)
 	flash_info_t *info_last  = addr2info(end);
 	flash_info_t *info;
 	__maybe_unused char *src_orig = src;
-	__maybe_unused char *addr_orig = (char *)addr;
+	__maybe_unused ulong addr_orig = addr;
+	__maybe_unused char *addr_orig_ptr = NULL;
 	__maybe_unused ulong cnt_orig = cnt;
 
 	if (cnt == 0) {
@@ -167,7 +169,8 @@ flash_write(char *src, ulong addr, ulong cnt)
 	}
 
 #if defined(CONFIG_FLASH_VERIFY)
-	if (memcmp(src_orig, addr_orig, cnt_orig)) {
+	addr_orig_ptr = (char *)map_physmem(addr_orig, cnt_orig, MAP_RO_DATA);
+	if (memcmp(src_orig, addr_orig_ptr, cnt_orig)) {
 		printf("\nVerify failed!\n");
 		return ERR_PROG_ERROR;
 	}
