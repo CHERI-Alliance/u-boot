@@ -312,7 +312,7 @@ static int sifive_ddr_setup(struct udevice *dev)
 	sifive_ddr_phy_fixup(denali_phy);
 
 	/* check size */
-	priv->info.size = get_ram_size((long *)(uintptr_t)priv->info.base,
+	priv->info.size = get_ram_size((long *)map_physmem(priv->info.base, ddr_size, MAP_DATA),
 				       ddr_size);
 
 	debug("%s : %lx\n", __func__, (uintptr_t)priv->info.size);

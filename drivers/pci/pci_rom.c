@@ -41,6 +41,7 @@
 #include <acpi/acpi_s3.h>
 #include <asm/global_data.h>
 #include <linux/screen_info.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -100,7 +101,9 @@ static int pci_rom_probe(struct udevice *dev, struct pci_rom_header **hdrp)
 			      rom_address | PCI_ROM_ADDRESS_ENABLE);
 #endif
 	debug("Option ROM address %x\n", rom_address);
-	rom_header = (struct pci_rom_header *)(unsigned long)rom_address;
+	rom_header = (struct pci_rom_header *)map_physmem(rom_address,
+							  sizeof(struct pci_rom_header),
+							  MAP_RO_DATA);
 
 	debug("PCI expansion ROM, signature %#04x, INIT size %#04x, data ptr %#04x\n",
 	      le16_to_cpu(rom_header->signature),

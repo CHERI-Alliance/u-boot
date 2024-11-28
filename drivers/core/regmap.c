@@ -438,7 +438,7 @@ int regmap_raw_read_range(struct regmap *map, uint range_num, uint offset,
 		return -ERANGE;
 	}
 
-	ptr = map_physmem(range->start + offset, val_len, MAP_NOCACHE);
+	ptr = map_physmem(range->start + offset, val_len, MAP_NOCACHE | MAP_IO);
 
 	switch (val_len) {
 	case REGMAP_SIZE_8:
@@ -577,7 +577,7 @@ int regmap_raw_write_range(struct regmap *map, uint range_num, uint offset,
 		return -ERANGE;
 	}
 
-	ptr = map_physmem(range->start + offset, val_len, MAP_NOCACHE);
+	ptr = map_physmem(range->start + offset, val_len, MAP_NOCACHE | MAP_IO);
 
 	switch (val_len) {
 	case REGMAP_SIZE_8:

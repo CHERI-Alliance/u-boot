@@ -8,6 +8,7 @@
 #include <log.h>
 #include <remoteproc.h>
 #include <asm/cache.h>
+#include <asm/io.h>
 #include <dm/device_compat.h>
 #include <linux/compat.h>
 #include <linux/printk.h>
@@ -171,15 +172,15 @@ int rproc_elf32_load_image(struct udevice *dev, unsigned long addr, ulong size)
 		return ret;
 	}
 
-	ehdr = (Elf32_Ehdr *)addr;
-	phdr = (Elf32_Phdr *)(addr + ehdr->e_phoff);
+	ehdr = (Elf32_Ehdr *)map_physmem(addr, sizeof(Elf32_Ehdr), MAP_RO_DATA);
+	phdr = (Elf32_Phdr *)map_physmem(addr + ehdr->e_phoff, sizeof(Elf32_Phdr), MAP_RO_DATA);
 
 	ops = rproc_get_ops(dev);
 
 	/* Load each program header */
 	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-		void *dst = (void *)(uintptr_t)phdr->p_paddr;
-		void *src = (void *)addr + phdr->p_offset;
+		void *dst = (void *)map_physmem(phdr->p_paddr, phdr->p_memsz, MAP_DATA);
+		void *src = (void *)map_physmem(addr + phdr->p_offset, phdr->p_filesz, MAP_RO_DATA);
 
 		if (phdr->p_type != PT_LOAD)
 			continue;
@@ -234,7 +235,7 @@ int rproc_elf64_load_image(struct udevice *dev, ulong addr, ulong size)
 		dev_dbg(dev, "%s:phdr: type %d da 0x%llx memsz 0x%llx filesz 0x%llx\n",
 			__func__, phdr->p_type, da, memsz, filesz);
 
-		ptr = (void *)(uintptr_t)da;
+		ptr = (void *)map_physmem(da, memsz, MAP_DATA);
 		if (ops->device_to_virt) {
 			ptr = ops->device_to_virt(dev, da, phdr->p_memsz);
 			if (!ptr) {
@@ -246,7 +247,8 @@ int rproc_elf64_load_image(struct udevice *dev, ulong addr, ulong size)
 		}
 
 		if (filesz)
-			memcpy(ptr, (void *)addr + offset, filesz);
+			memcpy(ptr, (void *)map_physmem(addr + offset, filesz, MAP_RO_DATA),
+			       filesz);
 		if (filesz != memsz)
 			memset(ptr + filesz, 0x00, memsz - filesz);
 

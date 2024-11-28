@@ -678,7 +678,7 @@ static int zynq_gem_recv(struct udevice *dev, int flags, uchar **packetp)
 #endif
 	addr &= ~(ARCH_DMA_MINALIGN - 1);
 
-	*packetp = (uchar *)(uintptr_t)addr;
+	*packetp = (uchar *)map_physmem(addr, roundup(PKTSIZE_ALIGN, ARCH_DMA_MINALIGN), MAP_DATA);
 
 	invalidate_dcache_range(addr, addr + roundup(PKTSIZE_ALIGN, ARCH_DMA_MINALIGN));
 	barrier();

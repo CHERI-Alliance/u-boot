@@ -835,7 +835,7 @@ static Elf32_Shdr *rproc_find_table(unsigned int addr)
 	char *name_table;
 	struct resource_table *ptable;
 
-	ehdr = (Elf32_Ehdr *)(uintptr_t)addr;
+	ehdr = (Elf32_Ehdr *)map_physmem(addr, sizeof(Elf32_Ehdr), MAP_RO_DATA);
 	elf_data = (u8 *)ehdr;
 	shdr = (Elf32_Shdr *)(elf_data + ehdr->e_shoff);
 	memcpy(&sectionheader, &shdr[ehdr->e_shstrndx], sizeof(sectionheader));
@@ -898,7 +898,7 @@ struct resource_table *rproc_find_resource_table(struct udevice *dev,
 	Elf32_Shdr *shdr;
 	Elf32_Shdr sectionheader;
 	struct resource_table *ptable;
-	u8 *elf_data = (u8 *)(uintptr_t)addr;
+	u8 *elf_data = (u8 *)map_physmem(addr, 0, MAP_RO_DATA);
 
 	shdr = rproc_find_table(addr);
 	if (!shdr) {
@@ -907,7 +907,9 @@ struct resource_table *rproc_find_resource_table(struct udevice *dev,
 	}
 
 	memcpy(&sectionheader, shdr, sizeof(sectionheader));
-	ptable = (struct resource_table *)(elf_data + sectionheader.sh_offset);
+	ptable = (struct resource_table *)map_physmem(virt_to_phys(elf_data +
+									sectionheader.sh_offset),
+						      sectionheader.sh_size, MAP_DATA);
 	if (tablesz)
 		*tablesz = sectionheader.sh_size;
 

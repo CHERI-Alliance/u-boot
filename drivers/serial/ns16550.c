@@ -501,7 +501,7 @@ static int ns16550_serial_assign_base(struct ns16550_plat *plat,
 #ifdef CONFIG_SYS_NS16550_PORT_MAPPED
 	plat->base = base;
 #else
-	plat->base = (unsigned long)map_physmem(base, 0, MAP_NOCACHE);
+	plat->base = (uintptr_t)map_physmem(base, 0, MAP_NOCACHE | MAP_IO);
 #endif
 	plat->size = size;
 

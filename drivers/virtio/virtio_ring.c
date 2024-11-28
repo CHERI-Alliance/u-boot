@@ -16,6 +16,7 @@
 #include <linux/bug.h>
 #include <linux/compat.h>
 #include <linux/kernel.h>
+#include <asm/io.h>
 
 static void *virtio_alloc_pages(struct udevice *vdev, u32 npages)
 {
@@ -280,7 +281,8 @@ void *virtqueue_get_buf(struct virtqueue *vq, unsigned int *len)
 		virtio_store_mb(&vring_used_event(&vq->vring),
 				cpu_to_virtio16(vq->vdev, vq->last_used_idx));
 
-	return (void *)(uintptr_t)vq->vring_desc_shadow[i].addr;
+	return (void *)map_physmem(vq->vring_desc_shadow[i].addr,
+				   vq->vring_desc_shadow[i].len, MAP_DATA);
 }
 
 static struct virtqueue *__vring_new_virtqueue(unsigned int index,

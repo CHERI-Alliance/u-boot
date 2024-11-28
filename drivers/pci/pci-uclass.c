@@ -1568,7 +1568,7 @@ static void *dm_pci_map_ea_bar(struct udevice *dev, int bar, size_t offset,
 			return NULL;
 
 		/* size ignored for now */
-		return map_physmem(addr + offset, len, MAP_NOCACHE);
+		return map_physmem(addr + offset, len, MAP_NOCACHE | MAP_IO);
 	}
 
 	return 0;

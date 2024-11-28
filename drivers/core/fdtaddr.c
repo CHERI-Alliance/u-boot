@@ -208,7 +208,7 @@ void *devfdt_remap_addr_index(const struct udevice *dev, int index)
 	if (addr == FDT_ADDR_T_NONE)
 		return NULL;
 
-	return map_physmem(addr, 0, MAP_NOCACHE);
+	return map_physmem(addr, 0, MAP_NOCACHE | MAP_IO);
 }
 
 void *devfdt_remap_addr_name(const struct udevice *dev, const char *name)
@@ -218,7 +218,7 @@ void *devfdt_remap_addr_name(const struct udevice *dev, const char *name)
 	if (addr == FDT_ADDR_T_NONE)
 		return NULL;
 
-	return map_physmem(addr, 0, MAP_NOCACHE);
+	return map_physmem(addr, 0, MAP_NOCACHE | MAP_IO);
 }
 
 void *devfdt_remap_addr(const struct udevice *dev)
@@ -233,7 +233,7 @@ void *devfdt_map_physmem(const struct udevice *dev, unsigned long size)
 	if (addr == FDT_ADDR_T_NONE)
 		return NULL;
 
-	return map_physmem(addr, size, MAP_NOCACHE);
+	return map_physmem(addr, size, MAP_NOCACHE | MAP_IO);
 }
 
 fdt_addr_t devfdt_get_addr_pci(const struct udevice *dev, fdt_size_t *sizep)

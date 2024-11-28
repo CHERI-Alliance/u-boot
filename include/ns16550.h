@@ -68,7 +68,7 @@ enum ns16550_flags {
  * @bdf:		PCI slot/function (pci_dev_t)
  */
 struct ns16550_plat {
-	ulong base;
+	uintptr_t base;
 	ulong size;
 	int reg_width;
 	int reg_shift;
