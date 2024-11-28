@@ -31,6 +31,7 @@
 #include <jffs2/jffs2.h>
 #include <jffs2/load_kernel.h>
 #include <cramfs/cramfs_fs.h>
+#include <asm/io.h>
 
 /* These two macros may change in future, to provide better st_ino
    semantics. */
@@ -43,10 +44,10 @@ struct cramfs_super super;
  * device address space offset, so we need to shift it by a device start address. */
 #if defined(CONFIG_MTD_NOR_FLASH)
 #include <flash.h>
-#define PART_OFFSET(x)	((ulong)x->offset + \
-			 flash_info[x->dev->id->num].start[0])
+#define PART_OFFSET(x)	map_physmem(((ulong)x->offset + flash_info[x->dev->id->num].start[0], \
+				    flash_info[x->dev->id->num].size), MAP_RO_DATA)
 #else
-#define PART_OFFSET(x)	((ulong)x->offset)
+#define PART_OFFSET(x)	map_physmem((ulong)x->offset, 0, MAP_RO_DATA)
 #endif
 
 static int cramfs_uncompress (unsigned long begin, unsigned long offset,

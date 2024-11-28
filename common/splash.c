@@ -26,6 +26,7 @@
 #include <video.h>
 #include <vsprintf.h>
 #include <linux/kernel.h>
+#include <asm/io.h>
 
 static struct splash_location default_splash_locations[] = {
 	{
@@ -79,7 +80,8 @@ static int splash_video_logo_load(void)
 		return -EFAULT;
 	}
 
-	memcpy((void *)bmp_load_addr, bmp_logo_bitmap,
+	memcpy((void *)map_physmem(bmp_load_addr, ARRAY_SIZE(bmp_logo_bitmap), MAP_DATA),
+	       bmp_logo_bitmap,
 	       ARRAY_SIZE(bmp_logo_bitmap));
 
 	return 0;
