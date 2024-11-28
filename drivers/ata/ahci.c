@@ -27,6 +27,7 @@
 #include <scsi.h>
 #include <libata.h>
 #include <linux/ctype.h>
+#include <linux/io.h>
 #include <ahci.h>
 #include <dm/device-internal.h>
 #include <dm/lists.h>
@@ -366,7 +367,7 @@ static int ahci_init_one(struct ahci_uc_priv *uc_priv, struct udevice *dev)
 	uc_priv->udma_mask = 0x7f;	/*Fixme,assume to support UDMA6 */
 
 	struct scsi_plat *plat = dev_get_uclass_plat(dev);
-	uc_priv->mmio_base = (void *)plat->base;
+	uc_priv->mmio_base = (void *)ioremap(plat->base, AHCI_REGS_MAX_SIZE);
 
 	debug("ahci mmio_base=0x%p\n", uc_priv->mmio_base);
 	/* initialize adapter */
