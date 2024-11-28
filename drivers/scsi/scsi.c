@@ -200,7 +200,7 @@ static ulong scsi_read(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 	/* Setup device */
 	pccb->target = block_dev->target;
 	pccb->lun = block_dev->lun;
-	buf_addr = (unsigned long)buffer;
+	buf_addr = (uintptr_t)buffer;
 	start = blknr;
 	blks = blkcnt;
 	if (uc_plat->max_bytes_per_req)
@@ -235,7 +235,7 @@ static ulong scsi_read(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 		}
 		debug("scsi_read_ext: startblk " LBAF
 		      ", blccnt " LBAF " buffer %lX\n",
-		      start, blocks, buf_addr);
+		      start, blocks, (unsigned long)buf_addr);
 		if (scsi_exec(bdev, pccb)) {
 			scsi_print_error(pccb);
 			blkcnt -= blks;
@@ -245,7 +245,7 @@ static ulong scsi_read(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 		buf_addr += pccb->datalen;
 	} while (blks != 0);
 	debug("scsi_read_ext: end startblk " LBAF
-	      ", blccnt " LBAF " buffer %lX\n", start, blocks, buf_addr);
+	      ", blccnt " LBAF " buffer %lX\n", start, blocks, (unsigned long)buf_addr);
 	return blkcnt;
 }
 
@@ -266,7 +266,7 @@ static ulong scsi_write(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 	/* Setup device */
 	pccb->target = block_dev->target;
 	pccb->lun = block_dev->lun;
-	buf_addr = (unsigned long)buffer;
+	buf_addr = (uintptr_t)buffer;
 	start = blknr;
 	blks = blkcnt;
 	if (uc_plat->max_bytes_per_req)
@@ -291,7 +291,7 @@ static ulong scsi_write(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 			start += blks;
 		}
 		debug("%s: startblk " LBAF ", blccnt " LBAF " buffer %lx\n",
-		      __func__, start, blocks, buf_addr);
+		      __func__, start, blocks, (unsigned long)buf_addr);
 		if (scsi_exec(bdev, pccb)) {
 			scsi_print_error(pccb);
 			blkcnt -= blks;
@@ -307,7 +307,7 @@ static ulong scsi_write(struct udevice *dev, lbaint_t blknr, lbaint_t blkcnt,
 		scsi_print_error(pccb);
 
 	debug("%s: end startblk " LBAF ", blccnt " LBAF " buffer %lX\n",
-	      __func__, start, blocks, buf_addr);
+	      __func__, start, blocks, (unsigned long)buf_addr);
 	return blkcnt;
 }
 
