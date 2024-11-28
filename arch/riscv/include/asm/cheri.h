@@ -77,6 +77,29 @@ static inline void *cheri_execution_mode_set(const void *cap, enum cheri_executi
 	return (void *)cap;
 }
 
+static inline void *cheri_cap_reloc(const void *cap, unsigned long offset)
+{
+	if (cap) {
+		unsigned long cap_base = cheri_base_get(cap);
+		unsigned long cap_offset = cheri_offset_get(cap);
+		unsigned long cap_addr = cheri_address_get(cap);
+		unsigned long cap_len = cheri_length_get(cap);
+
+		if (cap_base == 0x0) {
+			/* Cap with unlimited bounds */
+			cap = cheri_address_set(cap, cap_addr + offset);
+		} else {
+			cap = cheri_address_set(cap, cap_base + offset);
+			cap = cheri_bounds_set(cap, cap_len);
+			cap += cap_offset;
+		}
+
+		cap = cheri_cap_build(gd->arch.infinite_cap, (uintptr_t)cap);
+	}
+
+	return (void *)cap;
+}
+
 static inline void *cheri_infinite_cap_get(void)
 {
 	return gd->arch.infinite_cap;
