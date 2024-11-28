@@ -27,6 +27,7 @@
 #include <scsi.h>
 #include <libata.h>
 #include <linux/ctype.h>
+#include <linux/io.h>
 #include <ahci.h>
 #include <dm/device-internal.h>
 #include <dm/lists.h>
@@ -366,7 +367,7 @@ static int ahci_init_one(struct ahci_uc_priv *uc_priv, struct udevice *dev)
 	uc_priv->udma_mask = 0x7f;	/*Fixme,assume to support UDMA6 */
 
 	struct scsi_plat *plat = dev_get_uclass_plat(dev);
-	uc_priv->mmio_base = (void *)plat->base;
+	uc_priv->mmio_base = (void *)ioremap(plat->base, AHCI_REGS_MAX_SIZE);
 
 	debug("ahci mmio_base=0x%p\n", uc_priv->mmio_base);
 	/* initialize adapter */
@@ -420,7 +421,7 @@ static int ahci_fill_sg(struct ahci_uc_priv *uc_priv, u8 port,
 
 static void ahci_fill_cmd_slot(struct ahci_ioports *pp, u32 opts)
 {
-	phys_addr_t pa = virt_to_phys((void *)pp->cmd_tbl);
+	phys_addr_t pa = (phys_addr_t)(pp->cmd_tbl);
 
 	pp->cmd_slot->opts = cpu_to_le32(opts);
 	pp->cmd_slot->status = 0;
@@ -473,8 +474,7 @@ static int ahci_port_start(struct ahci_uc_priv *uc_priv, u8 port)
 	 * First item in chunk of DMA memory: 32-slot command table,
 	 * 32 bytes each in size
 	 */
-	pp->cmd_slot =
-		(struct ahci_cmd_hdr *)(uintptr_t)virt_to_phys((void *)mem);
+	pp->cmd_slot = mem;
 	debug("cmd_slot = %p\n", pp->cmd_slot);
 	mem += (AHCI_CMD_SLOT_SZ + 224);
 
@@ -492,10 +492,9 @@ static int ahci_port_start(struct ahci_uc_priv *uc_priv, u8 port)
 	debug("cmd_tbl_dma = %lx\n", pp->cmd_tbl);
 
 	mem += AHCI_CMD_TBL_HDR;
-	pp->cmd_tbl_sg =
-			(struct ahci_sg *)(uintptr_t)virt_to_phys((void *)mem);
+	pp->cmd_tbl_sg = mem;
 
-	dma_addr = (ulong)pp->cmd_slot;
+	dma_addr = (ulong)virt_to_phys(pp->cmd_slot);
 	writel_with_flush(dma_addr, port_mmio + PORT_LST_ADDR);
 	writel_with_flush(dma_addr >> 32, port_mmio + PORT_LST_ADDR_HI);
 	dma_addr = (ulong)pp->rx_fis;
@@ -542,7 +541,7 @@ static int ahci_device_data_io(struct ahci_uc_priv *uc_priv, u8 port, u8 *fis,
 		return -1;
 	}
 
-	memcpy((unsigned char *)pp->cmd_tbl, fis, fis_len);
+	memcpy((unsigned char *)map_physmem(pp->cmd_tbl, AHCI_CMD_TBL_SZ, MAP_DATA), fis, fis_len);
 
 	sg_count = ahci_fill_sg(uc_priv, port, buf, buf_len);
 	opts = (fis_len >> 2) | (sg_count << 16) | (is_write << 6);
@@ -914,7 +913,7 @@ static int ata_io_flush(struct ahci_uc_priv *uc_priv, u8 port)
 	fis[1] = 1 << 7;	 /* Command FIS. */
 	fis[2] = ATA_CMD_FLUSH_EXT;
 
-	memcpy((unsigned char *)pp->cmd_tbl, fis, 20);
+	memcpy((unsigned char *)map_physmem(pp->cmd_tbl, AHCI_CMD_TBL_SZ, MAP_DATA), fis, 20);
 	ahci_fill_cmd_slot(pp, cmd_fis_len);
 	ahci_dcache_flush_sata_cmd(pp);
 	writel_with_flush(1, port_mmio + PORT_CMD_ISSUE);
