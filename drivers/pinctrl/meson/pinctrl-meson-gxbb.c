@@ -457,11 +457,11 @@ struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
 static const struct udevice_id meson_gxbb_pinctrl_match[] = {
 	{
 		.compatible = "amlogic,meson-gxbb-periphs-pinctrl",
-		.data = (ulong)&meson_gxbb_periphs_pinctrl_data,
+		.data = (uintptr_t)&meson_gxbb_periphs_pinctrl_data,
 	},
 	{
 		.compatible = "amlogic,meson-gxbb-aobus-pinctrl",
-		.data = (ulong)&meson_gxbb_aobus_pinctrl_data,
+		.data = (uintptr_t)&meson_gxbb_aobus_pinctrl_data,
 	},
 	{ /* sentinel */ }
 };

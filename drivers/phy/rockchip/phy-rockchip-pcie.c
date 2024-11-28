@@ -256,7 +256,7 @@ static const struct rockchip_pcie_phy_data rk3399_pcie_data = {
 static const struct udevice_id rockchip_pcie_phy_ids[] = {
 	{
 		.compatible = "rockchip,rk3399-pcie-phy",
-		.data = (ulong)&rk3399_pcie_data,
+		.data = (uintptr_t)&rk3399_pcie_data,
 	},
 	{ /* sentile */ }
 };

@@ -385,7 +385,7 @@ static int jh7110_sys_pinctrl_probe(struct udevice *dev)
 static const struct udevice_id jh7110_sys_pinctrl_ids[] = {
 	/* JH7110 sys pinctrl */
 	{ .compatible = "starfive,jh7110-sys-pinctrl",
-	  .data = (ulong)&jh7110_sys_pinctrl_info, },
+	  .data = (uintptr_t)&jh7110_sys_pinctrl_info, },
 	{ /* sentinel */ }
 };
 

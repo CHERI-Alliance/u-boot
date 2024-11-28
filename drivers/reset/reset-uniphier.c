@@ -305,130 +305,130 @@ static const struct udevice_id uniphier_reset_match[] = {
 	/* System reset */
 	{
 		.compatible = "socionext,uniphier-ld4-reset",
-		.data = (ulong)uniphier_pro4_sys_reset_data,
+		.data = (uintptr_t)uniphier_pro4_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro4-reset",
-		.data = (ulong)uniphier_pro4_sys_reset_data,
+		.data = (uintptr_t)uniphier_pro4_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-sld8-reset",
-		.data = (ulong)uniphier_pro4_sys_reset_data,
+		.data = (uintptr_t)uniphier_pro4_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro5-reset",
-		.data = (ulong)uniphier_pro4_sys_reset_data,
+		.data = (uintptr_t)uniphier_pro4_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs2-reset",
-		.data = (ulong)uniphier_pxs2_sys_reset_data,
+		.data = (uintptr_t)uniphier_pxs2_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld11-reset",
-		.data = (ulong)uniphier_ld20_sys_reset_data,
+		.data = (uintptr_t)uniphier_ld20_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld20-reset",
-		.data = (ulong)uniphier_ld20_sys_reset_data,
+		.data = (uintptr_t)uniphier_ld20_sys_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs3-reset",
-		.data = (ulong)uniphier_pxs3_sys_reset_data,
+		.data = (uintptr_t)uniphier_pxs3_sys_reset_data,
 	},
 	/* Media I/O reset */
 	{
 		.compatible = "socionext,uniphier-ld4-mio-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro4-mio-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-sld8-mio-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro5-mio-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs2-mio-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld11-mio-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld11-sd-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld20-sd-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs3-sd-reset",
-		.data = (ulong)uniphier_mio_reset_data,
+		.data = (uintptr_t)uniphier_mio_reset_data,
 	},
 	/* Peripheral reset */
 	{
 		.compatible = "socionext,uniphier-ld4-peri-reset",
-		.data = (ulong)uniphier_ld4_peri_reset_data,
+		.data = (uintptr_t)uniphier_ld4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro4-peri-reset",
-		.data = (ulong)uniphier_pro4_peri_reset_data,
+		.data = (uintptr_t)uniphier_pro4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-sld8-peri-reset",
-		.data = (ulong)uniphier_ld4_peri_reset_data,
+		.data = (uintptr_t)uniphier_ld4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro5-peri-reset",
-		.data = (ulong)uniphier_pro4_peri_reset_data,
+		.data = (uintptr_t)uniphier_pro4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs2-peri-reset",
-		.data = (ulong)uniphier_pro4_peri_reset_data,
+		.data = (uintptr_t)uniphier_pro4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld11-peri-reset",
-		.data = (ulong)uniphier_pro4_peri_reset_data,
+		.data = (uintptr_t)uniphier_pro4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld20-peri-reset",
-		.data = (ulong)uniphier_pro4_peri_reset_data,
+		.data = (uintptr_t)uniphier_pro4_peri_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs3-peri-reset",
-		.data = (ulong)uniphier_pro4_peri_reset_data,
+		.data = (uintptr_t)uniphier_pro4_peri_reset_data,
 	},
 	/* USB glue reset */
 	{
 		.compatible = "socionext,uniphier-pro4-usb3-reset",
-		.data = (ulong)uniphier_pro4_usb3_reset_data,
+		.data = (uintptr_t)uniphier_pro4_usb3_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pro5-usb3-reset",
-		.data = (ulong)uniphier_pro4_usb3_reset_data,
+		.data = (uintptr_t)uniphier_pro4_usb3_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs2-usb3-reset",
-		.data = (ulong)uniphier_pro4_usb3_reset_data,
+		.data = (uintptr_t)uniphier_pro4_usb3_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld20-usb3-reset",
-		.data = (ulong)uniphier_pro4_usb3_reset_data,
+		.data = (uintptr_t)uniphier_pro4_usb3_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs3-usb3-reset",
-		.data = (ulong)uniphier_pro4_usb3_reset_data,
+		.data = (uintptr_t)uniphier_pro4_usb3_reset_data,
 	},
 	{
 		.compatible = "socionext,uniphier-nx1-usb3-reset",
-		.data = (ulong)uniphier_pro4_usb3_reset_data,
+		.data = (uintptr_t)uniphier_pro4_usb3_reset_data,
 	},
 	{ /* sentinel */ }
 };

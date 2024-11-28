@@ -240,9 +240,9 @@ static int stm32_serial_probe(struct udevice *dev)
 }
 
 static const struct udevice_id stm32_serial_id[] = {
-	{ .compatible = "st,stm32-uart", .data = (ulong)&stm32f4_info},
-	{ .compatible = "st,stm32f7-uart", .data = (ulong)&stm32f7_info},
-	{ .compatible = "st,stm32h7-uart", .data = (ulong)&stm32h7_info},
+	{ .compatible = "st,stm32-uart", .data = (uintptr_t)&stm32f4_info},
+	{ .compatible = "st,stm32f7-uart", .data = (uintptr_t)&stm32f7_info},
+	{ .compatible = "st,stm32h7-uart", .data = (uintptr_t)&stm32h7_info},
 	{}
 };
 

@@ -62,7 +62,7 @@ struct rkvop_driverdata rk3328_driverdata = {
 static const struct udevice_id rk3328_vop_ids[] = {
 	{
 		.compatible = "rockchip,rk3328-vop",
-		.data = (ulong)&rk3328_driverdata
+		.data = (uintptr_t)&rk3328_driverdata
 	},
 	{ /* sentile */ }
 };

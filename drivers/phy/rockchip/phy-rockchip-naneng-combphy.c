@@ -742,7 +742,7 @@ static const struct udevice_id rockchip_combphy_ids[] = {
 	},
 	{
 		.compatible = "rockchip,rk3568-naneng-combphy",
-		.data = (ulong)&rk3568_combphy_cfgs
+		.data = (uintptr_t)&rk3568_combphy_cfgs
 	},
 	{
 		.compatible = "rockchip,rk3576-naneng-combphy",
@@ -750,7 +750,7 @@ static const struct udevice_id rockchip_combphy_ids[] = {
 	},
 	{
 		.compatible = "rockchip,rk3588-naneng-combphy",
-		.data = (ulong)&rk3588_combphy_cfgs
+		.data = (uintptr_t)&rk3588_combphy_cfgs
 	},
 	{ }
 };

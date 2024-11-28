@@ -119,7 +119,7 @@ static int at91_reset_bind(struct udevice *dev)
 static const struct udevice_id at91_reset_ids[] = {
 	{
 		.compatible = "microchip,sama7g5-rstc",
-		.data = (ulong)&sama7g5_data,
+		.data = (uintptr_t)&sama7g5_data,
 	},
 	{
 		.compatible = "atmel,sama5d3-rstc",

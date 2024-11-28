@@ -22,7 +22,7 @@
 static u64 notrace riscv_aclint_timer_get_count(struct udevice *dev)
 {
 	return readq((void __iomem *)MTIME_REG(dev_get_priv(dev),
-					       dev_get_driver_data(dev)));
+					       (ulong)dev_get_driver_data(dev)));
 }
 
 #if CONFIG_IS_ENABLED(RISCV_MMODE) && IS_ENABLED(CONFIG_TIMER_EARLY)

@@ -502,14 +502,14 @@ static const struct udevice_id qusb2phy_ids[] = {
 	  .data = (ulong)&msm8996_phy_cfg },
 	{ .compatible = "qcom,qusb2-phy" },
 	{ .compatible = "qcom,qcm2290-qusb2-phy",
-	  .data = (ulong)&sm6115_phy_cfg },
+	  .data = (uintptr_t)&sm6115_phy_cfg },
 	{ .compatible = "qcom,qcs615-qusb2-phy",
-	  .data = (ulong)&qcs615_phy_cfg },
+	  .data = (uintptr_t)&qcs615_phy_cfg },
 	{ .compatible = "qcom,sdm660-qusb2-phy",
-	  .data = (ulong)&sdm660_phy_cfg },
+	  .data = (uintptr_t)&sdm660_phy_cfg },
 	{ .compatible = "qcom,sm6115-qusb2-phy",
-	  .data = (ulong)&sm6115_phy_cfg },
-	{ .compatible = "qcom,qusb2-v2-phy", .data = (ulong)&qusb2_v2_phy_cfg },
+	  .data = (uintptr_t)&sm6115_phy_cfg },
+	{ .compatible = "qcom,qusb2-v2-phy", .data = (uintptr_t)&qusb2_v2_phy_cfg },
 	{}
 };
 

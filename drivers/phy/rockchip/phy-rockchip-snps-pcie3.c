@@ -253,11 +253,11 @@ static struct phy_ops rockchip_p3phy_ops = {
 static const struct udevice_id rockchip_p3phy_of_match[] = {
 	{
 		.compatible = "rockchip,rk3568-pcie3-phy",
-		.data = (ulong)&rk3568_ops,
+		.data = (uintptr_t)&rk3568_ops,
 	},
 	{
 		.compatible = "rockchip,rk3588-pcie3-phy",
-		.data = (ulong)&rk3588_ops,
+		.data = (uintptr_t)&rk3588_ops,
 	},
 	{ },
 };

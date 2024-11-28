@@ -53,15 +53,15 @@ static const struct denali_dt_data denali_uniphier_v5b_data = {
 static const struct udevice_id denali_nand_dt_ids[] = {
 	{
 		.compatible = "altr,socfpga-denali-nand",
-		.data = (unsigned long)&denali_socfpga_data,
+		.data = (uintptr_t)&denali_socfpga_data,
 	},
 	{
 		.compatible = "socionext,uniphier-denali-nand-v5a",
-		.data = (unsigned long)&denali_uniphier_v5a_data,
+		.data = (uintptr_t)&denali_uniphier_v5a_data,
 	},
 	{
 		.compatible = "socionext,uniphier-denali-nand-v5b",
-		.data = (unsigned long)&denali_uniphier_v5b_data,
+		.data = (uintptr_t)&denali_uniphier_v5b_data,
 	},
 	{ /* sentinel */ }
 };

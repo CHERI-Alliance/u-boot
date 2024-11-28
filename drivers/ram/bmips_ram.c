@@ -136,16 +136,16 @@ static const struct bmips_ram_hw bmips_ram_bcm6358 = {
 static const struct udevice_id bmips_ram_ids[] = {
 	{
 		.compatible = "brcm,bcm6318-mc",
-		.data = (ulong)&bmips_ram_bcm6318,
+		.data = (uintptr_t)&bmips_ram_bcm6318,
 	}, {
 		.compatible = "brcm,bcm6328-mc",
-		.data = (ulong)&bmips_ram_bcm6328,
+		.data = (uintptr_t)&bmips_ram_bcm6328,
 	}, {
 		.compatible = "brcm,bcm6338-mc",
-		.data = (ulong)&bmips_ram_bcm6338,
+		.data = (uintptr_t)&bmips_ram_bcm6338,
 	}, {
 		.compatible = "brcm,bcm6358-mc",
-		.data = (ulong)&bmips_ram_bcm6358,
+		.data = (uintptr_t)&bmips_ram_bcm6358,
 	}, { /* sentinel */ }
 };
 

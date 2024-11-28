@@ -659,9 +659,9 @@ static const struct dm_pci_ops pcie_dw_imx_ops = {
 };
 
 static const struct udevice_id pcie_dw_imx_ids[] = {
-	{ .compatible = "fsl,imx8mm-pcie", .data = (ulong)&imx8mm_chip_info, },
-	{ .compatible = "fsl,imx8mp-pcie", .data = (ulong)&imx8mp_chip_info, },
-	{ .compatible = "fsl,imx95-pcie", .data = (ulong)&imx95_chip_info, },
+	{ .compatible = "fsl,imx8mm-pcie", .data = (uintptr_t)&imx8mm_chip_info, },
+	{ .compatible = "fsl,imx8mp-pcie", .data = (uintptr_t)&imx8mp_chip_info, },
+	{ .compatible = "fsl,imx95-pcie", .data = (uintptr_t)&imx95_chip_info, },
 	{ }
 };
 

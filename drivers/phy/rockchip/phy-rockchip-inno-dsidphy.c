@@ -655,16 +655,16 @@ static int inno_dsidphy_probe(struct udevice *dev)
 static const struct udevice_id inno_dsidphy_of_match[] = {
 	{
 		.compatible = "rockchip,px30-dsi-dphy",
-		.data = (long)&max_1ghz_video_phy_plat_data,
+		.data = (uintptr_t)&max_1ghz_video_phy_plat_data,
 	}, {
 		.compatible = "rockchip,rk3128-dsi-dphy",
-		.data = (long)&max_1ghz_video_phy_plat_data,
+		.data = (uintptr_t)&max_1ghz_video_phy_plat_data,
 	}, {
 		.compatible = "rockchip,rk3368-dsi-dphy",
-		.data = (long)&max_1ghz_video_phy_plat_data,
+		.data = (uintptr_t)&max_1ghz_video_phy_plat_data,
 	}, {
 		.compatible = "rockchip,rk3568-dsi-dphy",
-		.data = (long)&max_2_5ghz_video_phy_plat_data,
+		.data = (uintptr_t)&max_2_5ghz_video_phy_plat_data,
 	},
 	{}
 };

@@ -134,7 +134,7 @@ static struct meson_secure_pwrc_domain_data meson_secure_a1_pwrc_data = {
 static const struct udevice_id meson_secure_pwrc_ids[] = {
 	{
 		.compatible = "amlogic,meson-a1-pwrc",
-		.data = (unsigned long)&meson_secure_a1_pwrc_data,
+		.data = (uintptr_t)&meson_secure_a1_pwrc_data,
 	},
 	{ }
 };

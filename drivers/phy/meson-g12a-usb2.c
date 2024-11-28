@@ -353,11 +353,11 @@ int meson_g12a_usb2_phy_probe(struct udevice *dev)
 static const struct udevice_id meson_g12a_usb2_phy_ids[] = {
 	{
 		.compatible = "amlogic,g12a-usb2-phy",
-		.data = (ulong)MESON_SOC_G12A,
+		.data = (uintptr_t)MESON_SOC_G12A,
 	},
 	{
 		.compatible = "amlogic,a1-usb2-phy",
-		.data = (ulong)MESON_SOC_A1,
+		.data = (uintptr_t)MESON_SOC_A1,
 	},
 	{ }
 };

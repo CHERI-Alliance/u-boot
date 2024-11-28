@@ -397,7 +397,7 @@ static const struct mtk_musb_config mt8518_cfg = {
 
 static const struct udevice_id mtk_musb_ids[] = {
 	{ .compatible = "mediatek,mt8518-musb",
-	  .data = (ulong)&mt8518_cfg },
+	  .data = (uintptr_t)&mt8518_cfg },
 	{ }
 };
 

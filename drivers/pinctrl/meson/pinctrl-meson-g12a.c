@@ -1274,11 +1274,11 @@ static struct meson_pinctrl_data meson_g12a_aobus_pinctrl_data = {
 static const struct udevice_id meson_g12a_pinctrl_match[] = {
 	{
 		.compatible = "amlogic,meson-g12a-periphs-pinctrl",
-		.data = (ulong)&meson_g12a_periphs_pinctrl_data,
+		.data = (uintptr_t)&meson_g12a_periphs_pinctrl_data,
 	},
 	{
 		.compatible = "amlogic,meson-g12a-aobus-pinctrl",
-		.data = (ulong)&meson_g12a_aobus_pinctrl_data,
+		.data = (uintptr_t)&meson_g12a_aobus_pinctrl_data,
 	},
 	{ },
 };

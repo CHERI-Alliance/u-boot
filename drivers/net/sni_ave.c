@@ -972,23 +972,23 @@ static const struct ave_soc_data ave_pxs3_data = {
 static const struct udevice_id ave_ids[] = {
 	{
 		.compatible = "socionext,uniphier-pro4-ave4",
-		.data = (ulong)&ave_pro4_data,
+		.data = (uintptr_t)&ave_pro4_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs2-ave4",
-		.data = (ulong)&ave_pxs2_data,
+		.data = (uintptr_t)&ave_pxs2_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld11-ave4",
-		.data = (ulong)&ave_ld11_data,
+		.data = (uintptr_t)&ave_ld11_data,
 	},
 	{
 		.compatible = "socionext,uniphier-ld20-ave4",
-		.data = (ulong)&ave_ld20_data,
+		.data = (uintptr_t)&ave_ld20_data,
 	},
 	{
 		.compatible = "socionext,uniphier-pxs3-ave4",
-		.data = (ulong)&ave_pxs3_data,
+		.data = (uintptr_t)&ave_pxs3_data,
 	},
 	{ /* Sentinel */ }
 };

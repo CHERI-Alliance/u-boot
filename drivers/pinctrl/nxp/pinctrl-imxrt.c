@@ -16,7 +16,7 @@ static struct imx_pinctrl_soc_info imxrt_pinctrl_soc_info = {
 
 static const struct udevice_id imxrt_pinctrl_match[] = {
 	{ .compatible = "fsl,imxrt-iomuxc",
-	  .data = (ulong)&imxrt_pinctrl_soc_info },
+	  .data = (uintptr_t)&imxrt_pinctrl_soc_info },
 	{ /* sentinel */ }
 };
 

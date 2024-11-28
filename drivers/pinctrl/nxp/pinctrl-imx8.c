@@ -87,8 +87,8 @@ static struct imx_pinctrl_soc_info imx8_pinctrl_soc_info = {
 };
 
 static const struct udevice_id imx8_pinctrl_match[] = {
-	{ .compatible = "fsl,imx8qxp-iomuxc", .data = (ulong)&imx8_pinctrl_soc_info },
-	{ .compatible = "fsl,imx8qm-iomuxc", .data = (ulong)&imx8_pinctrl_soc_info },
+	{ .compatible = "fsl,imx8qxp-iomuxc", .data = (uintptr_t)&imx8_pinctrl_soc_info },
+	{ .compatible = "fsl,imx8qm-iomuxc", .data = (uintptr_t)&imx8_pinctrl_soc_info },
 	{ /* sentinel */ }
 };
 

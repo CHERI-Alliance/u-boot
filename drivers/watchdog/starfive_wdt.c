@@ -312,7 +312,7 @@ static int starfive_wdt_of_to_plat(struct udevice *dev)
 static const struct udevice_id starfive_wdt_ids[] = {
 	{
 		.compatible = "starfive,jh7110-wdt",
-		.data = (ulong)&starfive_wdt_jh7110_variant
+		.data = (uintptr_t)&starfive_wdt_jh7110_variant
 	}, {
 		/* sentinel */
 	}

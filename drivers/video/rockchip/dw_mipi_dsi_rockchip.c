@@ -981,10 +981,10 @@ static const struct rockchip_dw_dsi_chip_data rk3568_chip_data[] = {
 
 static const struct udevice_id dw_mipi_dsi_rockchip_dt_ids[] = {
 	{ .compatible = "rockchip,rk3399-mipi-dsi",
-	  .data = (long)&rk3399_chip_data,
+	  .data = (uintptr_t)&rk3399_chip_data,
 	},
 	{ .compatible = "rockchip,rk3568-mipi-dsi",
-	  .data = (long)&rk3568_chip_data,
+	  .data = (uintptr_t)&rk3568_chip_data,
 	},
 	{ /* sentinel */ }
 };

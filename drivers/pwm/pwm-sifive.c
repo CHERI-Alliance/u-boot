@@ -158,7 +158,7 @@ static const struct pwm_sifive_data pwm_data = {
 };
 
 static const struct udevice_id pwm_sifive_ids[] = {
-	{ .compatible = "sifive,pwm0", .data = (ulong)&pwm_data},
+	{ .compatible = "sifive,pwm0", .data = (uintptr_t)&pwm_data},
 	{ }
 };
 

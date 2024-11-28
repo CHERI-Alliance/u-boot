@@ -268,7 +268,7 @@ static const struct tpm_tis_chip_data tpm_tis_std_chip_data = {
 static const struct udevice_id tpm_tis_spi_ids[] = {
 	{
 		.compatible = "tcg,tpm_tis-spi",
-		.data = (ulong)&tpm_tis_std_chip_data,
+		.data = (uintptr_t)&tpm_tis_std_chip_data,
 	},
 	{ }
 };

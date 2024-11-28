@@ -142,7 +142,7 @@ static const struct sdhci_brcmstb_dev_priv match_priv_2712 = {
 };
 
 static const struct udevice_id sdhci_bcmstb_match[] = {
-	{ .compatible = "brcm,bcm2712-sdhci", .data = (ulong)&match_priv_2712 },
+	{ .compatible = "brcm,bcm2712-sdhci", .data = (uintptr_t)&match_priv_2712 },
 	{ .compatible = "brcm,bcm7425-sdhci" },
 	{ .compatible = "brcm,sdhci-brcmstb" },
 	{ }

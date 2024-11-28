@@ -815,7 +815,7 @@ static const struct udevice_id rockchip_udphy_dt_match[] = {
 	},
 	{
 		.compatible = "rockchip,rk3588-usbdp-phy",
-		.data = (ulong)&rk3588_udphy_cfgs
+		.data = (uintptr_t)&rk3588_udphy_cfgs
 	},
 	{ /* sentinel */ }
 };

@@ -150,11 +150,11 @@ static const struct tpm_tis_chip_data tpm_tis_std_chip_data = {
 static const struct udevice_id tpm_tis_i2c_ids[] = {
 	{
 		.compatible = "nuvoton,npct75x",
-		.data = (ulong)&tpm_tis_std_chip_data,
+		.data = (uintptr_t)&tpm_tis_std_chip_data,
 	},
 	{
 		.compatible = "tcg,tpm-tis-i2c",
-		.data = (ulong)&tpm_tis_std_chip_data,
+		.data = (uintptr_t)&tpm_tis_std_chip_data,
 	},
 	{ }
 };

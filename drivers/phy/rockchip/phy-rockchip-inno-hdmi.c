@@ -870,7 +870,7 @@ static const struct inno_hdmi_phy_data rk3328_inno_hdmi_phy_drv_data = {
 static const struct udevice_id inno_hdmi_phy_ids[] = {
 	{
 		.compatible = "rockchip,rk3328-hdmi-phy",
-		.data = (ulong)&rk3328_inno_hdmi_phy_drv_data,
+		.data = (uintptr_t)&rk3328_inno_hdmi_phy_drv_data,
 	},
 	{ /* sentile */ }
 };
