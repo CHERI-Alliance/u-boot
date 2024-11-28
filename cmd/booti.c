@@ -66,14 +66,14 @@ static int booti_start(struct bootm_info *bmi)
 		decomp_len = comp_len * 10;
 		dest_ptr = map_physmem(dest, decomp_len, MAP_DATA);
 		ret = image_decomp(ctype, 0, ld, IH_TYPE_KERNEL,
-				 (void *)dest_ptr, (void *)ld, comp_len,
+				 (void *)dest_ptr, (void *)temp, comp_len,
 				 decomp_len, &dest_end);
 		if (ret)
 			return ret;
 		/* dest_end contains the uncompressed Image size */
-		memmove((void *)ld, (void *)dest_ptr, dest_end);
+		memmove((void *)temp, (void *)dest_ptr, dest_end);
 	}
-	unmap_sysmem((void *)ld);
+	unmap_sysmem((void *)temp);
 
 	ret = booti_setup(ld, &relocated_addr, &image_size, false);
 	if (ret)

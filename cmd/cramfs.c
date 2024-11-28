@@ -98,6 +98,7 @@ int do_cramfs_load(struct cmd_tbl *cmdtp, int flag, int argc,
 	int size;
 	ulong offset = image_load_addr;
 	char *offset_virt;
+	char *part_offset_virt;
 
 	struct part_info part;
 	struct mtd_device dev;
@@ -114,7 +115,8 @@ int do_cramfs_load(struct cmd_tbl *cmdtp, int flag, int argc,
 	dev.id = &id;
 	part.dev = &dev;
 	/* fake the address offset */
-	part.offset = (u64)(uintptr_t) map_sysmem(addr - OFFSET_ADJUSTMENT, 0);
+	part_offset_virt = map_sysmem(addr - OFFSET_ADJUSTMENT, 0)
+	part.offset = (u64)(uintptr_t)part_offset_virt;
 
 	/* pre-set Boot file name */
 	filename = env_get("bootfile");
@@ -144,7 +146,7 @@ int do_cramfs_load(struct cmd_tbl *cmdtp, int flag, int argc,
 	}
 
 	unmap_sysmem(offset_virt);
-	unmap_sysmem((void *)(uintptr_t)part.offset);
+	unmap_sysmem(part_offset_virt);
 
 	return !(size > 0);
 }
@@ -167,6 +169,7 @@ int do_cramfs_ls(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 	struct part_info part;
 	struct mtd_device dev;
 	struct mtdids id;
+	char *part_offset_virt = NULL;
 
 	ulong addr;
 	addr = hextoul(env_get("cramfsaddr"), NULL);
@@ -179,7 +182,8 @@ int do_cramfs_ls(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 	dev.id = &id;
 	part.dev = &dev;
 	/* fake the address offset */
-	part.offset = (u64)(uintptr_t) map_sysmem(addr - OFFSET_ADJUSTMENT, 0);
+	part_offset_virt = map_sysmem(addr - OFFSET_ADJUSTMENT, 0);
+	part.offset = (u64)(uintptr_t)part_offset_virt;
 
 	if (argc == 2)
 		filename = argv[1];
@@ -187,7 +191,7 @@ int do_cramfs_ls(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 	ret = 0;
 	if (cramfs_check(&part))
 		ret = cramfs_ls (&part, filename);
-	unmap_sysmem((void *)(uintptr_t)part.offset);
+	unmap_sysmem(part_offset_virt);
 
 	return ret ? 0 : 1;
 }
