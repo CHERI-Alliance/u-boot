@@ -557,7 +557,7 @@ static const struct rzg2l_pfc_driver_data r9a07g044_driver_data = {
 };
 
 static const struct udevice_id rzg2l_pfc_ids[] = {
-	{ .compatible = "renesas,r9a07g044-pinctrl", .data = (ulong)&r9a07g044_driver_data },
+	{ .compatible = "renesas,r9a07g044-pinctrl", .data = (uintptr_t)&r9a07g044_driver_data },
 	{ /* sentinel */ }
 };
 

@@ -330,19 +330,19 @@ static const struct mvebu_spi_dev armada_380_spi_dev_data = {
 static const struct udevice_id mvebu_spi_ids[] = {
 	{
 		.compatible = "marvell,orion-spi",
-		.data = (ulong)&armada_spi_dev_data,
+		.data = (uintptr_t)&armada_spi_dev_data,
 	},
 	{
 		.compatible = "marvell,armada-375-spi",
-		.data = (ulong)&armada_375_spi_dev_data
+		.data = (uintptr_t)&armada_375_spi_dev_data
 	},
 	{
 		.compatible = "marvell,armada-380-spi",
-		.data = (ulong)&armada_380_spi_dev_data
+		.data = (uintptr_t)&armada_380_spi_dev_data
 	},
 	{
 		.compatible = "marvell,armada-xp-spi",
-		.data = (ulong)&armada_xp_spi_dev_data
+		.data = (uintptr_t)&armada_xp_spi_dev_data
 	},
 	{ }
 };

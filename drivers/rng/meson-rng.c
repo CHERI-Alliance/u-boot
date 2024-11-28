@@ -169,11 +169,11 @@ static const struct meson_rng_priv meson_rng_priv_s4 = {
 static const struct udevice_id meson_rng_match[] = {
 	{
 		.compatible = "amlogic,meson-rng",
-		.data = (ulong)&meson_rng_priv,
+		.data = (uintptr_t)&meson_rng_priv,
 	},
 	{
 		.compatible = "amlogic,meson-s4-rng",
-		.data = (ulong)&meson_rng_priv_s4,
+		.data = (uintptr_t)&meson_rng_priv_s4,
 	},
 	{},
 };

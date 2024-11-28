@@ -110,7 +110,7 @@ struct dwc3_glue_ops ti_am62_ops = {
 };
 
 static const struct udevice_id dwc3_am62_match[] = {
-	{ .compatible = "ti,am62-usb", .data = (ulong)&ti_am62_ops },
+	{ .compatible = "ti,am62-usb", .data = (uintptr_t)&ti_am62_ops },
 	{ /* sentinel */ }
 };
 

@@ -381,8 +381,8 @@ static int apple_pcie_remove(struct udevice *dev)
 }
 
 static const struct udevice_id apple_pcie_of_match[] = {
-	{ .compatible = "apple,t6020-pcie", .data = (ulong)&t602x_hw },
-	{ .compatible = "apple,pcie", .data = (ulong)&t8103_hw },
+	{ .compatible = "apple,t6020-pcie", .data = (uintptr_t)&t602x_hw },
+	{ .compatible = "apple,pcie", .data = (uintptr_t)&t8103_hw },
 	{ /* sentinel */ }
 };
 

@@ -405,8 +405,8 @@ static const struct stm32mp1_ddr_cfg stm32mp15x_ddr_cfg = {
 };
 
 static const struct udevice_id stm32mp1_ddr_ids[] = {
-	{ .compatible = "st,stm32mp1-ddr", .data = (ulong)&stm32mp15x_ddr_cfg},
-	{ .compatible = "st,stm32mp13-ddr", .data = (ulong)&stm32mp13x_ddr_cfg},
+	{ .compatible = "st,stm32mp1-ddr", .data = (uintptr_t)&stm32mp15x_ddr_cfg},
+	{ .compatible = "st,stm32mp13-ddr", .data = (uintptr_t)&stm32mp13x_ddr_cfg},
 	{ }
 };
 

@@ -210,12 +210,12 @@ static const struct mtk_pwm_soc mt7988_data = {
 };
 
 static const struct udevice_id mtk_pwm_ids[] = {
-	{ .compatible = "mediatek,mt7622-pwm", .data = (ulong)&mt7622_data },
-	{ .compatible = "mediatek,mt7623-pwm", .data = (ulong)&mt7623_data },
-	{ .compatible = "mediatek,mt7629-pwm", .data = (ulong)&mt7629_data },
-	{ .compatible = "mediatek,mt7981-pwm", .data = (ulong)&mt7981_data },
-	{ .compatible = "mediatek,mt7986-pwm", .data = (ulong)&mt7986_data },
-	{ .compatible = "mediatek,mt7988-pwm", .data = (ulong)&mt7988_data },
+	{ .compatible = "mediatek,mt7622-pwm", .data = (uintptr_t)&mt7622_data },
+	{ .compatible = "mediatek,mt7623-pwm", .data = (uintptr_t)&mt7623_data },
+	{ .compatible = "mediatek,mt7629-pwm", .data = (uintptr_t)&mt7629_data },
+	{ .compatible = "mediatek,mt7981-pwm", .data = (uintptr_t)&mt7981_data },
+	{ .compatible = "mediatek,mt7986-pwm", .data = (uintptr_t)&mt7986_data },
+	{ .compatible = "mediatek,mt7988-pwm", .data = (uintptr_t)&mt7988_data },
 	{ }
 };
 

@@ -2128,13 +2128,13 @@ static const struct mtk_soc_data mt7621_data = {
 };
 
 static const struct udevice_id mtk_eth_ids[] = {
-	{ .compatible = "mediatek,mt7988-eth", .data = (ulong)&mt7988_data },
-	{ .compatible = "mediatek,mt7986-eth", .data = (ulong)&mt7986_data },
-	{ .compatible = "mediatek,mt7981-eth", .data = (ulong)&mt7981_data },
-	{ .compatible = "mediatek,mt7629-eth", .data = (ulong)&mt7629_data },
-	{ .compatible = "mediatek,mt7623-eth", .data = (ulong)&mt7623_data },
-	{ .compatible = "mediatek,mt7622-eth", .data = (ulong)&mt7622_data },
-	{ .compatible = "mediatek,mt7621-eth", .data = (ulong)&mt7621_data },
+	{ .compatible = "mediatek,mt7988-eth", .data = (uintptr_t)&mt7988_data },
+	{ .compatible = "mediatek,mt7986-eth", .data = (uintptr_t)&mt7986_data },
+	{ .compatible = "mediatek,mt7981-eth", .data = (uintptr_t)&mt7981_data },
+	{ .compatible = "mediatek,mt7629-eth", .data = (uintptr_t)&mt7629_data },
+	{ .compatible = "mediatek,mt7623-eth", .data = (uintptr_t)&mt7623_data },
+	{ .compatible = "mediatek,mt7622-eth", .data = (uintptr_t)&mt7622_data },
+	{ .compatible = "mediatek,mt7621-eth", .data = (uintptr_t)&mt7621_data },
 	{}
 };
 

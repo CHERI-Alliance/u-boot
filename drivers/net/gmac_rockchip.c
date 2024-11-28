@@ -732,21 +732,21 @@ const struct rk_gmac_ops rv1108_gmac_ops = {
 
 static const struct udevice_id rockchip_gmac_ids[] = {
 	{ .compatible = "rockchip,px30-gmac",
-	  .data = (ulong)&px30_gmac_ops },
+	  .data = (uintptr_t)&px30_gmac_ops },
 	{ .compatible = "rockchip,rk3228-gmac",
-	  .data = (ulong)&rk3228_gmac_ops },
+	  .data = (uintptr_t)&rk3228_gmac_ops },
 	{ .compatible = "rockchip,rk3288-gmac",
-	  .data = (ulong)&rk3288_gmac_ops },
+	  .data = (uintptr_t)&rk3288_gmac_ops },
 	{ .compatible = "rockchip,rk3308-gmac",
-	  .data = (ulong)&rk3308_gmac_ops },
+	  .data = (uintptr_t)&rk3308_gmac_ops },
 	{ .compatible = "rockchip,rk3328-gmac",
-	  .data = (ulong)&rk3328_gmac_ops },
+	  .data = (uintptr_t)&rk3328_gmac_ops },
 	{ .compatible = "rockchip,rk3368-gmac",
-	  .data = (ulong)&rk3368_gmac_ops },
+	  .data = (uintptr_t)&rk3368_gmac_ops },
 	{ .compatible = "rockchip,rk3399-gmac",
-	  .data = (ulong)&rk3399_gmac_ops },
+	  .data = (uintptr_t)&rk3399_gmac_ops },
 	{ .compatible = "rockchip,rv1108-gmac",
-	  .data = (ulong)&rv1108_gmac_ops },
+	  .data = (uintptr_t)&rv1108_gmac_ops },
 	{ }
 };
 

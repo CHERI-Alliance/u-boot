@@ -328,7 +328,7 @@ static const struct k3_sysctrler_desc k3_sysctrler_am654_desc = {
 static const struct udevice_id k3_sysctrler_ids[] = {
 	{
 		.compatible = "ti,am654-system-controller",
-		.data = (ulong)&k3_sysctrler_am654_desc,
+		.data = (uintptr_t)&k3_sysctrler_am654_desc,
 	},
 	{}
 };

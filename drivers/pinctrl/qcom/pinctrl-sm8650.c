@@ -86,7 +86,7 @@ static struct msm_pinctrl_data sm8650_data = {
 };
 
 static const struct udevice_id msm_pinctrl_ids[] = {
-	{ .compatible = "qcom,sm8650-tlmm", .data = (ulong)&sm8650_data },
+	{ .compatible = "qcom,sm8650-tlmm", .data = (uintptr_t)&sm8650_data },
 	{ /* Sentinel */ }
 };
 

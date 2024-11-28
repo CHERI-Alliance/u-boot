@@ -787,27 +787,27 @@ static int am654_sdhci_bind(struct udevice *dev)
 static const struct udevice_id am654_sdhci_ids[] = {
 	{
 		.compatible = "ti,am654-sdhci-5.1",
-		.data = (ulong)&am654_drv_data,
+		.data = (uintptr_t)&am654_drv_data,
 	},
 	{
 		.compatible = "ti,j721e-sdhci-8bit",
-		.data = (ulong)&j721e_8bit_drv_data,
+		.data = (uintptr_t)&j721e_8bit_drv_data,
 	},
 	{
 		.compatible = "ti,j721e-sdhci-4bit",
-		.data = (ulong)&j721e_4bit_drv_data,
+		.data = (uintptr_t)&j721e_4bit_drv_data,
 	},
 	{
 		.compatible = "ti,am64-sdhci-8bit",
-		.data = (ulong)&sdhci_am64_8bit_drvdata,
+		.data = (uintptr_t)&sdhci_am64_8bit_drvdata,
 	},
 	{
 		.compatible = "ti,am64-sdhci-4bit",
-		.data = (ulong)&sdhci_am64_4bit_drvdata,
+		.data = (uintptr_t)&sdhci_am64_4bit_drvdata,
 	},
 	{
 		.compatible = "ti,am62-sdhci",
-		.data = (ulong)&sdhci_am64_4bit_drvdata,
+		.data = (uintptr_t)&sdhci_am64_4bit_drvdata,
 	},
 	{ }
 };

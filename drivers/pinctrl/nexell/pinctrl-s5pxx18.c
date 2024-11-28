@@ -205,7 +205,7 @@ const struct nexell_pin_ctrl s5pxx18_pin_ctrl[] = {
 
 static const struct udevice_id s5pxx18_pinctrl_ids[] = {
 	{ .compatible = "nexell,s5pxx18-pinctrl",
-		.data = (ulong)s5pxx18_pin_ctrl },
+		.data = (uintptr_t)s5pxx18_pin_ctrl },
 	{ }
 };
 

@@ -524,11 +524,11 @@ static int dwc3_meson_g12a_child_post_remove(struct udevice *dev)
 static const struct udevice_id dwc3_meson_g12a_ids[] = {
 	{
 		.compatible = "amlogic,meson-g12a-usb-ctrl",
-		.data = (ulong)&meson_g12a_drvdata,
+		.data = (uintptr_t)&meson_g12a_drvdata,
 	},
 	{
 		.compatible = "amlogic,meson-a1-usb-ctrl",
-		.data = (ulong)&meson_a1_drvdata,
+		.data = (uintptr_t)&meson_a1_drvdata,
 	},
 	{ }
 };

@@ -100,8 +100,8 @@ static struct dm_pmic_ops pmic_tps65910_ops = {
 };
 
 static const struct udevice_id pmic_tps65910_match[] = {
-	{ .compatible = "ti,tps65910", .data = (ulong)&tps65910_children_info },
-	{ .compatible = "ti,tps65911", .data = (ulong)&tps65911_children_info },
+	{ .compatible = "ti,tps65910", .data = (uintptr_t)&tps65910_children_info },
+	{ .compatible = "ti,tps65911", .data = (uintptr_t)&tps65911_children_info },
 	{ /* sentinel */ }
 };
 

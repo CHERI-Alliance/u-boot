@@ -82,9 +82,9 @@ struct rkvop_driverdata rk3399_big_driverdata = {
 
 static const struct udevice_id rk3399_vop_ids[] = {
 	{ .compatible = "rockchip,rk3399-vop-big",
-	  .data = (ulong)&rk3399_big_driverdata },
+	  .data = (uintptr_t)&rk3399_big_driverdata },
 	{ .compatible = "rockchip,rk3399-vop-lit",
-	  .data = (ulong)&rk3399_lit_driverdata },
+	  .data = (uintptr_t)&rk3399_lit_driverdata },
 	{ }
 };
 

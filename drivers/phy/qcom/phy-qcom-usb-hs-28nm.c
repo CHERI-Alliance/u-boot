@@ -235,7 +235,7 @@ static const struct hsphy_data data_femtophy = {
 };
 
 static const struct udevice_id hsphy_ids[] = {
-	{ .compatible = "qcom,usb-hs-28nm-femtophy", .data = (ulong)&data_femtophy },
+	{ .compatible = "qcom,usb-hs-28nm-femtophy", .data = (uintptr_t)&data_femtophy },
 	{ }
 };
 

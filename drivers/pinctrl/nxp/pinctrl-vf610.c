@@ -23,7 +23,7 @@ static int vf610_pinctrl_probe(struct udevice *dev)
 
 static const struct udevice_id vf610_pinctrl_match[] = {
 	{ .compatible = "fsl,vf610-iomuxc",
-	  .data = (ulong)&vf610_pinctrl_soc_info },
+	  .data = (uintptr_t)&vf610_pinctrl_soc_info },
 	{ /* sentinel */ }
 };
 

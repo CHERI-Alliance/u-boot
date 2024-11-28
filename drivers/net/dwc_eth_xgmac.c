@@ -1148,7 +1148,7 @@ static const struct eth_ops xgmac_ops = {
 static const struct udevice_id xgmac_ids[] = {
 	{
 		.compatible = "intel,socfpga-dwxgmac",
-		.data = (ulong)&xgmac_socfpga_config
+		.data = (uintptr_t)&xgmac_socfpga_config
 	},
 	{ }
 };

@@ -1940,11 +1940,11 @@ static const struct cdns_sierra_data cdns_ti_map_sierra = {
 static const struct udevice_id cdns_sierra_id_table[] = {
 	{
 		.compatible = "cdns,sierra-phy-t0",
-		.data = (ulong)&cdns_map_sierra,
+		.data = (uintptr_t)&cdns_map_sierra,
 	},
 	{
 		.compatible = "ti,sierra-phy-t0",
-		.data = (ulong)&cdns_ti_map_sierra,
+		.data = (uintptr_t)&cdns_ti_map_sierra,
 	},
 	{}
 };

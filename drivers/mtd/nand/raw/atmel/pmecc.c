@@ -928,9 +928,9 @@ struct atmel_pmecc *devm_atmel_pmecc_get(struct udevice *userdev)
 EXPORT_SYMBOL(devm_atmel_pmecc_get);
 
 static const struct udevice_id atmel_pmecc_match[] = {
-	{ .compatible = "atmel,at91sam9g45-pmecc", (ulong)&at91sam9g45_caps },
-	{ .compatible = "atmel,sama5d4-pmecc", (ulong)&sama5d4_caps },
-	{ .compatible = "atmel,sama5d2-pmecc", (ulong)&sama5d2_caps },
+	{ .compatible = "atmel,at91sam9g45-pmecc", (uintptr_t)&at91sam9g45_caps },
+	{ .compatible = "atmel,sama5d4-pmecc", (uintptr_t)&sama5d4_caps },
+	{ .compatible = "atmel,sama5d2-pmecc", (uintptr_t)&sama5d2_caps },
 	{ /* sentinel */ }
 };
 

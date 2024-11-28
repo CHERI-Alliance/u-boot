@@ -1881,15 +1881,15 @@ static const struct msdc_compatible mt8183_compat = {
 };
 
 static const struct udevice_id msdc_ids[] = {
-	{ .compatible = "mediatek,mt7620-mmc", .data = (ulong)&mt7620_compat },
-	{ .compatible = "mediatek,mt7621-mmc", .data = (ulong)&mt7621_compat },
-	{ .compatible = "mediatek,mt7622-mmc", .data = (ulong)&mt7622_compat },
-	{ .compatible = "mediatek,mt7623-mmc", .data = (ulong)&mt7623_compat },
-	{ .compatible = "mediatek,mt7986-mmc", .data = (ulong)&mt7986_compat },
-	{ .compatible = "mediatek,mt7981-mmc", .data = (ulong)&mt7981_compat },
-	{ .compatible = "mediatek,mt8512-mmc", .data = (ulong)&mt8512_compat },
-	{ .compatible = "mediatek,mt8516-mmc", .data = (ulong)&mt8516_compat },
-	{ .compatible = "mediatek,mt8183-mmc", .data = (ulong)&mt8183_compat },
+	{ .compatible = "mediatek,mt7620-mmc", .data = (uintptr_t)&mt7620_compat },
+	{ .compatible = "mediatek,mt7621-mmc", .data = (uintptr_t)&mt7621_compat },
+	{ .compatible = "mediatek,mt7622-mmc", .data = (uintptr_t)&mt7622_compat },
+	{ .compatible = "mediatek,mt7623-mmc", .data = (uintptr_t)&mt7623_compat },
+	{ .compatible = "mediatek,mt7986-mmc", .data = (uintptr_t)&mt7986_compat },
+	{ .compatible = "mediatek,mt7981-mmc", .data = (uintptr_t)&mt7981_compat },
+	{ .compatible = "mediatek,mt8512-mmc", .data = (uintptr_t)&mt8512_compat },
+	{ .compatible = "mediatek,mt8516-mmc", .data = (uintptr_t)&mt8516_compat },
+	{ .compatible = "mediatek,mt8183-mmc", .data = (uintptr_t)&mt8183_compat },
 	{}
 };
 

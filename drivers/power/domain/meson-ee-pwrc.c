@@ -404,19 +404,19 @@ static struct meson_ee_pwrc_domain_data meson_ee_sm1_pwrc_data = {
 static const struct udevice_id meson_ee_pwrc_ids[] = {
 	{
 		.compatible = "amlogic,meson-g12a-pwrc",
-		.data = (unsigned long)&meson_ee_g12a_pwrc_data,
+		.data = (uintptr_t)&meson_ee_g12a_pwrc_data,
 	},
 	{
 		.compatible = "amlogic,meson-gxbb-pwrc",
-		.data = (unsigned long)&meson_ee_gxbb_pwrc_data,
+		.data = (uintptr_t)&meson_ee_gxbb_pwrc_data,
 	},
 	{
 		.compatible = "amlogic,meson-axg-pwrc",
-		.data = (unsigned long)&meson_ee_axg_pwrc_data,
+		.data = (uintptr_t)&meson_ee_axg_pwrc_data,
 	},
 	{
 		.compatible = "amlogic,meson-sm1-pwrc",
-		.data = (unsigned long)&meson_ee_sm1_pwrc_data,
+		.data = (uintptr_t)&meson_ee_sm1_pwrc_data,
 	},
 	{ }
 };

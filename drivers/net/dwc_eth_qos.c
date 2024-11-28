@@ -1522,49 +1522,49 @@ static const struct udevice_id eqos_ids[] = {
 #if IS_ENABLED(CONFIG_DWC_ETH_QOS_TEGRA186)
 	{
 		.compatible = "nvidia,tegra186-eqos",
-		.data = (ulong)&eqos_tegra186_config
+		.data = (uintptr_t)&eqos_tegra186_config
 	},
 #endif
 #if IS_ENABLED(CONFIG_DWC_ETH_QOS_STM32)
 	{
 		.compatible = "st,stm32mp13-dwmac",
-		.data = (ulong)&eqos_stm32mp13_config
+		.data = (uintptr_t)&eqos_stm32mp13_config
 	},
 	{
 		.compatible = "st,stm32mp1-dwmac",
-		.data = (ulong)&eqos_stm32mp15_config
+		.data = (uintptr_t)&eqos_stm32mp15_config
 	},
 #endif
 #if IS_ENABLED(CONFIG_DWC_ETH_QOS_IMX)
 	{
 		.compatible = "nxp,imx8mp-dwmac-eqos",
-		.data = (ulong)&eqos_imx_config
+		.data = (uintptr_t)&eqos_imx_config
 	},
 	{
 		.compatible = "nxp,imx93-dwmac-eqos",
-		.data = (ulong)&eqos_imx_config
+		.data = (uintptr_t)&eqos_imx_config
 	},
 #endif
 #if IS_ENABLED(CONFIG_DWC_ETH_QOS_ROCKCHIP)
 	{
 		.compatible = "rockchip,rk3568-gmac",
-		.data = (ulong)&eqos_rockchip_config
+		.data = (uintptr_t)&eqos_rockchip_config
 	},
 	{
 		.compatible = "rockchip,rk3588-gmac",
-		.data = (ulong)&eqos_rockchip_config
+		.data = (uintptr_t)&eqos_rockchip_config
 	},
 #endif
 #if IS_ENABLED(CONFIG_DWC_ETH_QOS_QCOM)
 	{
 		.compatible = "qcom,qcs404-ethqos",
-		.data = (ulong)&eqos_qcom_config
+		.data = (uintptr_t)&eqos_qcom_config
 	},
 #endif
 #if IS_ENABLED(CONFIG_DWC_ETH_QOS_STARFIVE)
 	{
 		.compatible = "starfive,jh7110-dwmac",
-		.data = (ulong)&eqos_jh7110_config
+		.data = (uintptr_t)&eqos_jh7110_config
 	},
 #endif
 	{ }

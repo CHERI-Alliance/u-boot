@@ -528,16 +528,16 @@ static int imx8m_power_domain_of_to_plat(struct udevice *dev)
 
 static const struct udevice_id imx8m_power_domain_ids[] = {
 #ifdef CONFIG_IMX8MQ
-	{ .compatible = "fsl,imx8mq-gpc", .data = (long)&imx8m_pgc_domain_data },
+	{ .compatible = "fsl,imx8mq-gpc", .data = (uintptr_t)&imx8m_pgc_domain_data },
 #endif
 #ifdef CONFIG_IMX8MM
-	{ .compatible = "fsl,imx8mm-gpc", .data = (long)&imx8mm_pgc_domain_data },
+	{ .compatible = "fsl,imx8mm-gpc", .data = (uintptr_t)&imx8mm_pgc_domain_data },
 #endif
 #ifdef CONFIG_IMX8MN
-	{ .compatible = "fsl,imx8mn-gpc", .data = (long)&imx8mn_pgc_domain_data },
+	{ .compatible = "fsl,imx8mn-gpc", .data = (uintptr_t)&imx8mn_pgc_domain_data },
 #endif
 #ifdef CONFIG_IMX8MP
-	{ .compatible = "fsl,imx8mp-gpc", .data = (long)&imx8mp_pgc_domain_data },
+	{ .compatible = "fsl,imx8mp-gpc", .data = (uintptr_t)&imx8mp_pgc_domain_data },
 #endif
 	{ }
 };

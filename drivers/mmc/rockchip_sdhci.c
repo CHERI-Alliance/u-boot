@@ -668,15 +668,15 @@ static const struct sdhci_data rk3588_data = {
 static const struct udevice_id sdhci_ids[] = {
 	{
 		.compatible = "arasan,sdhci-5.1",
-		.data = (ulong)&rk3399_data,
+		.data = (uintptr_t)&rk3399_data,
 	},
 	{
 		.compatible = "rockchip,rk3568-dwcmshc",
-		.data = (ulong)&rk3568_data,
+		.data = (uintptr_t)&rk3568_data,
 	},
 	{
 		.compatible = "rockchip,rk3588-dwcmshc",
-		.data = (ulong)&rk3588_data,
+		.data = (uintptr_t)&rk3588_data,
 	},
 	{ }
 };

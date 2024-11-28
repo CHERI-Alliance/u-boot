@@ -1095,7 +1095,7 @@ static struct ringacc_match_data k3_nav_ringacc_data = {
 };
 
 static const struct udevice_id knav_ringacc_ids[] = {
-	{ .compatible = "ti,am654-navss-ringacc", .data = (ulong)&k3_nav_ringacc_data, },
+	{ .compatible = "ti,am654-navss-ringacc", .data = (uintptr_t)&k3_nav_ringacc_data, },
 	{},
 };
 

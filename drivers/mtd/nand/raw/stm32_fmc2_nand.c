@@ -1058,15 +1058,15 @@ static const struct stm32_fmc2_nfc_data stm32_fmc2_nfc_mp25_data = {
 static const struct udevice_id stm32_fmc2_nfc_match[] = {
 	{
 		.compatible = "st,stm32mp15-fmc2",
-		.data = (ulong)&stm32_fmc2_nfc_mp1_data,
+		.data = (uintptr_t)&stm32_fmc2_nfc_mp1_data,
 	},
 	{
 		.compatible = "st,stm32mp1-fmc2-nfc",
-		.data = (ulong)&stm32_fmc2_nfc_mp1_data,
+		.data = (uintptr_t)&stm32_fmc2_nfc_mp1_data,
 	},
 	{
 		.compatible = "st,stm32mp25-fmc2-nfc",
-		.data = (ulong)&stm32_fmc2_nfc_mp25_data,
+		.data = (uintptr_t)&stm32_fmc2_nfc_mp25_data,
 	},
 	{ /* Sentinel */ }
 };

@@ -154,9 +154,9 @@ static const struct sunxi_wdt_reg sun20i_wdt_reg = {
 };
 
 static const struct udevice_id sunxi_wdt_ids[] = {
-	{ .compatible = "allwinner,sun4i-a10-wdt", .data = (ulong)&sun4i_wdt_reg },
-	{ .compatible = "allwinner,sun6i-a31-wdt", .data = (ulong)&sun6i_wdt_reg },
-	{ .compatible = "allwinner,sun20i-d1-wdt", .data = (ulong)&sun20i_wdt_reg },
+	{ .compatible = "allwinner,sun4i-a10-wdt", .data = (uintptr_t)&sun4i_wdt_reg },
+	{ .compatible = "allwinner,sun6i-a31-wdt", .data = (uintptr_t)&sun6i_wdt_reg },
+	{ .compatible = "allwinner,sun20i-d1-wdt", .data = (uintptr_t)&sun20i_wdt_reg },
 	{ /* sentinel */ }
 };
 

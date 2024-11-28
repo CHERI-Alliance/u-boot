@@ -302,23 +302,23 @@ static const struct dm_rng_ops rockchip_rng_ops = {
 static const struct udevice_id rockchip_rng_match[] = {
 	{
 		.compatible = "rockchip,rk3288-crypto",
-		.data = (ulong)&rk_cryptov1_soc_data,
+		.data = (uintptr_t)&rk_cryptov1_soc_data,
 	},
 	{
 		.compatible = "rockchip,rk3328-crypto",
-		.data = (ulong)&rk_cryptov1_soc_data,
+		.data = (uintptr_t)&rk_cryptov1_soc_data,
 	},
 	{
 		.compatible = "rockchip,rk3399-crypto",
-		.data = (ulong)&rk_cryptov1_soc_data,
+		.data = (uintptr_t)&rk_cryptov1_soc_data,
 	},
 	{
 		.compatible = "rockchip,cryptov2-rng",
-		.data = (ulong)&rk_cryptov2_soc_data,
+		.data = (uintptr_t)&rk_cryptov2_soc_data,
 	},
 	{
 		.compatible = "rockchip,trngv1",
-		.data = (ulong)&rk_trngv1_soc_data,
+		.data = (uintptr_t)&rk_trngv1_soc_data,
 	},
 	{},
 };

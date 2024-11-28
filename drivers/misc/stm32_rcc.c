@@ -77,13 +77,13 @@ static int stm32_rcc_bind(struct udevice *dev)
 }
 
 static const struct udevice_id stm32_rcc_ids[] = {
-	{.compatible = "st,stm32f42xx-rcc", .data = (ulong)&stm32_rcc_clk_f42x },
-	{.compatible = "st,stm32f469-rcc", .data = (ulong)&stm32_rcc_clk_f469 },
-	{.compatible = "st,stm32f746-rcc", .data = (ulong)&stm32_rcc_clk_f7 },
-	{.compatible = "st,stm32h743-rcc", .data = (ulong)&stm32_rcc_clk_h7 },
-	{.compatible = "st,stm32mp1-rcc", .data = (ulong)&stm32_rcc_clk_mp1 },
-	{.compatible = "st,stm32mp1-rcc-secure", .data = (ulong)&stm32_rcc_clk_mp1 },
-	{.compatible = "st,stm32mp13-rcc", .data = (ulong)&stm32_rcc_clk_mp13 },
+	{.compatible = "st,stm32f42xx-rcc", .data = (uintptr_t)&stm32_rcc_clk_f42x },
+	{.compatible = "st,stm32f469-rcc", .data = (uintptr_t)&stm32_rcc_clk_f469 },
+	{.compatible = "st,stm32f746-rcc", .data = (uintptr_t)&stm32_rcc_clk_f7 },
+	{.compatible = "st,stm32h743-rcc", .data = (uintptr_t)&stm32_rcc_clk_h7 },
+	{.compatible = "st,stm32mp1-rcc", .data = (uintptr_t)&stm32_rcc_clk_mp1 },
+	{.compatible = "st,stm32mp1-rcc-secure", .data = (uintptr_t)&stm32_rcc_clk_mp1 },
+	{.compatible = "st,stm32mp13-rcc", .data = (uintptr_t)&stm32_rcc_clk_mp13 },
 	{ }
 };
 

@@ -81,7 +81,7 @@ static const struct exynos_usi_variant exynos850_usi_data = {
 static const struct udevice_id exynos_usi_ids[] = {
 	{
 		.compatible = "samsung,exynos850-usi",
-		.data = (ulong)&exynos850_usi_data,
+		.data = (uintptr_t)&exynos850_usi_data,
 	},
 	{ } /* sentinel */
 };

@@ -1295,19 +1295,19 @@ static int j721e_wiz_remove(struct udevice *dev)
 
 static const struct udevice_id j721e_wiz_ids[] = {
 	{
-		.compatible = "ti,j721e-wiz-16g", .data = (ulong)&j721e_16g_data,
+		.compatible = "ti,j721e-wiz-16g", .data = (uintptr_t)&j721e_16g_data,
 	},
 	{
-		.compatible = "ti,j721e-wiz-10g", .data = (ulong)&j721e_10g_data,
+		.compatible = "ti,j721e-wiz-10g", .data = (uintptr_t)&j721e_10g_data,
 	},
 	{
-		.compatible = "ti,am64-wiz-10g", .data = (ulong)&am64_10g_data,
+		.compatible = "ti,am64-wiz-10g", .data = (uintptr_t)&am64_10g_data,
 	},
 	{
-		.compatible = "ti,j784s4-wiz-10g", .data = (ulong)&j784s4_wiz_10g,
+		.compatible = "ti,j784s4-wiz-10g", .data = (uintptr_t)&j784s4_wiz_10g,
 	},
 	{
-		.compatible = "ti,j721s2-wiz-10g", .data = (ulong)&j721s2_10g_data,
+		.compatible = "ti,j721s2-wiz-10g", .data = (uintptr_t)&j721s2_10g_data,
 	},
 	{}
 };

@@ -1181,7 +1181,7 @@ static const struct udevice_id dwc2_udc_otg_ids[] = {
 	{ .compatible = "snps,dwc2" },
 	{ .compatible = "brcm,bcm2835-usb" },
 	{ .compatible = "st,stm32mp15-hsotg",
-	  .data = (ulong)dwc2_set_stm32mp1_hsotg_params },
+	  .data = (uintptr_t)dwc2_set_stm32mp1_hsotg_params },
 	{},
 };
 

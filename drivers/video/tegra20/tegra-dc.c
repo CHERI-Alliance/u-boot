@@ -558,13 +558,13 @@ static const struct tegra_dc_soc_info tegra114_dc_soc_info = {
 static const struct udevice_id tegra_lcd_ids[] = {
 	{
 		.compatible = "nvidia,tegra20-dc",
-		.data = (ulong)&tegra20_dc_soc_info
+		.data = (uintptr_t)&tegra20_dc_soc_info
 	}, {
 		.compatible = "nvidia,tegra30-dc",
-		.data = (ulong)&tegra30_dc_soc_info
+		.data = (uintptr_t)&tegra30_dc_soc_info
 	}, {
 		.compatible = "nvidia,tegra114-dc",
-		.data = (ulong)&tegra114_dc_soc_info
+		.data = (uintptr_t)&tegra114_dc_soc_info
 	}, {
 		/* sentinel */
 	}

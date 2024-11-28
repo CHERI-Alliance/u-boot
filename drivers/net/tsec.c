@@ -753,8 +753,8 @@ static struct tsec_data gianfar_data = {
 };
 
 static const struct udevice_id tsec_ids[] = {
-	{ .compatible = "fsl,etsec2", .data = (ulong)&etsec2_data },
-	{ .compatible = "gianfar", .data = (ulong)&gianfar_data },
+	{ .compatible = "fsl,etsec2", .data = (uintptr_t)&etsec2_data },
+	{ .compatible = "gianfar", .data = (uintptr_t)&gianfar_data },
 	{ }
 };
 

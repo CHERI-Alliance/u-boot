@@ -760,11 +760,11 @@ static int armada_37xx_pinctrl_bind(struct udevice *dev)
 static const struct udevice_id armada_37xx_pinctrl_of_match[] = {
 	{
 		.compatible = "marvell,armada3710-sb-pinctrl",
-		.data = (ulong)&armada_37xx_pin_sb,
+		.data = (uintptr_t)&armada_37xx_pin_sb,
 	},
 	{
 		.compatible = "marvell,armada3710-nb-pinctrl",
-		.data = (ulong)&armada_37xx_pin_nb,
+		.data = (uintptr_t)&armada_37xx_pin_nb,
 	},
 	{ /* sentinel */ }
 };

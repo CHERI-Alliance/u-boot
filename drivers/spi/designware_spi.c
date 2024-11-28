@@ -759,15 +759,15 @@ static const struct dm_spi_ops dw_spi_ops = {
 static const struct udevice_id dw_spi_ids[] = {
 	/* Generic compatible strings */
 
-	{ .compatible = "snps,dw-apb-ssi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "snps,dw-apb-ssi-3.20a", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "snps,dw-apb-ssi-3.22a", .data = (ulong)dw_spi_apb_init },
+	{ .compatible = "snps,dw-apb-ssi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "snps,dw-apb-ssi-3.20a", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "snps,dw-apb-ssi-3.22a", .data = (uintptr_t)dw_spi_apb_init },
 	/* First version with SSI_MAX_XFER_SIZE */
-	{ .compatible = "snps,dw-apb-ssi-3.23a", .data = (ulong)dw_spi_apb_init },
+	{ .compatible = "snps,dw-apb-ssi-3.23a", .data = (uintptr_t)dw_spi_apb_init },
 	/* First version with Dual/Quad SPI; unused by this driver */
-	{ .compatible = "snps,dw-apb-ssi-4.00a", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "snps,dw-apb-ssi-4.01", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "snps,dwc-ssi-1.01a", .data = (ulong)dw_spi_dwc_init },
+	{ .compatible = "snps,dw-apb-ssi-4.00a", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "snps,dw-apb-ssi-4.01", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "snps,dwc-ssi-1.01a", .data = (uintptr_t)dw_spi_dwc_init },
 
 	/* Compatible strings for specific SoCs */
 
@@ -776,16 +776,16 @@ static const struct udevice_id dw_spi_ids[] = {
 	 * version of this device. This compatible string is used for those
 	 * devices, and is not used for sofpgas in general.
 	 */
-	{ .compatible = "altr,socfpga-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "altr,socfpga-arria10-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "canaan,k210-spi", .data = (ulong)dw_spi_apb_k210_init},
-	{ .compatible = "canaan,k210-ssi", .data = (ulong)dw_spi_dwc_init },
-	{ .compatible = "intel,stratix10-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "intel,agilex-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "mscc,ocelot-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "mscc,jaguar2-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "snps,axs10x-spi", .data = (ulong)dw_spi_apb_init },
-	{ .compatible = "snps,hsdk-spi", .data = (ulong)dw_spi_apb_init },
+	{ .compatible = "altr,socfpga-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "altr,socfpga-arria10-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "canaan,k210-spi", .data = (uintptr_t)dw_spi_apb_k210_init},
+	{ .compatible = "canaan,k210-ssi", .data = (uintptr_t)dw_spi_dwc_init },
+	{ .compatible = "intel,stratix10-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "intel,agilex-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "mscc,ocelot-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "mscc,jaguar2-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "snps,axs10x-spi", .data = (uintptr_t)dw_spi_apb_init },
+	{ .compatible = "snps,hsdk-spi", .data = (uintptr_t)dw_spi_apb_init },
 	{ }
 };
 

@@ -61,7 +61,7 @@ static const struct msm_pinctrl_data apq8096_data = {
 };
 
 static const struct udevice_id msm_pinctrl_ids[] = {
-	{ .compatible = "qcom,msm8996-pinctrl", .data = (ulong)&apq8096_data },
+	{ .compatible = "qcom,msm8996-pinctrl", .data = (uintptr_t)&apq8096_data },
 	{ /* Sentinal */ }
 };
 

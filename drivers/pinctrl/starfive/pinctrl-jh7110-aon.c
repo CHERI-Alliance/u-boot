@@ -99,7 +99,7 @@ static int jh7110_aon_pinctrl_probe(struct udevice *dev)
 static const struct udevice_id jh7110_aon_pinctrl_ids[] = {
 	/* JH7110 aon pinctrl */
 	{ .compatible = "starfive,jh7110-aon-pinctrl",
-	  .data = (ulong)&jh7110_aon_pinctrl_info, },
+	  .data = (uintptr_t)&jh7110_aon_pinctrl_info, },
 	{ /* sentinel */ }
 };
 

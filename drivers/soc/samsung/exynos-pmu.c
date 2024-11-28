@@ -87,7 +87,7 @@ static int exynos_pmu_probe(struct udevice *dev)
 static const struct udevice_id exynos_pmu_ids[] = {
 	{
 		.compatible = "samsung,exynos850-pmu",
-		.data = (ulong)&exynos850_pmu_data
+		.data = (uintptr_t)&exynos850_pmu_data
 	},
 	{ /* sentinel */ }
 };

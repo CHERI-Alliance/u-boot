@@ -1145,19 +1145,19 @@ static const struct atmel_qspi_caps atmel_sama7g5_qspi_caps = {
 static const struct udevice_id atmel_qspi_ids[] = {
 	{
 		.compatible = "atmel,sama5d2-qspi",
-		.data = (ulong)&atmel_sama5d2_qspi_caps,
+		.data = (uintptr_t)&atmel_sama5d2_qspi_caps,
 	},
 	{
 		.compatible = "microchip,sam9x60-qspi",
-		.data = (ulong)&atmel_sam9x60_qspi_caps,
+		.data = (uintptr_t)&atmel_sam9x60_qspi_caps,
 	},
 	{
 		.compatible = "microchip,sama7g5-ospi",
-		.data = (ulong)&atmel_sama7g5_ospi_caps,
+		.data = (uintptr_t)&atmel_sama7g5_ospi_caps,
 	},
 	{
 		.compatible = "microchip,sama7g5-qspi",
-		.data = (ulong)&atmel_sama7g5_qspi_caps,
+		.data = (uintptr_t)&atmel_sama7g5_qspi_caps,
 	},
 	{ /* sentinel */ }
 };

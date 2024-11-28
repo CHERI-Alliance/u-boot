@@ -12,6 +12,7 @@
 #include <dm/device-internal.h>
 #include <i2c.h>
 #include <i2c_eeprom.h>
+#include <asm/io.h>
 
 struct i2c_eeprom_drv_data {
 	u32 size; /* size in bytes */
@@ -272,21 +273,21 @@ static const struct i2c_eeprom_drv_data atmel24c512_data = {
 };
 
 static const struct udevice_id i2c_eeprom_std_ids[] = {
-	{ .compatible = "i2c-eeprom", (ulong)&eeprom_data },
-	{ .compatible = "atmel,24c01", (ulong)&atmel24c01a_data },
-	{ .compatible = "atmel,24c01a", (ulong)&atmel24c01a_data },
-	{ .compatible = "atmel,24c02", (ulong)&atmel24c02_data },
-	{ .compatible = "atmel,24c04", (ulong)&atmel24c04_data },
-	{ .compatible = "atmel,24c08", (ulong)&atmel24c08_data },
-	{ .compatible = "atmel,24c08a", (ulong)&atmel24c08a_data },
-	{ .compatible = "atmel,24c16a", (ulong)&atmel24c16a_data },
-	{ .compatible = "atmel,24mac402", (ulong)&atmel24mac402_data },
-	{ .compatible = "atmel,24c32", (ulong)&atmel24c32_data },
-	{ .compatible = "atmel,24c32d-wl", (ulong)&atmel24c32d_wlp_data },
-	{ .compatible = "atmel,24c64", (ulong)&atmel24c64_data },
-	{ .compatible = "atmel,24c128", (ulong)&atmel24c128_data },
-	{ .compatible = "atmel,24c256", (ulong)&atmel24c256_data },
-	{ .compatible = "atmel,24c512", (ulong)&atmel24c512_data },
+	{ .compatible = "i2c-eeprom", (uintptr_t)&eeprom_data },
+	{ .compatible = "atmel,24c01", (uintptr_t)&atmel24c01a_data },
+	{ .compatible = "atmel,24c01a", (uintptr_t)&atmel24c01a_data },
+	{ .compatible = "atmel,24c02", (uintptr_t)&atmel24c02_data },
+	{ .compatible = "atmel,24c04", (uintptr_t)&atmel24c04_data },
+	{ .compatible = "atmel,24c08", (uintptr_t)&atmel24c08_data },
+	{ .compatible = "atmel,24c08a", (uintptr_t)&atmel24c08a_data },
+	{ .compatible = "atmel,24c16a", (uintptr_t)&atmel24c16a_data },
+	{ .compatible = "atmel,24mac402", (uintptr_t)&atmel24mac402_data },
+	{ .compatible = "atmel,24c32", (uintptr_t)&atmel24c32_data },
+	{ .compatible = "atmel,24c32d-wl", (uintptr_t)&atmel24c32d_wlp_data },
+	{ .compatible = "atmel,24c64", (uintptr_t)&atmel24c64_data },
+	{ .compatible = "atmel,24c128", (uintptr_t)&atmel24c128_data },
+	{ .compatible = "atmel,24c256", (uintptr_t)&atmel24c256_data },
+	{ .compatible = "atmel,24c512", (uintptr_t)&atmel24c512_data },
 	{ }
 };
 

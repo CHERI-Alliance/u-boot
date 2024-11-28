@@ -778,163 +778,163 @@ static const struct udevice_id sunxi_pinctrl_ids[] = {
 #ifdef CONFIG_PINCTRL_SUNIV_F1C100S
 	{
 		.compatible = "allwinner,suniv-f1c100s-pinctrl",
-		.data = (ulong)&suniv_f1c100s_pinctrl_desc,
+		.data = (uintptr_t)&suniv_f1c100s_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN4I_A10
 	{
 		.compatible = "allwinner,sun4i-a10-pinctrl",
-		.data = (ulong)&sun4i_a10_pinctrl_desc,
+		.data = (uintptr_t)&sun4i_a10_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN5I_A13
 	{
 		.compatible = "allwinner,sun5i-a10s-pinctrl",
-		.data = (ulong)&sun5i_a13_pinctrl_desc,
+		.data = (uintptr_t)&sun5i_a13_pinctrl_desc,
 	},
 	{
 		.compatible = "allwinner,sun5i-a13-pinctrl",
-		.data = (ulong)&sun5i_a13_pinctrl_desc,
+		.data = (uintptr_t)&sun5i_a13_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN6I_A31
 	{
 		.compatible = "allwinner,sun6i-a31-pinctrl",
-		.data = (ulong)&sun6i_a31_pinctrl_desc,
+		.data = (uintptr_t)&sun6i_a31_pinctrl_desc,
 	},
 	{
 		.compatible = "allwinner,sun6i-a31s-pinctrl",
-		.data = (ulong)&sun6i_a31_pinctrl_desc,
+		.data = (uintptr_t)&sun6i_a31_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN6I_A31_R
 	{
 		.compatible = "allwinner,sun6i-a31-r-pinctrl",
-		.data = (ulong)&sun6i_a31_r_pinctrl_desc,
+		.data = (uintptr_t)&sun6i_a31_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN7I_A20
 	{
 		.compatible = "allwinner,sun7i-a20-pinctrl",
-		.data = (ulong)&sun7i_a20_pinctrl_desc,
+		.data = (uintptr_t)&sun7i_a20_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_A23
 	{
 		.compatible = "allwinner,sun8i-a23-pinctrl",
-		.data = (ulong)&sun8i_a23_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_a23_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_A23_R
 	{
 		.compatible = "allwinner,sun8i-a23-r-pinctrl",
-		.data = (ulong)&sun8i_a23_r_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_a23_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_A33
 	{
 		.compatible = "allwinner,sun8i-a33-pinctrl",
-		.data = (ulong)&sun8i_a33_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_a33_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_A83T
 	{
 		.compatible = "allwinner,sun8i-a83t-pinctrl",
-		.data = (ulong)&sun8i_a83t_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_a83t_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_A83T_R
 	{
 		.compatible = "allwinner,sun8i-a83t-r-pinctrl",
-		.data = (ulong)&sun8i_a83t_r_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_a83t_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_H3
 	{
 		.compatible = "allwinner,sun8i-h3-pinctrl",
-		.data = (ulong)&sun8i_h3_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_h3_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_H3_R
 	{
 		.compatible = "allwinner,sun8i-h3-r-pinctrl",
-		.data = (ulong)&sun8i_h3_r_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_h3_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN7I_A20
 	{
 		.compatible = "allwinner,sun8i-r40-pinctrl",
-		.data = (ulong)&sun7i_a20_pinctrl_desc,
+		.data = (uintptr_t)&sun7i_a20_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN8I_V3S
 	{
 		.compatible = "allwinner,sun8i-v3-pinctrl",
-		.data = (ulong)&sun8i_v3s_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_v3s_pinctrl_desc,
 	},
 	{
 		.compatible = "allwinner,sun8i-v3s-pinctrl",
-		.data = (ulong)&sun8i_v3s_pinctrl_desc,
+		.data = (uintptr_t)&sun8i_v3s_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN9I_A80
 	{
 		.compatible = "allwinner,sun9i-a80-pinctrl",
-		.data = (ulong)&sun9i_a80_pinctrl_desc,
+		.data = (uintptr_t)&sun9i_a80_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN9I_A80_R
 	{
 		.compatible = "allwinner,sun9i-a80-r-pinctrl",
-		.data = (ulong)&sun9i_a80_r_pinctrl_desc,
+		.data = (uintptr_t)&sun9i_a80_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN20I_D1
 	{
 		.compatible = "allwinner,sun20i-d1-pinctrl",
-		.data = (ulong)&sun20i_d1_pinctrl_desc,
+		.data = (uintptr_t)&sun20i_d1_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_A64
 	{
 		.compatible = "allwinner,sun50i-a64-pinctrl",
-		.data = (ulong)&sun50i_a64_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_a64_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_A64_R
 	{
 		.compatible = "allwinner,sun50i-a64-r-pinctrl",
-		.data = (ulong)&sun50i_a64_r_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_a64_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_H5
 	{
 		.compatible = "allwinner,sun50i-h5-pinctrl",
-		.data = (ulong)&sun50i_h5_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_h5_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_H6
 	{
 		.compatible = "allwinner,sun50i-h6-pinctrl",
-		.data = (ulong)&sun50i_h6_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_h6_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_H6_R
 	{
 		.compatible = "allwinner,sun50i-h6-r-pinctrl",
-		.data = (ulong)&sun50i_h6_r_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_h6_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_H616
 	{
 		.compatible = "allwinner,sun50i-h616-pinctrl",
-		.data = (ulong)&sun50i_h616_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_h616_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_H616_R
 	{
 		.compatible = "allwinner,sun50i-h616-r-pinctrl",
-		.data = (ulong)&sun50i_h616_r_pinctrl_desc,
+		.data = (uintptr_t)&sun50i_h616_r_pinctrl_desc,
 	},
 #endif
 	{}

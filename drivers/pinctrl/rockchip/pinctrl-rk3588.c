@@ -334,7 +334,7 @@ static const struct rockchip_pin_ctrl rk3588_pin_ctrl = {
 static const struct udevice_id rk3588_pinctrl_ids[] = {
 	{
 		.compatible = "rockchip,rk3588-pinctrl",
-		.data = (ulong)&rk3588_pin_ctrl
+		.data = (uintptr_t)&rk3588_pin_ctrl
 	},
 	{ }
 };

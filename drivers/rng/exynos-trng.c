@@ -271,10 +271,10 @@ static const struct exynos_trng_variant exynos850_trng_data = {
 static const struct udevice_id exynos_trng_match[] = {
 	{
 		.compatible = "samsung,exynos5250-trng",
-		.data = (ulong)&exynos5250_trng_data,
+		.data = (uintptr_t)&exynos5250_trng_data,
 	}, {
 		.compatible = "samsung,exynos850-trng",
-		.data = (ulong)&exynos850_trng_data,
+		.data = (uintptr_t)&exynos850_trng_data,
 	},
 	{ },
 };

@@ -2435,11 +2435,11 @@ static int cdns_torrent_phy_reset(struct phy *gphy)
 static const struct udevice_id cdns_torrent_id_table[] = {
 	{
 		.compatible = "cdns,torrent-phy",
-		.data = (ulong)&cdns_map_torrent,
+		.data = (uintptr_t)&cdns_map_torrent,
 	},
 	{
 		.compatible = "ti,j721e-serdes-10g",
-		.data = (ulong)&ti_j721e_map_torrent,
+		.data = (uintptr_t)&ti_j721e_map_torrent,
 	},
 	{}
 };

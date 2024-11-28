@@ -690,21 +690,21 @@ static const struct sun4i_usb_phy_cfg suniv_f1c100s_cfg = {
 };
 
 static const struct udevice_id sun4i_usb_phy_ids[] = {
-	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = (ulong)&sun4i_a10_cfg },
-	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = (ulong)&sun5i_a13_cfg },
-	{ .compatible = "allwinner,sun6i-a31-usb-phy", .data = (ulong)&sun6i_a31_cfg },
-	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = (ulong)&sun7i_a20_cfg },
-	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = (ulong)&sun8i_a23_cfg },
-	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = (ulong)&sun8i_a33_cfg },
-	{ .compatible = "allwinner,sun8i-a83t-usb-phy", .data = (ulong)&sun8i_a83t_cfg },
-	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = (ulong)&sun8i_h3_cfg },
-	{ .compatible = "allwinner,sun8i-r40-usb-phy", .data = (ulong)&sun8i_r40_cfg },
-	{ .compatible = "allwinner,sun8i-v3s-usb-phy", .data = (ulong)&sun8i_v3s_cfg },
-	{ .compatible = "allwinner,sun20i-d1-usb-phy", .data = (ulong)&sun20i_d1_cfg },
-	{ .compatible = "allwinner,sun50i-a64-usb-phy", .data = (ulong)&sun50i_a64_cfg},
-	{ .compatible = "allwinner,sun50i-h6-usb-phy", .data = (ulong)&sun50i_h6_cfg},
-	{ .compatible = "allwinner,sun50i-h616-usb-phy", .data = (ulong)&sun50i_h616_cfg },
-	{ .compatible = "allwinner,suniv-f1c100s-usb-phy", .data = (ulong)&suniv_f1c100s_cfg },
+	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = (uintptr_t)&sun4i_a10_cfg },
+	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = (uintptr_t)&sun5i_a13_cfg },
+	{ .compatible = "allwinner,sun6i-a31-usb-phy", .data = (uintptr_t)&sun6i_a31_cfg },
+	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = (uintptr_t)&sun7i_a20_cfg },
+	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = (uintptr_t)&sun8i_a23_cfg },
+	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = (uintptr_t)&sun8i_a33_cfg },
+	{ .compatible = "allwinner,sun8i-a83t-usb-phy", .data = (uintptr_t)&sun8i_a83t_cfg },
+	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = (uintptr_t)&sun8i_h3_cfg },
+	{ .compatible = "allwinner,sun8i-r40-usb-phy", .data = (uintptr_t)&sun8i_r40_cfg },
+	{ .compatible = "allwinner,sun8i-v3s-usb-phy", .data = (uintptr_t)&sun8i_v3s_cfg },
+	{ .compatible = "allwinner,sun20i-d1-usb-phy", .data = (uintptr_t)&sun20i_d1_cfg },
+	{ .compatible = "allwinner,sun50i-a64-usb-phy", .data = (uintptr_t)&sun50i_a64_cfg},
+	{ .compatible = "allwinner,sun50i-h6-usb-phy", .data = (uintptr_t)&sun50i_h6_cfg},
+	{ .compatible = "allwinner,sun50i-h616-usb-phy", .data = (uintptr_t)&sun50i_h616_cfg },
+	{ .compatible = "allwinner,suniv-f1c100s-usb-phy", .data = (uintptr_t)&suniv_f1c100s_cfg },
 	{ }
 };
 

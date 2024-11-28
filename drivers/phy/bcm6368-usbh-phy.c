@@ -96,16 +96,16 @@ static const struct bcm6368_usbh_hw bcm63268_hw = {
 static const struct udevice_id bcm6368_usbh_ids[] = {
 	{
 		.compatible = "brcm,bcm6328-usbh",
-		.data = (ulong)&bcm6328_hw,
+		.data = (uintptr_t)&bcm6328_hw,
 	}, {
 		.compatible = "brcm,bcm6362-usbh",
-		.data = (ulong)&bcm6362_hw,
+		.data = (uintptr_t)&bcm6362_hw,
 	}, {
 		.compatible = "brcm,bcm6368-usbh",
-		.data = (ulong)&bcm6368_hw,
+		.data = (uintptr_t)&bcm6368_hw,
 	}, {
 		.compatible = "brcm,bcm63268-usbh",
-		.data = (ulong)&bcm63268_hw,
+		.data = (uintptr_t)&bcm63268_hw,
 	}, { /* sentinel */ }
 };
 

@@ -1145,15 +1145,15 @@ static struct nfc_cfg nfc_v9_cfg = {
 static const struct udevice_id rk_nfc_id_table[] = {
 	{
 		.compatible = "rockchip,px30-nfc",
-		.data = (unsigned long)&nfc_v9_cfg
+		.data = (uintptr_t)&nfc_v9_cfg
 	},
 	{
 		.compatible = "rockchip,rk2928-nfc",
-		.data = (unsigned long)&nfc_v6_cfg
+		.data = (uintptr_t)&nfc_v6_cfg
 	},
 	{
 		.compatible = "rockchip,rv1108-nfc",
-		.data = (unsigned long)&nfc_v8_cfg
+		.data = (uintptr_t)&nfc_v8_cfg
 	},
 	{ /* sentinel */ }
 };

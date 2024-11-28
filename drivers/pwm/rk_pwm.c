@@ -202,9 +202,9 @@ static const struct rockchip_pwm_data pwm_data_v3 = {
 };
 
 static const struct udevice_id rk_pwm_ids[] = {
-	{ .compatible = "rockchip,rk2928-pwm", .data = (ulong)&pwm_data_v1},
-	{ .compatible = "rockchip,rk3288-pwm", .data = (ulong)&pwm_data_v2},
-	{ .compatible = "rockchip,rk3328-pwm", .data = (ulong)&pwm_data_v3},
+	{ .compatible = "rockchip,rk2928-pwm", .data = (uintptr_t)&pwm_data_v1},
+	{ .compatible = "rockchip,rk3288-pwm", .data = (uintptr_t)&pwm_data_v2},
+	{ .compatible = "rockchip,rk3328-pwm", .data = (uintptr_t)&pwm_data_v3},
 	{ }
 };
 

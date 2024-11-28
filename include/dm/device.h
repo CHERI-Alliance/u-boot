@@ -314,7 +314,7 @@ static inline int dev_seq(const struct udevice *dev)
  */
 struct udevice_id {
 	const char *compatible;
-	ulong data;
+	uintptr_t data;
 };
 
 #if CONFIG_IS_ENABLED(OF_REAL)
@@ -609,7 +609,7 @@ struct udevice *dev_get_parent(const struct udevice *child);
  * @dev:	Device to check
  * Return: driver data (0 if none is provided)
  */
-ulong dev_get_driver_data(const struct udevice *dev);
+uintptr_t dev_get_driver_data(const struct udevice *dev);
 
 /**
  * dev_get_driver_ops() - get the device's driver's operations

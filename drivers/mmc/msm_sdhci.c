@@ -264,8 +264,8 @@ static const struct msm_sdhc_variant_info msm_sdhc_v5_var = {
 };
 
 static const struct udevice_id msm_mmc_ids[] = {
-	{ .compatible = "qcom,sdhci-msm-v4", .data = (ulong)&msm_sdhc_mci_var },
-	{ .compatible = "qcom,sdhci-msm-v5", .data = (ulong)&msm_sdhc_v5_var },
+	{ .compatible = "qcom,sdhci-msm-v4", .data = (uintptr_t)&msm_sdhc_mci_var },
+	{ .compatible = "qcom,sdhci-msm-v5", .data = (uintptr_t)&msm_sdhc_v5_var },
 	{ }
 };
 

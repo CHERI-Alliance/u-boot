@@ -1151,9 +1151,9 @@ static const struct rockchip_dp_data rk3288_dp = {
 };
 
 static const struct udevice_id rockchip_dp_ids[] = {
-	{ .compatible = "rockchip,rk3288-dp", .data = (ulong)&rk3288_dp },
-	{ .compatible = "rockchip,rk3288-edp", .data = (ulong)&rk3288_dp },
-	{ .compatible = "rockchip,rk3399-edp", .data = (ulong)&rk3399_edp },
+	{ .compatible = "rockchip,rk3288-dp", .data = (uintptr_t)&rk3288_dp },
+	{ .compatible = "rockchip,rk3288-edp", .data = (uintptr_t)&rk3288_dp },
+	{ .compatible = "rockchip,rk3399-edp", .data = (uintptr_t)&rk3399_edp },
 	{ }
 };
 

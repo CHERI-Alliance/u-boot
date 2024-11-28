@@ -111,7 +111,7 @@ static const struct samsung_pin_ctrl exynos850_pin_ctrl[] = {
 
 static const struct udevice_id exynos850_pinctrl_ids[] = {
 	{ .compatible = "samsung,exynos850-pinctrl",
-		.data = (ulong)exynos850_pin_ctrl },
+		.data = (uintptr_t)exynos850_pin_ctrl },
 	{ }
 };
 

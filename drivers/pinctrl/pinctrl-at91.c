@@ -512,10 +512,10 @@ static int at91_pinctrl_probe(struct udevice *dev)
 }
 
 static const struct udevice_id at91_pinctrl_match[] = {
-	{ .compatible = "atmel,sama5d3-pinctrl", .data = (ulong)&sama5d3_ops },
-	{ .compatible = "atmel,at91sam9x5-pinctrl", .data = (ulong)&at91sam9x5_ops },
-	{ .compatible = "atmel,at91rm9200-pinctrl", .data = (ulong)&at91rm9200_ops },
-	{ .compatible = "microchip,sam9x60-pinctrl", .data = (ulong)&sam9x60_ops },
+	{ .compatible = "atmel,sama5d3-pinctrl", .data = (uintptr_t)&sama5d3_ops },
+	{ .compatible = "atmel,at91sam9x5-pinctrl", .data = (uintptr_t)&at91sam9x5_ops },
+	{ .compatible = "atmel,at91rm9200-pinctrl", .data = (uintptr_t)&at91rm9200_ops },
+	{ .compatible = "microchip,sam9x60-pinctrl", .data = (uintptr_t)&sam9x60_ops },
 	{}
 };
 

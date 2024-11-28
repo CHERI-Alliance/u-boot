@@ -863,14 +863,14 @@ static const struct dm_spi_ops fsl_qspi_ops = {
 };
 
 static const struct udevice_id fsl_qspi_ids[] = {
-	{ .compatible = "fsl,vf610-qspi", .data = (ulong)&vybrid_data, },
-	{ .compatible = "fsl,imx6sx-qspi", .data = (ulong)&imx6sx_data, },
-	{ .compatible = "fsl,imx6ul-qspi", .data = (ulong)&imx6ul_data, },
-	{ .compatible = "fsl,imx7d-qspi", .data = (ulong)&imx7d_data, },
-	{ .compatible = "fsl,imx7ulp-qspi", .data = (ulong)&imx7ulp_data, },
-	{ .compatible = "fsl,ls1021a-qspi", .data = (ulong)&ls1021a_data, },
-	{ .compatible = "fsl,ls1088a-qspi", .data = (ulong)&ls2080a_data, },
-	{ .compatible = "fsl,ls2080a-qspi", .data = (ulong)&ls2080a_data, },
+	{ .compatible = "fsl,vf610-qspi", .data = (uintptr_t)&vybrid_data, },
+	{ .compatible = "fsl,imx6sx-qspi", .data = (uintptr_t)&imx6sx_data, },
+	{ .compatible = "fsl,imx6ul-qspi", .data = (uintptr_t)&imx6ul_data, },
+	{ .compatible = "fsl,imx7d-qspi", .data = (uintptr_t)&imx7d_data, },
+	{ .compatible = "fsl,imx7ulp-qspi", .data = (uintptr_t)&imx7ulp_data, },
+	{ .compatible = "fsl,ls1021a-qspi", .data = (uintptr_t)&ls1021a_data, },
+	{ .compatible = "fsl,ls1088a-qspi", .data = (uintptr_t)&ls2080a_data, },
+	{ .compatible = "fsl,ls2080a-qspi", .data = (uintptr_t)&ls2080a_data, },
 	{ }
 };
 

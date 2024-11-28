@@ -490,31 +490,31 @@ static const struct meson_pwm_data pwm_g12a_ee_data = {
 static const struct udevice_id meson_pwm_ids[] = {
 	{
 		.compatible = "amlogic,meson-gxbb-pwm",
-		.data = (ulong)&pwm_gxbb_data
+		.data = (uintptr_t)&pwm_gxbb_data
 	},
 	{
 		.compatible = "amlogic,meson-gxbb-ao-pwm",
-		.data = (ulong)&pwm_gxbb_ao_data
+		.data = (uintptr_t)&pwm_gxbb_ao_data
 	},
 	{
 		.compatible = "amlogic,meson-axg-ee-pwm",
-		.data = (ulong)&pwm_axg_ee_data
+		.data = (uintptr_t)&pwm_axg_ee_data
 	},
 	{
 		.compatible = "amlogic,meson-axg-ao-pwm",
-		.data = (ulong)&pwm_axg_ao_data
+		.data = (uintptr_t)&pwm_axg_ao_data
 	},
 	{
 		.compatible = "amlogic,meson-g12a-ee-pwm",
-		.data = (ulong)&pwm_g12a_ee_data
+		.data = (uintptr_t)&pwm_g12a_ee_data
 	},
 	{
 		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
-		.data = (ulong)&pwm_g12a_ao_ab_data
+		.data = (uintptr_t)&pwm_g12a_ao_ab_data
 	},
 	{
 		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
-		.data = (ulong)&pwm_g12a_ao_cd_data
+		.data = (uintptr_t)&pwm_g12a_ao_cd_data
 	},
 };
 

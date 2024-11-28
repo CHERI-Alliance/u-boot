@@ -2016,7 +2016,7 @@ static const struct udevice_id omap_hsmmc_ids[] = {
 	{ .compatible = "ti,omap4-hsmmc" },
 	{ .compatible = "ti,am33xx-hsmmc" },
 	{ .compatible = "ti,am335-sdhci" },
-	{ .compatible = "ti,dra7-hsmmc", .data = (ulong)&dra7_mmc_of_data },
+	{ .compatible = "ti,dra7-hsmmc", .data = (uintptr_t)&dra7_mmc_of_data },
 	{ }
 };
 #endif

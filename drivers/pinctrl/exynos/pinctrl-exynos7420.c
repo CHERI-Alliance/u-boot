@@ -103,7 +103,7 @@ const struct samsung_pin_ctrl exynos7420_pin_ctrl[] = {
 
 static const struct udevice_id exynos7420_pinctrl_ids[] = {
 	{ .compatible = "samsung,exynos7420-pinctrl",
-		.data = (ulong)exynos7420_pin_ctrl },
+		.data = (uintptr_t)exynos7420_pin_ctrl },
 	{ }
 };
 

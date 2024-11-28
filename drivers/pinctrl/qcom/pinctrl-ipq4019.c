@@ -337,7 +337,7 @@ static const struct msm_pinctrl_data ipq4019_data = {
 };
 
 static const struct udevice_id msm_pinctrl_ids[] = {
-	{ .compatible = "qcom,ipq4019-pinctrl", .data = (ulong)&ipq4019_data },
+	{ .compatible = "qcom,ipq4019-pinctrl", .data = (uintptr_t)&ipq4019_data },
 	{ /* Sentinal */ }
 };
 

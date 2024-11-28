@@ -520,11 +520,11 @@ static int rpmh_regulators_bind(struct udevice *dev)
 static const struct udevice_id rpmh_regulator_ids[] = {
 	{
 		.compatible = "qcom,pm8150-rpmh-regulators",
-		.data = (ulong)pm8150_vreg_data,
+		.data = (uintptr_t)pm8150_vreg_data,
 	},
 	{
 		.compatible = "qcom,pm8150l-rpmh-regulators",
-		.data = (ulong)pm8150l_vreg_data,
+		.data = (uintptr_t)pm8150l_vreg_data,
 	},
 	{ /* sentinal */ },
 };

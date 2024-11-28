@@ -1744,35 +1744,35 @@ static const struct atmel_smc_nand_ebi_csa_cfg sam9x60_ebi_csa = {
 static const struct udevice_id atmel_ebi_csa_regmap_of_ids[] = {
 	{
 		.compatible = "atmel,at91sam9260-matrix",
-		.data = (ulong)&at91sam9260_ebi_csa,
+		.data = (uintptr_t)&at91sam9260_ebi_csa,
 	},
 	{
 		.compatible = "atmel,at91sam9261-matrix",
-		.data = (ulong)&at91sam9261_ebi_csa,
+		.data = (uintptr_t)&at91sam9261_ebi_csa,
 	},
 	{
 		.compatible = "atmel,at91sam9263-matrix",
-		.data = (ulong)&at91sam9263_ebi_csa,
+		.data = (uintptr_t)&at91sam9263_ebi_csa,
 	},
 	{
 		.compatible = "atmel,at91sam9rl-matrix",
-		.data = (ulong)&at91sam9rl_ebi_csa,
+		.data = (uintptr_t)&at91sam9rl_ebi_csa,
 	},
 	{
 		.compatible = "atmel,at91sam9g45-matrix",
-		.data = (ulong)&at91sam9g45_ebi_csa,
+		.data = (uintptr_t)&at91sam9g45_ebi_csa,
 	},
 	{
 		.compatible = "atmel,at91sam9n12-matrix",
-		.data = (ulong)&at91sam9n12_ebi_csa,
+		.data = (uintptr_t)&at91sam9n12_ebi_csa,
 	},
 	{
 		.compatible = "atmel,at91sam9x5-matrix",
-		.data = (ulong)&at91sam9x5_ebi_csa,
+		.data = (uintptr_t)&at91sam9x5_ebi_csa,
 	},
 	{
 		.compatible = "microchip,sam9x60-sfr",
-		.data = (ulong)&sam9x60_ebi_csa,
+		.data = (uintptr_t)&sam9x60_ebi_csa,
 	},
 	{ /* sentinel */ },
 };
@@ -2160,40 +2160,40 @@ static const struct atmel_nand_controller_caps atmel_rm9200_nand_caps = {
 static const struct udevice_id atmel_nand_controller_of_ids[] = {
 	{
 		.compatible = "atmel,at91rm9200-nand-controller",
-		.data = (ulong)&atmel_rm9200_nc_caps,
+		.data = (uintptr_t)&atmel_rm9200_nc_caps,
 	},
 	{
 		.compatible = "atmel,at91sam9260-nand-controller",
-		.data = (ulong)&atmel_sam9260_nc_caps,
+		.data = (uintptr_t)&atmel_sam9260_nc_caps,
 	},
 	{
 		.compatible = "atmel,at91sam9261-nand-controller",
-		.data = (ulong)&atmel_sam9261_nc_caps,
+		.data = (uintptr_t)&atmel_sam9261_nc_caps,
 	},
 	{
 		.compatible = "atmel,at91sam9g45-nand-controller",
-		.data = (ulong)&atmel_sam9g45_nc_caps,
+		.data = (uintptr_t)&atmel_sam9g45_nc_caps,
 	},
 	{
 		.compatible = "atmel,sama5d3-nand-controller",
-		.data = (ulong)&atmel_sama5_nc_caps,
+		.data = (uintptr_t)&atmel_sama5_nc_caps,
 	},
 	{
 		.compatible = "microchip,sam9x60-nand-controller",
-		.data = (ulong)&microchip_sam9x60_nc_caps,
+		.data = (uintptr_t)&microchip_sam9x60_nc_caps,
 	},
 	/* Support for old/deprecated bindings: */
 	{
 		.compatible = "atmel,at91rm9200-nand",
-		.data = (ulong)&atmel_rm9200_nand_caps,
+		.data = (uintptr_t)&atmel_rm9200_nand_caps,
 	},
 	{
 		.compatible = "atmel,sama5d4-nand",
-		.data = (ulong)&atmel_rm9200_nand_caps,
+		.data = (uintptr_t)&atmel_rm9200_nand_caps,
 	},
 	{
 		.compatible = "atmel,sama5d2-nand",
-		.data = (ulong)&atmel_rm9200_nand_caps,
+		.data = (uintptr_t)&atmel_rm9200_nand_caps,
 	},
 	{ /* sentinel */ },
 };
