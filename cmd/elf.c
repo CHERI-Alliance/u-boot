@@ -12,6 +12,7 @@
 #include <log.h>
 #include <net.h>
 #include <vxworks.h>
+#include <asm/io.h>
 #ifdef CONFIG_X86
 #include <vesa.h>
 #include <asm/cache.h>
@@ -273,9 +274,11 @@ int do_bootvx(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 		bootline = build_buf;
 	}
 
-	memcpy((void *)bootaddr, bootline, max(strlen(bootline), (size_t)255));
+	char *bootaddr_ptr = map_physmem(bootaddr, max(strlen(bootline), (size_t)255), MAP_DATA);
+
+	memcpy((void *)bootaddr_ptr, bootline, max(strlen(bootline), (size_t)255));
 	flush_cache(bootaddr, max(strlen(bootline), (size_t)255));
-	printf("## Using bootline (@ 0x%lx): %s\n", bootaddr, (char *)bootaddr);
+	printf("## Using bootline (@ 0x%lx): %s\n", bootaddr, bootaddr_ptr);
 
 	/*
 	 * If the data at the load address is an elf image, then
@@ -300,7 +303,7 @@ int do_bootvx(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 	/* VxWorks on x86 uses stack to pass parameters */
 	((asmlinkage void (*)(int))addr)(0);
 #else
-	((void (*)(int))addr)(0);
+	((void (*)(int))map_physmem(addr, 0, MAP_EXE))(0);
 #endif
 
 	puts("## vxWorks terminated\n");

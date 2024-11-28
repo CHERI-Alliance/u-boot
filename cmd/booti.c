@@ -14,6 +14,7 @@
 #include <asm/global_data.h>
 #include <linux/kernel.h>
 #include <linux/sizes.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 /*
@@ -28,6 +29,7 @@ static int booti_start(struct bootm_info *bmi)
 	ulong image_size;
 	uint8_t *temp;
 	ulong dest;
+	void *dest_ptr;
 	ulong dest_end;
 	unsigned long comp_len;
 	unsigned long decomp_len;
@@ -62,13 +64,14 @@ static int booti_start(struct bootm_info *bmi)
 		debug("kernel image compression type %d size = 0x%08lx address = 0x%08lx\n",
 			ctype, comp_len, (ulong)dest);
 		decomp_len = comp_len * 10;
+		dest_ptr = map_physmem(dest, decomp_len, MAP_DATA);
 		ret = image_decomp(ctype, 0, ld, IH_TYPE_KERNEL,
-				 (void *)dest, (void *)ld, comp_len,
+				 (void *)dest_ptr, (void *)ld, comp_len,
 				 decomp_len, &dest_end);
 		if (ret)
 			return ret;
 		/* dest_end contains the uncompressed Image size */
-		memmove((void *) ld, (void *)dest, dest_end);
+		memmove((void *)ld, (void *)dest_ptr, dest_end);
 	}
 	unmap_sysmem((void *)ld);
 
@@ -80,7 +83,8 @@ static int booti_start(struct bootm_info *bmi)
 	if (relocated_addr != ld) {
 		printf("Moving Image from 0x%lx to 0x%lx, end=%lx\n", ld,
 		       relocated_addr, relocated_addr + image_size);
-		memmove((void *)relocated_addr, (void *)ld, image_size);
+		memmove((void *)map_physmem(relocated_addr, image_size, MAP_DATA),
+			(void *)map_physmem(ld, image_size, MAP_RO_DATA), image_size);
 	}
 
 	images->ep = relocated_addr;

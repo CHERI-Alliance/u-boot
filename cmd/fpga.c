@@ -15,6 +15,7 @@
 #include <image.h>
 #include <log.h>
 #include <malloc.h>
+#include <asm/io.h>
 
 static long do_fpga_get_device(char *arg)
 {
@@ -82,9 +83,8 @@ int do_fpga_loads(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 	}
 
 	if (argc == 6)
-		fpga_sec_info.userkey_addr = (u8 *)(uintptr_t)
-					      simple_strtoull(argv[5],
-							      NULL, 16);
+		fpga_sec_info.userkey_addr = (u8 *)map_physmem(simple_strtoull(argv[5], NULL, 16),
+							       0, MAP_RO_DATA);
 	else
 		/*
 		 * If 6th parameter is not passed then do_fpga_check_params
@@ -162,7 +162,7 @@ static int do_fpga_dump(struct cmd_tbl *cmdtp, int flag, int argc,
 	if (ret)
 		return ret;
 
-	return fpga_dump(dev, (void *)fpga_data, data_size);
+	return fpga_dump(dev, (void *)map_physmem(fpga_data, data_size, MAP_RO_DATA), data_size);
 }
 
 static int do_fpga_load(struct cmd_tbl *cmdtp, int flag, int argc,
@@ -177,7 +177,8 @@ static int do_fpga_load(struct cmd_tbl *cmdtp, int flag, int argc,
 	if (ret)
 		return ret;
 
-	return fpga_load(dev, (void *)fpga_data, data_size, BIT_FULL, 0);
+	return fpga_load(dev, (void *)map_physmem(fpga_data, data_size, MAP_RO_DATA),
+						data_size, BIT_FULL, 0);
 }
 
 static int do_fpga_loadb(struct cmd_tbl *cmdtp, int flag, int argc,
@@ -192,7 +193,8 @@ static int do_fpga_loadb(struct cmd_tbl *cmdtp, int flag, int argc,
 	if (ret)
 		return ret;
 
-	return fpga_loadbitstream(dev, (void *)fpga_data, data_size, BIT_FULL);
+	return fpga_loadbitstream(dev, (void *)map_physmem(fpga_data, data_size, MAP_RO_DATA),
+							   data_size, BIT_FULL);
 }
 
 #if defined(CONFIG_CMD_FPGA_LOADP)

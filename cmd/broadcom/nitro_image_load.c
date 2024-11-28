@@ -5,6 +5,7 @@
 
 #include <command.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 
 #define FW_IMAGE_SIG	0xff123456
 #define CFG_IMAGE_SIG	0xcf54321a
@@ -44,8 +45,8 @@ static int env_set_val(const char *varname, ulong val)
 static int do_spi_images_addr(struct cmd_tbl *cmdtp, int flag, int argc,
 			      char *const argv[])
 {
-	uintptr_t images_load_addr;
-	uintptr_t spi_load_addr;
+	ulong images_load_addr;
+	ulong spi_load_addr;
 	u32 len;
 	u32 spi_data_offset = sizeof(struct img_header);
 
@@ -65,7 +66,8 @@ static int do_spi_images_addr(struct cmd_tbl *cmdtp, int flag, int argc,
 		return CMD_RET_USAGE;
 	}
 
-	img_header = (struct img_header *)images_load_addr;
+	img_header = (struct img_header *)map_physmem(images_load_addr, sizeof(struct img_header),
+						      MAP_RO_DATA);
 
 	if (img_header->bin_sig != FW_IMAGE_SIG) {
 		pr_err("Invalid Nitro bin file\n");

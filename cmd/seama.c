@@ -6,6 +6,7 @@
 
 #include <command.h>
 #include <nand.h>
+#include <asm/io.h>
 
 /*
  * All SEAMA data is stored in the flash in "network endianness"
@@ -62,12 +63,12 @@ static int do_seama_load_image(struct cmd_tbl *cmdtp, int flag, int argc,
 	u32 *start;
 	u32 *offset;
 	u32 *end;
-	u32 tmp;
+	uintptr_t tmp;
 
 	if (argc < 2 || argc > 3)
 		return CMD_RET_USAGE;
 
-	load_addr = hextoul(argv[1], NULL);
+	load_addr = (uintptr_t)hextoul(argv[1], NULL);
 	if (!load_addr) {
 		printf("Invalid load address\n");
 		return CMD_RET_USAGE;
@@ -127,6 +128,7 @@ static int do_seama_load_image(struct cmd_tbl *cmdtp, int flag, int argc,
 
 	/* We need to include the header (read full pages) */
 	readsz = shdr.image_size + SEAMA_HDR_NO_META_SZ + shdr.meta_size;
+	load_addr = map_physmem(load_addr, readsz, MAP_DATA);
 	ret = nand_read_skip_bad(mtd, 0, &readsz, NULL, mtd->size,
 				 (u_char *)load_addr);
 	if (ret) {
@@ -136,14 +138,14 @@ static int do_seama_load_image(struct cmd_tbl *cmdtp, int flag, int argc,
 
 	/* We use a temporary variable tmp to avoid to hairy casts */
 	start = (u32 *)load_addr;
-	tmp = (u32)start;
+	tmp = (uintptr_t)start;
 	tmp += SEAMA_HDR_NO_META_SZ + shdr.meta_size;
 	offset = (u32 *)tmp;
 	tmp += shdr.image_size;
 	end = (u32 *)tmp;
 
 	printf("Decoding SEAMA image 0x%08x..0x%08x to 0x%08x\n",
-	       (u32)offset, (u32)end, (u32)start);
+	       (u32)(uintptr_t)offset, (u32)(uintptr_t)end, (u32)(uintptr_t)start);
 	for (; start < end; start++, offset++)
 		*start = be32_to_cpu(*offset);
 

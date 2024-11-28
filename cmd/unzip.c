@@ -10,6 +10,7 @@
 #include <mapmem.h>
 #include <part.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 
 static int do_unzip(struct cmd_tbl *cmdtp, int flag, int argc,
 		    char *const argv[])
@@ -62,8 +63,8 @@ static int do_gzwrite(struct cmd_tbl *cmdtp, int flag,
 	if (ret < 0)
 		return CMD_RET_FAILURE;
 
-	addr = (unsigned char *)hextoul(argv[3], NULL);
 	length = hextoul(argv[4], NULL);
+	addr = (unsigned char *)map_physmem(hextoul(argv[3], NULL), length, MAP_DATA);
 
 	if (5 < argc) {
 		writebuf = hextoul(argv[5], NULL);

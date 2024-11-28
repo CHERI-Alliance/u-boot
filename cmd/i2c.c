@@ -78,6 +78,7 @@
 #include <linux/compiler.h>
 #include <linux/delay.h>
 #include <u-boot/crc.h>
+#include <asm/io.h>
 
 /* Display values from last command.
  * Memory modify remembered values are different from display memory.
@@ -278,7 +279,7 @@ static int do_i2c_read(struct cmd_tbl *cmdtp, int flag, int argc,
 	/*
 	 * memaddr is the address where to store things in memory
 	 */
-	memaddr = (u_char *)hextoul(argv[4], NULL);
+	memaddr = (u_char *)map_physmem(hextoul(argv[4], NULL), length, MAP_DATA);
 
 #if CONFIG_IS_ENABLED(DM_I2C)
 	ret = i2c_get_cur_bus_chip(chip, &dev);
@@ -312,11 +313,6 @@ static int do_i2c_write(struct cmd_tbl *cmdtp, int flag, int argc,
 		return cmd_usage(cmdtp);
 
 	/*
-	 * memaddr is the address where to store things in memory
-	 */
-	memaddr = (u_char *)hextoul(argv[1], NULL);
-
-	/*
 	 * I2C chip address
 	 */
 	chip = hextoul(argv[2], NULL);
@@ -334,6 +330,11 @@ static int do_i2c_write(struct cmd_tbl *cmdtp, int flag, int argc,
 	 * Length is the number of bytes.
 	 */
 	length = hextoul(argv[4], NULL);
+
+	/*
+	 * memaddr is the address where to store things in memory
+	 */
+	memaddr = (u_char *)map_physmem(hextoul(argv[1], NULL), length, MAP_RO_DATA);
 
 #if CONFIG_IS_ENABLED(DM_I2C)
 	ret = i2c_get_cur_bus_chip(chip, &dev);

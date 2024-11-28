@@ -14,6 +14,7 @@
 #include <sparse_format.h>
 #include <image-sparse.h>
 #include <vsprintf.h>
+#include <asm/io.h>
 
 static int curr_device = -1;
 
@@ -209,7 +210,7 @@ static int do_mmcrpmb_key(struct cmd_tbl *cmdtp, int flag,
 	if (argc != 2)
 		return CMD_RET_USAGE;
 
-	key_addr = (void *)hextoul(argv[1], NULL);
+	key_addr = (void *)map_physmem(hextoul(argv[1], NULL), 0, MAP_RO_DATA);
 	if (!confirm_key_prog())
 		return CMD_RET_FAILURE;
 	if (mmc_rpmb_set_key(mmc, key_addr)) {
@@ -231,12 +232,12 @@ static int do_mmcrpmb_read(struct cmd_tbl *cmdtp, int flag,
 	if (argc < 4)
 		return CMD_RET_USAGE;
 
-	addr = (void *)hextoul(argv[1], NULL);
+	addr = (void *)map_physmem(hextoul(argv[1], NULL), 0, MAP_DATA);
 	blk = hextoul(argv[2], NULL);
 	cnt = hextoul(argv[3], NULL);
 
 	if (argc == 5)
-		key_addr = (void *)hextoul(argv[4], NULL);
+		key_addr = (void *)map_physmem(hextoul(argv[4], NULL), 0, MAP_DATA);
 
 	printf("\nMMC RPMB read: dev # %d, block # %d, count %d ... ",
 	       curr_device, blk, cnt);
@@ -260,10 +261,10 @@ static int do_mmcrpmb_write(struct cmd_tbl *cmdtp, int flag,
 	if (argc != 5)
 		return CMD_RET_USAGE;
 
-	addr = (void *)hextoul(argv[1], NULL);
+	addr = (void *)map_physmem(hextoul(argv[1], NULL), 0, MAP_RO_DATA);
 	blk = hextoul(argv[2], NULL);
 	cnt = hextoul(argv[3], NULL);
-	key_addr = (void *)hextoul(argv[4], NULL);
+	key_addr = (void *)map_physmem(hextoul(argv[4], NULL), 0, MAP_RO_DATA);
 
 	printf("\nMMC RPMB write: dev # %d, block # %d, count %d ... ",
 	       curr_device, blk, cnt);
@@ -354,7 +355,7 @@ static int do_mmc_read(struct cmd_tbl *cmdtp, int flag,
 	if (argc != 4)
 		return CMD_RET_USAGE;
 
-	addr = (void *)hextoul(argv[1], NULL);
+	addr = (void *)map_physmem(hextoul(argv[1], NULL), 0, MAP_DATA);
 	blk = hextoul(argv[2], NULL);
 	cnt = hextoul(argv[3], NULL);
 
@@ -399,7 +400,7 @@ static int do_mmc_sparse_write(struct cmd_tbl *cmdtp, int flag,
 	if (argc != 3)
 		return CMD_RET_USAGE;
 
-	addr = (void *)hextoul(argv[1], NULL);
+	addr = (void *)map_physmem(hextoul(argv[1], NULL), 0, MAP_RO_DATA);
 	blk = hextoul(argv[2], NULL);
 
 	if (!is_sparse_image(addr)) {
@@ -447,7 +448,7 @@ static int do_mmc_write(struct cmd_tbl *cmdtp, int flag,
 	if (argc != 4)
 		return CMD_RET_USAGE;
 
-	addr = (void *)hextoul(argv[1], NULL);
+	addr = (void *)map_physmem(hextoul(argv[1], NULL), 0, MAP_RO_DATA);
 	blk = hextoul(argv[2], NULL);
 	cnt = hextoul(argv[3], NULL);
 
