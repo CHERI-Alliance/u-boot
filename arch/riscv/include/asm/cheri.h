@@ -39,6 +39,9 @@
 #define CHERI_PERM_IO		(~(CHERI_PERM_EXECUTE | CHERI_PERM_CAP))
 
 #ifndef __ASSEMBLY__
+/* Get capability permission helper */
+#define	CHERI_PERM_GET_SDP(cap)		(cheri_perms_get(cap) >> 6 & 0xF)
+#define	CHERI_PERM_GET_CAP_LVL(cap)	(cheri_perms_get(cap) >> 4 & 0x1)
 
 /* Getting the alignment for a length (x) which a base address
  * must be aligned to for a capability representable bounds.
@@ -52,6 +55,20 @@
 	(!(~cheri_representable_alignment_mask(x) & (base)))
 
 #ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+enum cheri_execution_mode {
+	RISCV_CHERI_CAP_PTR_EXE_MODE = 0,
+	RISCV_CHERI_INT_PTR_EXE_MODE,
+};
+
+static inline enum cheri_execution_mode cheri_execution_mode_get(const void *cap)
+{
+	enum cheri_execution_mode mode = RISCV_CHERI_CAP_PTR_EXE_MODE;
+#ifdef CONFIG_RISCV_ISA_ZCHERIHYBRID
+	__asm__ __volatile__("gcmode %0, %1\n" : "+r" (mode) : "C" (cap));
+#endif
+	return mode;
+}
+
 static inline void *cheri_infinite_cap_get(void)
 {
 	return gd->arch.infinite_cap;
