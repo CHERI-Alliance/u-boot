@@ -3,7 +3,9 @@
  */
 
 #include <asm/asm.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
 #include <asm/cheri.h>
+#endif
 #include <cpu_func.h>
 
 #ifndef CONFIG_SYS_CACHELINE_SIZE
