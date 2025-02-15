@@ -106,8 +106,7 @@ struct axidma_reg {
 /* Platform data structures */
 struct axidma_plat {
 	struct eth_pdata eth_pdata;
-	struct axidma_reg *dmatx;
-	struct axidma_reg *dmarx;
+	phys_addr_t dmatx;
 	int pcsaddr;
 	int phyaddr;
 	u8 eth_hasnobuf;
@@ -828,10 +827,13 @@ static int axi_emac_probe(struct udevice *dev)
 	struct axidma_priv *priv = dev_get_priv(dev);
 	int ret;
 
-	priv->iobase = (struct axi_regs *)pdata->iobase;
-	priv->dmatx = plat->dmatx;
+	priv->iobase = (struct axi_regs *)ioremap(pdata->iobase,
+						  sizeof(struct axi_regs));
+	priv->dmatx = (struct axidma_reg *)ioremap(plat->dmatx,
+						   sizeof(struct axidma_reg));
 	/* RX channel offset is 0x30 */
-	priv->dmarx = (struct axidma_reg *)((phys_addr_t)priv->dmatx + 0x30);
+	priv->dmarx = (struct axidma_reg *)ioremap(plat->dmatx + 0x30,
+						   sizeof(struct axidma_reg));
 	priv->mactype = plat->mactype;
 
 	if (priv->mactype == EMAC_1G) {
@@ -903,10 +905,9 @@ static int axi_emac_of_to_plat(struct udevice *dev)
 	ret = dev_read_phandle_with_args(dev, "axistream-connected", NULL, 0, 0,
 					 &axistream_node);
 	if (!ret)
-		plat->dmatx = (struct axidma_reg *)ioremap(ofnode_get_addr(axistream_node.node),
-							   sizeof(struct axidma_reg));
+		plat->dmatx = ofnode_get_addr(axistream_node.node);
 	else
-		plat->dmatx = (struct axidma_reg *)dev_read_addr_index_ptr(dev, 1);
+		plat->dmatx = dev_read_addr_index(dev, 1);
 
 	if (!plat->dmatx) {
 		printf("%s: axi_dma register space not found\n", __func__);
