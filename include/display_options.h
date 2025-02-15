@@ -51,12 +51,12 @@ int print_buffer(ulong addr, const void *data, uint width, uint count,
 
 /*
  * Maximum length of an output line is when width == 1
- *	9 for address,
+ *	17 for address,
  *	a space, two hex digits and an ASCII character for each byte
  *	2 spaces between the hex and ASCII
  *	\0 terminator
  */
-#define HEXDUMP_MAX_BUF_LENGTH(bytes)	(9 + (bytes) * 4 + 3)
+#define HEXDUMP_MAX_BUF_LENGTH(bytes)	(17 + (bytes) * 4 + 3)
 
 /**
  * hexdump_line() - Print out a single line of a hex dump
