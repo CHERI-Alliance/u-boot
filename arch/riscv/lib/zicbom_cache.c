@@ -26,7 +26,7 @@ void flush_dcache_range(unsigned long start, unsigned long end)
 	end_addr = (void*)end;
 #endif
 
-	for ( ; addr < end; addr += CONFIG_SYS_CACHELINE_SIZE)
+	for ( ; addr < end_addr; addr += CONFIG_SYS_CACHELINE_SIZE)
 		 __asm__ __volatile__ ("cbo.flush 0(%[addr])\n" :: [addr] PTR_REG(addr));
 }
 
