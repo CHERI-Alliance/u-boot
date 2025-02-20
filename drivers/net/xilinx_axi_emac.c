@@ -754,6 +754,7 @@ static int axiemac_recv(struct udevice *dev, int flags, uchar **packetp)
 	temp = readl(&priv->dmarx->control);
 	temp &= ~XAXIDMA_IRQ_ALL_MASK;
 	writel(temp, &priv->dmarx->control);
+	flush_cache((phys_addr_t)&rx_bd, sizeof(rx_bd));
 	if (!priv->eth_hasnobuf  && priv->mactype == EMAC_1G)
 		length = rx_bd.app4 & 0xFFFF; /* max length mask */
 	else
