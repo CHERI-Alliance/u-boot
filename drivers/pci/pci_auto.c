@@ -351,7 +351,7 @@ void dm_pciauto_prescan_setup_bridge(struct udevice *dev, int sub_bus)
 	struct pci_region *pci_prefetch;
 	struct pci_region *pci_io;
 	u16 cmdstat, prefechable_64;
-	u8 io_32;
+	u8 io_32, sec_lat_timer;
 	struct udevice *ctlr = pci_get_controller(dev);
 	struct pci_controller *ctlr_hose = dev_get_uclass_priv(ctlr);
 	int pcie_off;
@@ -366,11 +366,18 @@ void dm_pciauto_prescan_setup_bridge(struct udevice *dev, int sub_bus)
 	dm_pci_read_config8(dev, PCI_IO_BASE, &io_32);
 	io_32 &= PCI_IO_RANGE_TYPE_MASK;
 
-	/* Configure bus number registers */
-	dm_pci_write_config8(dev, PCI_PRIMARY_BUS,
-			     PCI_BUS(dm_pci_get_bdf(dev)) - dev_seq(ctlr));
-	dm_pci_write_config8(dev, PCI_SECONDARY_BUS, sub_bus - dev_seq(ctlr));
-	dm_pci_write_config8(dev, PCI_SUBORDINATE_BUS, 0xff);
+	/*
+	 * The Linux kernel has a cryptic comment saying that the bridge bus number
+	 * register has to be written as a a 32 bit write, unfortnately why
+	 * has been lost in the mists of time. For the Xilinx
+	 * controller at least, it doesn't work if you do it as byte writes.
+	 */
+	dm_pci_read_config8(dev, PCI_SEC_LATENCY_TIMER, &sec_lat_timer);
+
+	dm_pci_write_config32(dev, PCI_PRIMARY_BUS,
+			     (PCI_BUS(dm_pci_get_bdf(dev)) - dev_seq(ctlr)) |
+			     ((sub_bus - dev_seq(ctlr)) << 8) |
+		  	     (0xff << 16) | (sec_lat_timer << 24));
 
 	if (pci_mem) {
 		/* Round memory allocator */
@@ -457,13 +464,17 @@ void dm_pciauto_postscan_setup_bridge(struct udevice *dev, int sub_bus)
 	struct pci_region *pci_io;
 	struct udevice *ctlr = pci_get_controller(dev);
 	struct pci_controller *ctlr_hose = dev_get_uclass_priv(ctlr);
+	u32 val;
 
 	pci_mem = ctlr_hose->pci_mem;
 	pci_prefetch = ctlr_hose->pci_prefetch;
 	pci_io = ctlr_hose->pci_io;
 
-	/* Configure bus number registers */
-	dm_pci_write_config8(dev, PCI_SUBORDINATE_BUS, sub_bus - dev_seq(ctlr));
+
+	/* Update subordinate bus number, done as a 32 bit write */
+	dm_pci_read_config32(dev, PCI_PRIMARY_BUS, &val);
+	val = (val & 0xff00ffff) | ( (sub_bus - dev_seq(ctlr)) << 16);
+	dm_pci_write_config32(dev, PCI_PRIMARY_BUS, val);
 
 	if (pci_mem) {
 		/* Round memory allocator */
