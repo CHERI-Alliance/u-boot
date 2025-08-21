@@ -339,6 +339,7 @@ static const struct dm_i2c_ops xilinx_xiic_ops = {
 
 static const struct udevice_id xilinx_xiic_ids[] = {
 	{ .compatible = "xlnx,xps-iic-2.00.a" },
+	{ .compatible = "xlnx,axi-iic-2.1"},
 	{ }
 };
 
