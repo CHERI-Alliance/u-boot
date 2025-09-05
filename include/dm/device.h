@@ -176,7 +176,7 @@ struct udevice {
 	void *plat_;
 	void *parent_plat_;
 	void *uclass_plat_;
-	ulong driver_data;
+	uintptr_t driver_data;
 	struct udevice *parent;
 	void *priv_;
 	struct uclass *uclass;

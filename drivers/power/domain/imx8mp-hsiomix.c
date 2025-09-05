@@ -194,7 +194,7 @@ int imx8mp_hsiomix_bind(struct udevice *dev)
 		return -ENOENT;
 
 	return device_bind_with_driver_data(dev, drv, "hsio-pll",
-					    (ulong)dev_read_addr_ptr(dev),
+					    (uintptr_t)dev_read_addr_ptr(dev),
 					    dev_ofnode(dev), NULL);
 }
 
