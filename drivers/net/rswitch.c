@@ -1211,7 +1211,7 @@ static int rswitch_bind(struct udevice *parent)
 
 		ret = device_bind_with_driver_data(parent, drv,
 						   ofnode_get_name(node),
-						   (ulong)priv, node, &dev);
+						   (uintptr_t)priv, node, &dev);
 		if (ret)
 			return ret;
 	}

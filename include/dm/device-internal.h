@@ -138,7 +138,7 @@ int device_bind(struct udevice *parent, const struct driver *drv,
  */
 int device_bind_with_driver_data(struct udevice *parent,
 				 const struct driver *drv, const char *name,
-				 ulong driver_data, ofnode node,
+				 uintptr_t driver_data, ofnode node,
 				 struct udevice **devp);
 /**
  * device_bind_by_name: Create a device and bind it to a driver

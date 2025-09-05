@@ -720,7 +720,7 @@ static int rpmh_regulators_bind(struct udevice *dev)
 			return -ENOMEM;
 		}
 
-		ret = device_bind_with_driver_data(dev, drv, name, (ulong)data,
+		ret = device_bind_with_driver_data(dev, drv, name, (uintptr_t)data,
 						   node, NULL);
 		if (ret < 0) {
 			dev_err(dev, "Failed to bind RPMh regulator %s: %d\n", name, ret);

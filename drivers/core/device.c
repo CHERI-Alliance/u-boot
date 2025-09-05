@@ -39,7 +39,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 static int device_bind_common(struct udevice *parent, const struct driver *drv,
 			      const char *name, void *plat,
-			      ulong driver_data, ofnode node,
+			      uintptr_t driver_data, ofnode node,
 			      uint of_plat_size, struct udevice **devp)
 {
 	struct udevice *dev;
@@ -239,7 +239,7 @@ fail_alloc1:
 
 int device_bind_with_driver_data(struct udevice *parent,
 				 const struct driver *drv, const char *name,
-				 ulong driver_data, ofnode node,
+				 uintptr_t driver_data, ofnode node,
 				 struct udevice **devp)
 {
 	return device_bind_common(parent, drv, name, NULL, driver_data, node,
