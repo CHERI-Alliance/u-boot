@@ -35,6 +35,20 @@ static bool is_dir(const char *path)
 	return S_ISDIR(st.st_mode);
 }
 
+/* Remove blank characters at the beginning of a line */
+static int strip(char *str)
+{
+	char *p = str;
+	int l;
+
+	while ((isspace(*p)))
+		p++;
+	l = strlen(p);
+	if (p != str)
+		memmove(str, p, l + 1);
+	return l;
+}
+
 /*
  * Create the parent directory of the given path.
  *
@@ -346,6 +360,10 @@ load:
 	while (compat_getline(&line, &line_asize, in) != -1) {
 		conf_lineno++;
 		sym = NULL;
+
+		if (!strip(line))
+			continue;
+
 		if (line[0] == '#') {
 			if (memcmp(line + 2, CONFIG_, strlen(CONFIG_)))
 				continue;
