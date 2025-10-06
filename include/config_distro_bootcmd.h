@@ -478,8 +478,10 @@
 
 #define BOOTENV_DEV_NAME(devtypeu, devtypel, instance, ...) \
 	BOOTENV_DEV_NAME_##devtypeu(devtypeu, devtypel, instance, ## __VA_ARGS__)
+#ifndef BOOTENV_BOOT_TARGETS
 #define BOOTENV_BOOT_TARGETS \
 	"boot_targets=" BOOT_TARGET_DEVICES(BOOTENV_DEV_NAME) "\0"
+#endif
 
 #define BOOTENV_DEV(devtypeu, devtypel, instance, ...) \
 	BOOTENV_DEV_##devtypeu(devtypeu, devtypel, instance, ## __VA_ARGS__)
