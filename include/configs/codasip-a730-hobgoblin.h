@@ -4,7 +4,12 @@
 #include <linux/sizes.h>
 
 #define BOOT_TARGET_DEVICES(func) \
+	func(NVME, nvme, 0) \
 	func(MMC, mmc, 0)
+
+/* By default only look on the SD card, ignoring the NVMe */
+#define BOOTENV_BOOT_TARGETS \
+	"boot_targets=mmc0\0"
 
 #include <config_distro_bootcmd.h>
 
