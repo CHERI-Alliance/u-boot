@@ -3,9 +3,14 @@
 
 #include <linux/sizes.h>
 
+#if defined(CONFIG_TARGET_CODASIP_A730_HOBGOBLIN_PROFPGA)
+#define BOOT_TARGET_DEVICES(func) \
+	func(MMC, mmc, 0)
+#else
 #define BOOT_TARGET_DEVICES(func) \
 	func(NVME, nvme, 0) \
 	func(MMC, mmc, 0)
+#endif
 
 /* By default only look on the SD card, ignoring the NVMe */
 #define BOOTENV_BOOT_TARGETS \
