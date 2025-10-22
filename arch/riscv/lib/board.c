@@ -4,6 +4,7 @@
  */
 
 #include <asm/global_data.h>
+#include <asm/io.h>
 #include <linux/errno.h>
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -13,7 +14,7 @@ __weak int board_fdt_blob_setup(void **fdtp)
 	if (!gd->arch.firmware_fdt_addr)
 		return -EEXIST;
 
-	*fdtp = (ulong *)(uintptr_t)gd->arch.firmware_fdt_addr;
+	*fdtp = (ulong *)map_physmem(gd->arch.firmware_fdt_addr, 0, MAP_DATA);
 
 	return 0;
 }
