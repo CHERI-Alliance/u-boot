@@ -74,7 +74,8 @@ config SYS_DTC_PAD_BYTES
 config LINKER_LIST_ALIGN
 	int
 	default 32 if SANDBOX
-	default 8 if ARM64 || X86
+	default 8 if ARM64 || X86 || (32BIT && RISCV_ISA_ZCHERIPURECAP_ABI)
+	default 16 if (64BIT && RISCV_ISA_ZCHERIPURECAP_ABI)
 	default 4
 	help
 	  Force the each linker list to be aligned to this boundary. This
