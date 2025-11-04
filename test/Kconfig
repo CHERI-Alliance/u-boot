@@ -111,6 +111,13 @@ config UT_UNICODE
 	  Enables the 'ut unicode' command which tests that the functions for
 	  manipulating Unicode strings work correctly.
 
+config UT_CHERI
+	bool "Unit tests for RISCV CHERI extension"
+	depends on UNIT_TEST && RISCV_ISA_ZCHERIPURECAP_ABI
+	help
+	  Enables the 'ut cheri' command which tests that the RISCV zcheri extension
+	  behaviour (e.g. exception handling) and Zcheripurecap ABI work correctly.
+
 source "test/dm/Kconfig"
 source "test/env/Kconfig"
 source "test/image/Kconfig"
