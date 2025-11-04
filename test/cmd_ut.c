@@ -72,6 +72,7 @@ SUITE_DECL(pci_mps);
 SUITE_DECL(seama);
 SUITE_DECL(setexpr);
 SUITE_DECL(upl);
+SUITE_DECL(cheri);
 
 static struct suite suites[] = {
 	SUITE(addrmap, "very basic test of addrmap command"),
@@ -99,6 +100,7 @@ static struct suite suites[] = {
 	SUITE(seama, "seama command parameters loading and decoding"),
 	SUITE(setexpr, "setexpr command"),
 	SUITE(upl, "Universal payload support"),
+	SUITE(cheri, "CHERI test"),
 };
 
 /**
