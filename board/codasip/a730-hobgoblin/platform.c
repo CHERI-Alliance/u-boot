@@ -41,8 +41,11 @@ phys_addr_t board_get_usable_ram_top(phys_size_t total_size)
 	if (!total_size)
 		return gd->ram_top;
 
-	/* Find enough non-reserved memory to relocate U-Boot */
-	size = ALIGN(CONFIG_SYS_MALLOC_LEN + total_size, MMU_SECTION_SIZE);
+	/* Find enough non-reserved memory to relocate U-Boot
+	 * Add 8M for other U-Boot reserved memory: display,
+	 * fdt, gd,...
+	 */
+	size = ALIGN(SZ_8M + CONFIG_SYS_MALLOC_LEN + total_size, MMU_SECTION_SIZE);
 	reg = get_mem_top(gd->ram_base, gd->ram_size, size,
 			  (void *)gd->fdt_blob);
 
