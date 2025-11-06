@@ -2,8 +2,8 @@
 
 #include <cpu_func.h>
 #include <dm.h>
-#include <lmb.h>
 #include <image.h>
+#include <memtop.h>
 #include <asm/sections.h>
 #include <asm/io.h>
 
@@ -28,9 +28,6 @@ int board_init(void)
 	return 0;
 }
 
-
-#if defined(CONFIG_LMB)
-
 #ifndef MMU_SECTION_SIZE
 #define MMU_SECTION_SIZE        (1 * 1024 * 1024)
 #endif
@@ -45,14 +42,12 @@ phys_addr_t board_get_usable_ram_top(phys_size_t total_size)
 		return gd->ram_top;
 
 	/* Find enough non-reserved memory to relocate U-Boot */
-	lmb_add(gd->ram_base, gd->ram_size);
-	boot_fdt_add_mem_rsv_regions((void *)gd->fdt_blob);
 	size = ALIGN(CONFIG_SYS_MALLOC_LEN + total_size, MMU_SECTION_SIZE);
-	reg = lmb_alloc(size, MMU_SECTION_SIZE);
+	reg = get_mem_top(gd->ram_base, gd->ram_size, size,
+			  (void *)gd->fdt_blob);
 
 	if (!reg)
 		reg = gd->ram_top - size;
 
 	return reg + size;
 }
-#endif
