@@ -18,6 +18,9 @@
 #include <asm/hwcap.h>
 #include <asm/cpufeature.h>
 #include <asm/cache.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #include <asm/global_data.h>
 #include <dm/uclass-internal.h>
 #include <linux/bitops.h>
@@ -744,6 +747,10 @@ __weak int cleanup_before_linux(void)
 	disable_interrupts();
 
 	cache_flush();
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	cheri_reset_cap_csr();
+#endif
 
 	return 0;
 }
