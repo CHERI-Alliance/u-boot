@@ -232,6 +232,39 @@
 			      : "memory");			\
 })
 
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#define cap_csr_swap(csr, val)					\
+({								\
+	uintptr_t __v = val;					\
+	__asm__ __volatile__("csrrw %0, " __ASM_STR(csr) ", %1"	\
+				: "=C"(__v)			\
+				: "CK"(__v)			\
+				: "memory");			\
+	__v;							\
+})
+
+#define cap_csr_write(csr, val)					\
+({                                                              \
+	uintptr_t __v = val;					\
+	__asm__ __volatile__("csrw " __ASM_STR(csr) ", %0"	\
+				: "+C"(__v)			\
+				:				\
+				: "memory");			\
+	__v;							\
+})
+
+#define cap_csr_read(csr)					\
+({								\
+	register uintptr_t __v;					\
+	__asm__ __volatile__("csrr %0, " __ASM_STR(csr)		\
+				: "=C"(__v)			\
+				:				\
+				: "memory");			\
+	__v;							\
+})
+
+#endif /* __CHERI_PURE_CAPABILITY__ */
+
 #endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_RISCV_CSR_H */
