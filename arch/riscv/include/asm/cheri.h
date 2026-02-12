@@ -6,6 +6,7 @@
 #ifndef __ASSEMBLY__
 #include <cheriintrin.h>
 #include <asm/global_data.h>
+#include <asm/csr.h>
 #else /* __ASSEMBLY__ */
 /* Capability permissions definition for assembly */
 #if defined(__riscv_zcheripurecap)
@@ -108,6 +109,17 @@ static inline void *cheri_infinite_cap_get(void)
 static inline void *cheri_build_infinite_cap(unsigned long offset)
 {
 	return (void *)cheri_address_set(cheri_infinite_cap_get(), offset);
+}
+
+static inline void cheri_reset_cap_csr(void)
+{
+	cap_csr_write(CSR_STVEC, (uintptr_t)cheri_infinite_cap_get());
+	cap_csr_write(CSR_SSCRATCH, 0);
+
+	if (!CONFIG_IS_ENABLED(RISCV_SMODE)) {
+		cap_csr_write(CSR_MTVEC, (uintptr_t)cheri_infinite_cap_get());
+		cap_csr_write(CSR_MSCRATCH, 0);
+	}
 }
 #endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
 #endif /* __ASSEMBLY__ */
