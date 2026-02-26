@@ -6,6 +6,10 @@
 
 #include <cpu_func.h>
 #include <dm.h>
+#include <asm/asm.h>
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#include <asm/cheri.h>
+#endif
 #include <asm/insn-def.h>
 #include <linux/const.h>
 #include <linux/errno.h>
@@ -26,29 +30,27 @@ enum {
 } riscv_cbo_ops;
 static int zicbom_block_size;
 extern unsigned int riscv_get_cbom_block_size(void);
-static inline void do_cbo_clean(unsigned long base)
+static inline void do_cbo_clean(void *base)
 {
-	asm volatile ("add a0, %0, zero\n" CBO_CLEAN(%0) ::
-		      "r"(base) : "memory");
+	asm volatile ("mv " PREG(a0) ", %0\n" CBO_CLEAN(%0) :: PTR_REG(base) : PREG(a0), "memory");
 }
 
-static inline void do_cbo_flush(unsigned long base)
+static inline void do_cbo_flush(void *base)
 {
-	asm volatile ("add a0, %0, zero\n" CBO_FLUSH(%0) ::
-		      "r"(base) : "memory");
+	asm volatile ("mv " PREG(a0) ", %0\n" CBO_FLUSH(%0) :: PTR_REG(base) : PREG(a0), "memory");
 }
 
-static inline void do_cbo_inval(unsigned long base)
+static inline void do_cbo_inval(void *base)
 {
-	asm volatile ("add a0, %0, zero\n" CBO_INVAL(%0) ::
-		      "r"(base) : "memory");
+	asm volatile ("mv " PREG(a0) ", %0\n" CBO_INVAL(%0) :: PTR_REG(base) : PREG(a0), "memory");
 }
 
 static void cbo_op(int op_type, unsigned long start,
 		   unsigned long end)
 {
 	unsigned long op_size = end - start, size = 0;
-	void (*fn)(unsigned long base);
+	void *base = NULL;
+	void (*fn)(void *base);
 
 	switch (op_type) {
 	case CBO_CLEAN:
@@ -62,8 +64,15 @@ static void cbo_op(int op_type, unsigned long start,
 		break;
 	}
 	start &= ~(UL(zicbom_block_size - 1));
+
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	base = cheri_build_infinite_cap(start);
+#else
+	base = (void*)start;
+#endif
+
 	while (size < op_size) {
-		fn(start + size);
+		fn(base + size);
 		size += zicbom_block_size;
 	}
 }
@@ -105,7 +114,11 @@ __weak void invalidate_icache_range(unsigned long start, unsigned long end)
 
 __weak void invalidate_dcache_range(unsigned long start, unsigned long end)
 {
+#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+	cbo_flush(start, end);
+#else
 	cbo_inval(start, end);
+#endif
 }
 
 void cache_flush(void)
