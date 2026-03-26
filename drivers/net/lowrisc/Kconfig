@@ -1,0 +1,21 @@
+#
+# Xilink device configuration
+#
+
+config NET_VENDOR_LOWRISC
+	bool "Lowrisc devices"
+	default y
+	depends on RISCV
+	help
+	  Enables the selection of network drivers from LowRISC.
+
+if NET_VENDOR_LOWRISC
+
+config LOWRISC_DIGILENT_100MHZ
+	tristate "Lowrisc 100MHz Ethernet Nexys4_DDR support"
+	depends on RISCV
+	select PHYLIB
+	help
+	  This driver supports the 100MHz Ethernet for Nexys4_DDR Digilent boards from Lowrisc.
+
+endif # NET_VENDOR_LOWRISC
