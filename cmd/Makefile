@@ -258,6 +258,9 @@ obj-$(CONFIG_ARCH_MVEBU) += mvebu/
 obj-$(CONFIG_ARCH_KEYSTONE) += ti/
 obj-$(CONFIG_ARCH_K3) += ti/
 obj-$(CONFIG_ARCH_OMAP2PLUS) += ti/
+
+# Codasip
+obj-$(CONFIG_CMD_CODASIP_CPU) += codasip/
 endif # !CONFIG_XPL_BUILD
 
 obj-$(CONFIG_$(PHASE_)CMD_TLV_EEPROM) += tlv_eeprom.o
