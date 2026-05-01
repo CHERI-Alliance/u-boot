@@ -7,7 +7,7 @@ config SYS_VENDOR
 	default "codasip"
 
 config SYS_CPU
-	default "generic"
+	default "codasip"
 
 config SYS_CONFIG_NAME
 	default "codasip-a730-hobgoblin"
@@ -20,7 +20,7 @@ config TEXT_BASE
 
 config BOARD_SPECIFIC_OPTIONS # dummy
 	def_bool y
-	select GENERIC_RISCV
+	select RISCV_CODASIP
 	imply MMC
 	imply SPI
 	imply MMC_SPI
