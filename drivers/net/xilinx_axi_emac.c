@@ -746,6 +746,8 @@ static int axiemac_recv(struct udevice *dev, int flags, uchar **packetp)
 	u32 length;
 	struct axidma_priv *priv = dev_get_priv(dev);
 	u32 temp;
+	unsigned long rx_bd_start = (unsigned long)(uintptr_t)&rx_bd;
+	unsigned long rxframe_start = (unsigned long)(uintptr_t)&rxframe;
 
 	/* Wait for an incoming packet */
 	if (!isrxready(priv))
@@ -757,11 +759,18 @@ static int axiemac_recv(struct udevice *dev, int flags, uchar **packetp)
 	temp = readl(&priv->dmarx->control);
 	temp &= ~XAXIDMA_IRQ_ALL_MASK;
 	writel(temp, &priv->dmarx->control);
+
+	invalidate_dcache_range(rx_bd_start,
+				rx_bd_start + sizeof(rx_bd));
+
 	if (!priv->eth_hasnobuf  && priv->mactype == EMAC_1G)
 		length = rx_bd.app4 & 0xFFFF; /* max length mask */
 	else
 		length = rx_bd.status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
 
+
+	invalidate_dcache_range(rxframe_start,
+				rxframe_start + sizeof(rxframe));
 #ifdef DEBUG
 	print_buffer((ulong)(&rxframe), &rxframe[0], 1, length, 16);
 #endif
