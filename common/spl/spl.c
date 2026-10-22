@@ -43,7 +43,7 @@
 #include <bootcount.h>
 #include <wdt.h>
 #include <video.h>
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <asm/cheri.h>
 #endif
 
@@ -406,7 +406,7 @@ __weak void __noreturn jump_to_image(struct spl_image_info *spl_image)
 {
 	typedef void __noreturn (*image_entry_noargs_t)(void);
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	void *image_entry_ptr = cheri_build_infinite_cap(spl_image->entry_point);
 
 	image_entry_noargs_t image_entry = (image_entry_noargs_t)image_entry_ptr;

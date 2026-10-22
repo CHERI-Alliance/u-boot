@@ -21,7 +21,7 @@ int main(void)
 #endif
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	DEFINE(GD_CHERI_INFINITE_CAP, offsetof(gd_t, arch.infinite_cap));
 #endif
 

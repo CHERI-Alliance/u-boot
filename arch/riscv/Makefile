@@ -11,6 +11,16 @@ ifeq ($(CONFIG_ARCH_RV32I),y)
 	ARCH_BASE = rv32im
 	ABI_BASE = ilp32
 endif
+ifeq ($(CONFIG_ARCH_RV64Y),y)
+	ARCH_BASE = rv64ym
+	ABI_BASE = l64pc128
+	ARCH_CHERI = _zyhybrid_zylg
+endif
+ifeq ($(CONFIG_ARCH_RV32Y),y)
+	ARCH_BASE = rv32ym
+	ABI_BASE = il32pc64
+	ARCH_CHERI = _zyhybrid_zylg
+endif
 # GCC starts to recognize "Zaamo" and "Zalrsc" from version 15, which is quite
 # recent. We don't bother checking the exact compiler version, but pass "A"
 # extension for -march as long as one of "Zaamo" or "Zalrsc" is available.
@@ -31,20 +41,6 @@ ifeq ($(CONFIG_RISCV_ISA_C),y)
 endif
 ifeq ($(CONFIG_RISCV_ISA_ZBB),y)
 	ARCH_ZBB = _zbb
-endif
-ifeq ($(CONFIG_RISCV_ISA_ZCHERIPURECAP),y)
-	ARCH_CHERI = zcheripurecap
-endif
-ifeq ($(CONFIG_RISCV_ISA_ZCHERIHYBRID),y)
- 	ARCH_CHERI = zcherihybrid
-endif
-ifeq ($(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI),y)
-ifeq ($(CONFIG_ARCH_RV64I),y)
-	ABI_BASE = l64pc128
-endif
-ifeq ($(CONFIG_ARCH_RV32I),y)
-	ABI_BASE = il32pc64
-endif
 endif
 ifeq ($(CONFIG_CMODEL_MEDLOW),y)
 	CMODEL = medlow

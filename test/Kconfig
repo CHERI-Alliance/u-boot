@@ -115,9 +115,9 @@ config UT_UNICODE
 
 config UT_CHERI
 	bool "Unit tests for RISCV CHERI extension"
-	depends on UNIT_TEST && RISCV_ISA_ZCHERIPURECAP_ABI
+	depends on UNIT_TEST && ARCH_RV64Y
 	help
-	  Enables the 'ut cheri' command which tests that the RISCV zcheri extension
+	  Enables the 'ut cheri' command which tests that the RISCV Y extension
 	  behaviour (e.g. exception handling) and Zcheripurecap ABI work correctly.
 
 source "test/dm/Kconfig"

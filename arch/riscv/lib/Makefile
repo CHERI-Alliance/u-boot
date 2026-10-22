@@ -31,7 +31,7 @@ obj-$(CONFIG_XPL_BUILD)	+= spl.o
 obj-y   += fdt_fixup.o
 obj-$(CONFIG_$(SPL)CMD_BDI) += bdinfo.o
 obj-$(CONFIG_OF_BOARD) += board.o
-obj-$(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI)	+= stack.o
+obj-$(CONFIG_ARCH_RV64Y)	+= stack.o
 
 # For building EFI apps
 CFLAGS_NON_EFI := -fstack-protector-strong

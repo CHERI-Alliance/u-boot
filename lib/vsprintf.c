@@ -26,7 +26,7 @@
 #include <linux/types.h>
 #include <linux/string.h>
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <asm/cheri.h>
 #endif
 
@@ -442,7 +442,7 @@ static char *uuid_string(char *buf, char *end, u8 *addr, int field_width,
 }
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 static char *cheri_cap_pointer(const char *fmt, char *buf, char *end, void *ptr,
 			       int field_width, int precision, int flags)
 {
@@ -451,9 +451,6 @@ static char *cheri_cap_pointer(const char *fmt, char *buf, char *end, void *ptr,
 	u64 len = cheri_length_get(ptr);
 	u64 perm = cheri_perms_get(ptr);
 	u32 sdp = CHERI_PERM_GET_SDP(ptr);
-#if defined(__riscv_zcherilevels)	
-	u32 level = CHERI_PERM_GET_CAP_LVL(ptr);
-#endif	
 	int i = 0;
 
 	flags &= ~SPECIAL;
@@ -518,23 +515,25 @@ static char *cheri_cap_pointer(const char *fmt, char *buf, char *end, void *ptr,
 	else
 		ADDCH(buf, '-');
 
-#if defined(__riscv_zcherilevels)
-	if (perm & (CHERI_PERM_STORE_LEVEL))
-		ADDCH(buf, 'S');
+#if defined(__riscv_zylg)
+	if (perm & (CHERI_PERM_STORE_LOCAL))
+		ADDCH(buf, 'l');
 	else
 		ADDCH(buf, '-');
 
-	if (perm & (CHERI_PERM_ELEVATE_LEVEL))
-		ADDCH(buf, 'E');
+	if (perm & (CHERI_PERM_LOAD_GLOBAL))
+		ADDCH(buf, 'g');
 	else
 		ADDCH(buf, '-');
-	ADDCH(buf, ':');
 
-	/* Print Capability Level */
-	buf = number(buf, end, level, 16, 1, precision, flags);
+	if (perm & (CHERI_PERM_GLOBAL))
+		ADDCH(buf, 'G');
+	else
+		ADDCH(buf, '-');
+
 	ADDCH(buf, ':');
-#else /* !defined(__riscv_zcherilevels) */
-	/* Print placeholder for non-zcherilevels */
+#else /* !defined(__riscv_zylg) */
+	/* Print placeholder for non-zylg */
 	ADDCH(buf, '-');
 	ADDCH(buf, '-');
 	ADDCH(buf, ':');
@@ -542,7 +541,7 @@ static char *cheri_cap_pointer(const char *fmt, char *buf, char *end, void *ptr,
 	/* Print placeholder Capability Level */
 	ADDCH(buf, '0');
 	ADDCH(buf, ':');
-#endif /* !defined(__riscv_zcherilevels) */
+#endif /* !defined(__riscv_zylg) */
 
 
 	/* Print Sentry */
@@ -613,7 +612,7 @@ static char *pointer(const char *fmt, char *buf, char *end, void *ptr,
 			      flags);
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	if (flags & SPECIAL) {
 		return cheri_cap_pointer(fmt, buf, end, ptr, field_width, precision, flags);
 	}
@@ -665,11 +664,11 @@ static char *pointer(const char *fmt, char *buf, char *end, void *ptr,
 	}
 	flags |= SMALL;
 	if (field_width == -1) {
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 		field_width = sizeof(void *);
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 		field_width = 2*sizeof(void *);
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 		flags |= ZEROPAD;
 	}
 	return number(buf, end, num, 16, field_width, precision, flags);
@@ -799,7 +798,7 @@ repeat:
 			continue;
 
 		case 'p':
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 			if (qualifier == 'l' && !(flags & SPECIAL)) {
 				str = cheri_cap_hex(fmt + 1, str, end,
 						va_arg(args, void *),

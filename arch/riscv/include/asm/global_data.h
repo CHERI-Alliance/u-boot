@@ -46,7 +46,7 @@ struct arch_global_data {
 #endif
 	struct resume_data *resume;
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	void *infinite_cap;
 #endif
 };
@@ -62,20 +62,24 @@ static inline gd_t *get_gd(void)
 {
 	gd_t *gd_ptr;
 
-	__asm__ volatile ("mv %0, " PREG(gp) "\n" : "=" PTR_REG(gd_ptr));
+#if defined(__CHERI__)
+	__asm__ volatile ("ymv %0, gp \n" : "=C"(gd_ptr));
+#else
+	__asm__ volatile ("mv %0, gp \n" : "=r"(gd_ptr));
+#endif
 
 	return gd_ptr;
 }
 
 #else
 
-#define DECLARE_GLOBAL_DATA_PTR register gd_t *gd asm (PREG(gp))
+#define DECLARE_GLOBAL_DATA_PTR register gd_t *gd asm (gp)
 
 #endif
 
 static inline void set_gd(gd_t *gd_ptr)
 {
-	asm volatile(PREG_L " " PREG(gp) ", %0\n" : : "m"(gd_ptr));
+	asm volatile(PREG_L " gp, %0\n" : : "m"(gd_ptr));
 }
 
 #endif /* __ASM_GBL_DATA_H */

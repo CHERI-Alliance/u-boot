@@ -123,11 +123,11 @@ typedef __u32 u32;
 #else /* !USE_HOSTCC */
 
 /* Type for `void *' pointers. */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 typedef __UINTPTR_TYPE__ uintptr_t;
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 typedef unsigned long int uintptr_t;
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 #include <linux/string.h>
 #include <linux/types.h>

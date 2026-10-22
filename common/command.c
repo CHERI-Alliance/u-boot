@@ -19,7 +19,7 @@
 #include <time.h>
 #include <asm/global_data.h>
 #include <linux/ctype.h>
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <asm/cheri.h>
 #endif
 
@@ -505,7 +505,7 @@ void fixup_cmdtable(struct cmd_tbl *cmdtp, int size)
 
 	for (i = 0; i < size; i++) {
 		uintptr_t addr;
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 		addr = (uintptr_t)cheri_cap_reloc(cmdtp->cmd_rep, gd->reloc_off);
 #else
 		addr = (uintptr_t)(cmdtp->cmd_rep) + gd->reloc_off;
@@ -513,7 +513,7 @@ void fixup_cmdtable(struct cmd_tbl *cmdtp, int size)
 		cmdtp->cmd_rep =
 			(int (*)(struct cmd_tbl *, int, int,
 				 char * const [], int *))addr;
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 		addr = (uintptr_t)cheri_cap_reloc(cmdtp->cmd, gd->reloc_off);
 #else
 		addr = (uintptr_t)(cmdtp->cmd) + gd->reloc_off;
@@ -524,14 +524,14 @@ void fixup_cmdtable(struct cmd_tbl *cmdtp, int size)
 #endif
 		cmdtp->cmd = (int (*)(struct cmd_tbl *, int, int,
 				      char *const []))addr;
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 		addr = (uintptr_t)cheri_cap_reloc(cmdtp->name, gd->reloc_off);
 #else
 		addr = (uintptr_t)(cmdtp->name) + gd->reloc_off;
 #endif
 		cmdtp->name = (char *)addr;
 		if (cmdtp->usage) {
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 			addr = (uintptr_t)cheri_cap_reloc(cmdtp->usage, gd->reloc_off);
 #else
 			addr = (uintptr_t)(cmdtp->usage) + gd->reloc_off;
@@ -540,7 +540,7 @@ void fixup_cmdtable(struct cmd_tbl *cmdtp, int size)
 		}
 #ifdef	CONFIG_SYS_LONGHELP
 		if (cmdtp->help) {
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 			addr = (uintptr_t)cheri_cap_reloc(cmdtp->help, gd->reloc_off);
 #else
 			addr = (uintptr_t)(cmdtp->help) + gd->reloc_off;
@@ -550,7 +550,7 @@ void fixup_cmdtable(struct cmd_tbl *cmdtp, int size)
 #endif
 #ifdef CONFIG_AUTO_COMPLETE
 		if (cmdtp->complete) {
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 			addr = (uintptr_t)cheri_cap_reloc(cmdtp->complete, gd->reloc_off);
 #else
 			addr = (uintptr_t)(cmdtp->complete) + gd->reloc_off;

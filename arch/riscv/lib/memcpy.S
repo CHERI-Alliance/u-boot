@@ -11,7 +11,7 @@ ENTRY(__memcpy)
 WEAK(memcpy)
 	beq	a0, a1, .copy_end
 	/* Save for return value */
-	mv	PREG(t6), PREG(a0)
+	mv	t6, a0
 
 	/*
 	 * Register allocation for code below:
@@ -30,11 +30,11 @@ WEAK(memcpy)
 	 * the fixed overhead. For CHERI, it is chosen to be capability aligned
 	 * for tag bit preserved.
 	 */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	li	a3, SZPREG
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 	li	a3, 16
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 	bltu	a2, a3, .Lbyte_copy_tail
 
 	/*
@@ -44,10 +44,10 @@ WEAK(memcpy)
 	andi	a2, a2, ~(SZREG-1)
 	beq	a0, a2, 2f
 1:
-	lb	a5, 0(PREG(a1))
-	add	PREG(a1), PREG(a1), 1
-	sb	a5, 0(PREG(a0))
-	add	PREG(a0), PREG(a0), 1
+	lb	a5, 0(a1)
+	add	a1, a1, 1
+	sb	a5, 0(a0)
+	add	a0, a0, 1
 	bne	a0, a2, 1b
 2:
 
@@ -57,7 +57,7 @@ WEAK(memcpy)
 	 * word-wise copy.
 	 */
 	andi	a3, a1, SZREG-1
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	bnez	a3, .Lbyte_copy_tail
 #else
 	bnez	a3, .Lmisaligned_word_copy
@@ -67,40 +67,40 @@ WEAK(memcpy)
 	addi	t0, t0, -(16*SZREG-1)
 	bgeu	a0, t0, 2f
 1:
-	REG_L	REG(a2),        0(PREG(a1))
-	REG_L	REG(a3),    SZREG(PREG(a1))
-	REG_L	REG(a4),  2*SZREG(PREG(a1))
-	REG_L	REG(a5),  3*SZREG(PREG(a1))
-	REG_L	REG(a6),  4*SZREG(PREG(a1))
-	REG_L	REG(a7),  5*SZREG(PREG(a1))
-	REG_L	REG(t1),  6*SZREG(PREG(a1))
-	REG_L	REG(t2),  7*SZREG(PREG(a1))
-	REG_L	REG(t3),  8*SZREG(PREG(a1))
-	REG_L	REG(t4),  9*SZREG(PREG(a1))
-	REG_L	REG(t5), 10*SZREG(PREG(a1))
-	REG_S	REG(a2),        0(PREG(a0))
-	REG_S	REG(a3),    SZREG(PREG(a0))
-	REG_S	REG(a4),  2*SZREG(PREG(a0))
-	REG_S	REG(a5),  3*SZREG(PREG(a0))
-	REG_S	REG(a6),  4*SZREG(PREG(a0))
-	REG_S	REG(a7),  5*SZREG(PREG(a0))
-	REG_S	REG(t1),  6*SZREG(PREG(a0))
-	REG_S	REG(t2),  7*SZREG(PREG(a0))
-	REG_S	REG(t3),  8*SZREG(PREG(a0))
-	REG_S	REG(t4),  9*SZREG(PREG(a0))
-	REG_S	REG(t5), 10*SZREG(PREG(a0))
-	REG_L	REG(a2), 11*SZREG(PREG(a1))
-	REG_L	REG(a3), 12*SZREG(PREG(a1))
-	REG_L	REG(a4), 13*SZREG(PREG(a1))
-	REG_L	REG(a5), 14*SZREG(PREG(a1))
-	REG_L	REG(a6), 15*SZREG(PREG(a1))
-	add		PREG(a1), PREG(a1), 16*SZREG
-	REG_S	REG(a2), 11*SZREG(PREG(a0))
-	REG_S	REG(a3), 12*SZREG(PREG(a0))
-	REG_S	REG(a4), 13*SZREG(PREG(a0))
-	REG_S	REG(a5), 14*SZREG(PREG(a0))
-	REG_S	REG(a6), 15*SZREG(PREG(a0))
-	add		PREG(a0), PREG(a0), 16*SZREG
+	REG_L	a2,        0(a1)
+	REG_L	a3,    SZREG(a1)
+	REG_L	a4,  2*SZREG(a1)
+	REG_L	a5,  3*SZREG(a1)
+	REG_L	a6,  4*SZREG(a1)
+	REG_L	a7,  5*SZREG(a1)
+	REG_L	t1,  6*SZREG(a1)
+	REG_L	t2,  7*SZREG(a1)
+	REG_L	t3,  8*SZREG(a1)
+	REG_L	t4,  9*SZREG(a1)
+	REG_L	t5, 10*SZREG(a1)
+	REG_S	a2,        0(a0)
+	REG_S	a3,    SZREG(a0)
+	REG_S	a4,  2*SZREG(a0)
+	REG_S	a5,  3*SZREG(a0)
+	REG_S	a6,  4*SZREG(a0)
+	REG_S	a7,  5*SZREG(a0)
+	REG_S	t1,  6*SZREG(a0)
+	REG_S	t2,  7*SZREG(a0)
+	REG_S	t3,  8*SZREG(a0)
+	REG_S	t4,  9*SZREG(a0)
+	REG_S	t5, 10*SZREG(a0)
+	REG_L	a2, 11*SZREG(a1)
+	REG_L	a3, 12*SZREG(a1)
+	REG_L	a4, 13*SZREG(a1)
+	REG_L	a5, 14*SZREG(a1)
+	REG_L	a6, 15*SZREG(a1)
+	add		a1, a1, 16*SZREG
+	REG_S	a2, 11*SZREG(a0)
+	REG_S	a3, 12*SZREG(a0)
+	REG_S	a4, 13*SZREG(a0)
+	REG_S	a5, 14*SZREG(a0)
+	REG_S	a6, 15*SZREG(a0)
+	add		a0, a0, 16*SZREG
 	bltu	a0, t0, 1b
 2:
 	/* Post-loop increment by 16*SZREG-1 and pre-loop decrement by SZREG-1 */
@@ -109,10 +109,10 @@ WEAK(memcpy)
 	/* Wordwise copy */
 	bgeu	a0, t0, 2f
 1:
-	REG_L	REG(a5), 0(PREG(a1))
-	add		PREG(a1), PREG(a1), SZREG
-	REG_S	REG(a5), 0(PREG(a0))
-	add		PREG(a0), PREG(a0), SZREG
+	REG_L	a5, 0(a1)
+	add		a1, a1, SZREG
+	REG_S	a5, 0(a0)
+	add		a0, a0, SZREG
 	bltu	a0, t0, 1b
 2:
 	addi	t0, t0, SZREG-1
@@ -123,14 +123,14 @@ WEAK(memcpy)
 	 */
 	beq	a0, t0, 2f
 1:
-	lb	a5, 0(PREG(a1))
-	add	PREG(a1), PREG(a1), 1
-	sb	a5, 0(PREG(a0))
-	add	PREG(a0), PREG(a0), 1
+	lb	a5, 0(a1)
+	add	a1, a1, 1
+	sb	a5, 0(a0)
+	add	a0, a0, 1
 	bne	a0, t0, 1b
 2:
 
-	mv	PREG(a0), PREG(t6)
+	mv	a0, t6
 .copy_end:
 	ret
 
@@ -156,23 +156,23 @@ WEAK(memcpy)
 
 	/* Load the initial value and align a1 */
 	andi	a1, a1, ~(SZXREG-1)
-	XREG_L	a5, 0(PREG(a1))
+	XREG_L	a5, 0(a1)
 
 	addi	t0, t0, -(SZXREG-1)
 	/* At least one iteration will be executed here, no check */
 1:
 	M_SRL	a4, a5, t3
-	XREG_L	a5, SZXREG(PREG(a1))
-	add		PREG(a1), PREG(a1), SZXREG
+	XREG_L	a5, SZXREG(a1)
+	add		a1, a1, SZXREG
 	M_SLL	a2, a5, t4
 	or	a2, a2, a4
-	XREG_S	a2, 0(PREG(a0))
-	add		PREG(a0), PREG(a0), SZXREG
+	XREG_S	a2, 0(a0)
+	add		a0, a0, SZXREG
 	bltu	a0, t0, 1b
 
 	/* Update pointers to correct value */
 	addi	t0, t0, SZXREG-1
-	add		PREG(a1), PREG(a1), a3
+	add		a1, a1, a3
 
 	j	.Lbyte_copy_tail
 ENDPROC(__memcpy)

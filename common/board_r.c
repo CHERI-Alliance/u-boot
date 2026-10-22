@@ -58,7 +58,7 @@
 #include <trace.h>
 #include <watchdog.h>
 #include <xen.h>
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <asm/cheri.h>
 #endif
 #include <asm/sections.h>
@@ -234,14 +234,14 @@ static int initr_malloc(void)
 	 * This value MUST match the value of gd->start_addr_sp in board_f.c:
 	 * reserve_noncached().
 	 */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	total_malloc_size = cheri_representable_length(TOTAL_MALLOC_LEN);
 	start = (gd->relocaddr - total_malloc_size) &
 		cheri_representable_alignment_mask(total_malloc_size);
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 	total_malloc_size = TOTAL_MALLOC_LEN;
 	start = gd->relocaddr - total_malloc_size;
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 	gd_set_malloc_start(start);
 	mem_malloc_init(start, total_malloc_size);
 	return 0;

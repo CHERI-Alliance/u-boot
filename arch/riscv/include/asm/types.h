@@ -21,7 +21,7 @@ typedef unsigned short umode_t;
  */
 #ifdef __KERNEL__
 
-#ifdef CONFIG_ARCH_RV64I
+#if defined(CONFIG_ARCH_RV64I) || defined(CONFIG_ARCH_RV64Y)
 #define BITS_PER_LONG 64
 #else
 #define BITS_PER_LONG 32

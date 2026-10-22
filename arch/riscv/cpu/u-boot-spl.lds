@@ -22,7 +22,7 @@ SECTIONS
 		*(.text*)
 	} > .spl_mem
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
@@ -31,7 +31,7 @@ SECTIONS
 		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*)))
 	} > .spl_mem
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
@@ -39,7 +39,7 @@ SECTIONS
 	.data : {
 		*(.data*)
 	} > .spl_mem
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
@@ -49,13 +49,13 @@ SECTIONS
 		KEEP(*(SORT(__u_boot_list*)));
 	} > .spl_mem
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	__cap_relocs : {
 		__cap_relocs_start = .;
 		*(__cap_relocs)
@@ -78,7 +78,7 @@ SECTIONS
 		. = ALIGN(8);
 	} > .spl_mem
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #endif
 
@@ -89,7 +89,7 @@ SECTIONS
 	.bss : {
 		__bss_start = .;
 		*(.bss*)
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 		. = ALIGN(16);
 #else
 		. = ALIGN(8);

@@ -60,7 +60,11 @@
 #define BOOTEFI_NAME "BOOTIA32.EFI"
 #elif defined(CONFIG_ARCH_RV32I)
 #define BOOTEFI_NAME "BOOTRISCV32.EFI"
+#elif defined(CONFIG_ARCH_RV32Y)
+#define BOOTEFI_NAME "BOOTRISCV32.EFI"
 #elif defined(CONFIG_ARCH_RV64I)
+#define BOOTEFI_NAME "BOOTRISCV64.EFI"
+#elif defined(CONFIG_ARCH_RV64Y)
 #define BOOTEFI_NAME "BOOTRISCV64.EFI"
 #else
 #error Unsupported UEFI architecture

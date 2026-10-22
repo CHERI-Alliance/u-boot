@@ -36,7 +36,7 @@ static void show_efi_loaded_images(uintptr_t epc)
 static void __maybe_unused show_regs(struct pt_regs *regs)
 {
 #ifdef CONFIG_SHOW_REGS
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	printf("\nCRA:  " CREG_FMT "\n", (void *)regs->ra);
 	printf("CSP:  " CREG_FMT "\nCGP:  " CREG_FMT "\nCTP:  " CREG_FMT "\n",
 	       (void *)regs->sp, (void *)regs->gp, (void *)regs->tp);
@@ -58,7 +58,7 @@ static void __maybe_unused show_regs(struct pt_regs *regs)
 	       (void *)regs->s10, (void *)regs->s11, (void *)regs->t3);
 	printf("CT4:  " CREG_FMT "\nCT5:  " CREG_FMT "\nCT6:  " CREG_FMT "\n",
 	       (void *)regs->t4, (void *)regs->t5, (void *)regs->t6);
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 	printf("\nSP:  " REG_FMT " GP:  " REG_FMT " TP:  " REG_FMT "\n",
 	       regs->sp, regs->gp, regs->tp);
 	printf("T0:  " REG_FMT " T1:  " REG_FMT " T2:  " REG_FMT "\n",
@@ -79,7 +79,7 @@ static void __maybe_unused show_regs(struct pt_regs *regs)
 	       regs->s10, regs->s11, regs->t3);
 	printf("T4:  " REG_FMT " T5:  " REG_FMT " T6:  " REG_FMT "\n",
 	       regs->t4, regs->t5, regs->t6);
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 #endif
 }
 
@@ -94,7 +94,7 @@ static void __maybe_unused show_backtrace(struct pt_regs *regs)
 	/* there are a few entry points where the s0 register is
 	 * set to gd, so to avoid changing those, just abort if
 	 * the value is the same */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	while (fp && fp != (uintptr_t *)gd) {
 		ra = fp[-1];
 		printf("%3d: CFP: " CREG_FMT " CRA: " CREG_FMT,
@@ -108,7 +108,7 @@ static void __maybe_unused show_backtrace(struct pt_regs *regs)
 		fp = (uintptr_t *)fp[-2];
 		count++;
 	}
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 	while (fp != NULL && fp != (uintptr_t *)gd) {
 		ra = fp[-1];
 		printf("%3d: FP: " REG_FMT " RA: " REG_FMT,
@@ -123,7 +123,7 @@ static void __maybe_unused show_backtrace(struct pt_regs *regs)
 		fp = (uintptr_t *)fp[-2];
 		count++;
 	}
-#endif  /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif  /* !__CHERI__ */
 }
 
 /**
@@ -158,7 +158,7 @@ static void show_code(uintptr_t epc)
 		printf("%04x%s", pos[i], i + 1 == len ? ")\n" : " ");
 }
 
-static void _exit_trap(ulong code, uintptr_t epc, ulong tval, ulong tval2, struct pt_regs *regs)
+static void _exit_trap(ulong code, uintptr_t epc, ulong tval, struct pt_regs *regs)
 {
 	static const char * const exception_code[] = {
 		"Instruction address misaligned",
@@ -177,51 +177,38 @@ static void _exit_trap(ulong code, uintptr_t epc, ulong tval, ulong tval2, struc
 		"Load page fault",
 		"Reserved",
 		"Store/AMO page fault",
+#if defined(__CHERI__)
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"Reserved",
+		"CHERI Instruction Access Fault",
+		"CHERI Load Access Fault",
+		"CHERI Store/AMO Access Fault",
+		"CHERI Load Capability Fault",
+		"CHERI Store/AMO Page Fault",
+#endif /* __CHERI__ */
 	};
 
 	if (gd->arch.resume) {
 		gd->arch.resume->code = code;
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP
-		gd->arch.resume->tval = tval;
-		gd->arch.resume->tval2 = tval2;
-#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP */
 		longjmp(gd->arch.resume->jump, 1);
 	}
 
 	if (code < ARRAY_SIZE(exception_code)) {
 		printf("Unhandled exception: %s\n", exception_code[code]);
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP
-	} else if (code == EXC_CHERI_FAULT) {
-		static const char * const cheri_exception_type[] = {
-			[EXC_CHERI_TYPE_INST] = "Instruction access fault",
-			[EXC_CHERI_TYPE_DATA] = "Data fault due to load, store or AMO",
-			[EXC_CHERI_TYPE_JMP_BRANCH] = "Jump or branch fault",
-		};
-
-		static const char * const cheri_exception_cause[] = {
-			[EXC_CHERI_CAUSE_TAG] = "Tag violation",
-			[EXC_CHERI_CAUSE_SEAL] = "Seal violation",
-			[EXC_CHERI_CAUSE_PERM] = "Permission violation",
-			[EXC_CHERI_CAUSE_INVALID_ADDR] = "Invalid address violation",
-			[EXC_CHERI_CAUSE_BOUNDS] = "Bounds violation",
-		};
-
-		ulong cheri_type = XTVAL2_CHERI_TYPE(tval2);
-		ulong cheri_cause = XTVAL2_CHERI_CAUSE(tval2);
-
-		printf("Unhandled CHERI exception: (type: 0x%lx) (cause: 0x%lx)\n",
-		       cheri_type,
-			   cheri_cause);
-
-		if (cheri_type < ARRAY_SIZE(cheri_exception_type)) {
-			printf("CHERI exception type: %s\n", cheri_exception_type[cheri_type]);
-			if (cheri_type == EXC_CHERI_TYPE_DATA)
-				printf("CHERI data fault on address: 0x%lx\n", tval);
-		}
-
-		if (cheri_cause < ARRAY_SIZE(cheri_exception_cause))
-			printf("CHERI exception cause: %s\n", cheri_exception_cause[cheri_cause]);
-#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP */
 	} else {
 		printf("Unhandled exception code: %ld\n", code);
 	}
@@ -262,7 +249,7 @@ int disable_interrupts(void)
 	return 0;
 }
 
-uintptr_t handle_trap(ulong cause, uintptr_t epc, ulong tval, ulong tval2, struct pt_regs *regs)
+uintptr_t handle_trap(ulong cause, uintptr_t epc, ulong tval, struct pt_regs *regs)
 {
 	ulong is_irq, irq;
 
@@ -306,11 +293,11 @@ uintptr_t handle_trap(ulong cause, uintptr_t epc, ulong tval, ulong tval2, struc
 			timer_interrupt(0);	/* handle timer interrupt */
 			break;
 		default:
-			_exit_trap(cause, epc, tval, tval2, regs);
+			_exit_trap(cause, epc, tval, regs);
 			break;
 		};
 	} else {
-		_exit_trap(cause, epc, tval, tval2, regs);
+		_exit_trap(cause, epc, tval, regs);
 	}
 
 	return epc;

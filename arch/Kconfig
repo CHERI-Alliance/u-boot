@@ -1,12 +1,12 @@
 config ARCH_MAP_SYSMEM
-	depends on SANDBOX || RISCV_ISA_ZCHERIPURECAP_ABI
+	depends on SANDBOX || ARCH_RV64Y
 	def_bool y
 
 config CREATE_ARCH_SYMLINK
 	bool
 
 config HAVE_ARCH_IOREMAP
-	default y if RISCV_ISA_ZCHERIPURECAP_ABI
+	default y if ARCH_RV64Y
 	bool
 
 config HAVE_SETJMP
@@ -74,8 +74,8 @@ config SYS_DTC_PAD_BYTES
 config LINKER_LIST_ALIGN
 	int
 	default 32 if SANDBOX
-	default 8 if ARM64 || X86 || (32BIT && RISCV_ISA_ZCHERIPURECAP_ABI)
-	default 16 if (64BIT && RISCV_ISA_ZCHERIPURECAP_ABI)
+	default 8 if ARM64 || X86 || (32BIT && ARCH_RV64Y)
+	default 16 if (64BIT && ARCH_RV64Y)
 	default 4
 	help
 	  Force the each linker list to be aligned to this boundary. This

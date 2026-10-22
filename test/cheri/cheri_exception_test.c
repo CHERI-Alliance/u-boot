@@ -14,10 +14,10 @@
 #include <interrupt.h>
 
 #if CONFIG_IS_ENABLED(RISCV_MMODE)
-#define XEPCC	"mepcc"
+#define XEPCC	"mepc"
 #define XRET	"mret"
 #elif CONFIG_IS_ENABLED(RISCV_SMODE)
-#define XEPCC	"sepcc"
+#define XEPCC	"sepc"
 #define XRET	"sret"
 #endif
 
@@ -30,9 +30,9 @@ static void cheri_jmp_test(void)
 
 static inline void cheri_exception_inst_tag_violation_trigger(void)
 {
-	__asm__ __volatile__("llc ct0, 1f\n\t"
+	__asm__ __volatile__("lly t0, 1f\n\t"
 			     "addi t0, t0, 4\n\t"
-			     "csrw " XEPCC ", ct0\n\t"
+			     "csrw " XEPCC ", t0\n\t"
 			     XRET "\n\t"
 			     "1:\n\t"
 	);
@@ -40,24 +40,24 @@ static inline void cheri_exception_inst_tag_violation_trigger(void)
 
 static inline void cheri_exception_instr_permission_violation_trigger(void)
 {
-	__asm__ __volatile__("llc ct0, 1f\n\t"
-			     "add ct0, ct0, 4\n\t"
+	__asm__ __volatile__("lly ct0, 1f\n\t"
+			     "yadd t0, t0, 4\n\t"
 			     "li t1, %0\n\t"
-			     "acperm ct0, ct0, t1\n\t"
-			     "csrw " XEPCC ", ct0\n\t"
+			     "ypermc t0, t0, t1\n\t"
+			     "csrw " XEPCC ", t0\n\t"
 			     XRET "\n\t"
 			     "1:\n\t" ::
-			     "i"(~CHERI_PERM_EXECUTE)
+			     "i"(CHERI_PERM_EXECUTE)
 	);
 }
 
 static inline void cheri_exception_instr_length_violation_trigger(void)
 {
-	__asm__ __volatile__("llc ct0, 1f\n\t"
-			     "add ct0, ct0, 4\n\t"
+	__asm__ __volatile__("lly t0, 1f\n\t"
+			     "yadd t0, t0, 4\n\t"
 			     "li t1, 1\n\t"
-			     "scbnds ct0, ct0, t1\n\t"
-			     "csrw " XEPCC ", ct0\n\t"
+			     "ybndsw t0, t0, t1\n\t"
+			     "csrw " XEPCC ", t0\n\t"
 			     XRET "\n\t"
 			     "1:\n\t"
 	);
@@ -77,10 +77,7 @@ static int cheri_exception_data_tag_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_DATA, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_TAG, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_STORE_ACCESS, resume.code);
 	} else {
 		*ptr = 1;
 
@@ -105,10 +102,7 @@ static int cheri_exception_data_seal_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_DATA, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_SEAL, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_STORE_ACCESS, resume.code);
 	} else {
 		*ptr = 1;
 
@@ -133,10 +127,7 @@ static int cheri_exception_data_permission_violation(struct unit_test_state *uts
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_DATA, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_PERM, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_STORE_ACCESS, resume.code);
 	} else {
 		*ptr = 1;
 
@@ -161,10 +152,7 @@ static int cheri_exception_data_length_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_DATA, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_BOUNDS, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_STORE_ACCESS, resume.code);
 	} else {
 		for (int i = 0; i <= ARRAY_SIZE(array); i++)
 			*ptr++ = i;
@@ -187,10 +175,7 @@ static int cheri_exception_jmp_tag_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_JMP_BRANCH, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_TAG, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		unsigned long fun_addr = cheri_address_get(&cheri_jmp_test);
 		void (*fun_ptr)(void) = (void (*)(void))(uintptr_t)fun_addr;
@@ -215,10 +200,7 @@ static int cheri_exception_jmp_seal_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_JMP_BRANCH, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_SEAL, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		void (*fun_ptr)(void) =
 			(void (*)(void))cheri_address_set(gd->arch.infinite_cap,
@@ -245,10 +227,7 @@ static int cheri_exception_jmp_permission_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_JMP_BRANCH, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_PERM, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		void (*fun_ptr)(void) =
 			(void (*)(void))cheri_address_set(gd->arch.infinite_cap,
@@ -275,10 +254,7 @@ static int cheri_exception_jmp_length_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_JMP_BRANCH, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_BOUNDS, XTVAL2_CHERI_CAUSE(resume.tval2));
-
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		void (*fun_ptr)(void) =
 			(void (*)(void))cheri_address_set(gd->arch.infinite_cap,
@@ -305,9 +281,7 @@ static int cheri_exception_inst_tag_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_INST, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_TAG, XTVAL2_CHERI_CAUSE(resume.tval2));
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		cheri_exception_inst_tag_violation_trigger();
 
@@ -329,9 +303,7 @@ static int cheri_exception_inst_permission_violation(struct unit_test_state *uts
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_INST, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_PERM, XTVAL2_CHERI_CAUSE(resume.tval2));
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		cheri_exception_instr_permission_violation_trigger();
 
@@ -353,9 +325,7 @@ static int cheri_exception_inst_length_violation(struct unit_test_state *uts)
 	ret = setjmp(resume.jump);
 	if (ret) {
 		ut_asserteq(1, ret);
-		ut_asserteq(EXC_CHERI_FAULT, resume.code);
-		ut_asserteq(EXC_CHERI_TYPE_INST, XTVAL2_CHERI_TYPE(resume.tval2));
-		ut_asserteq(EXC_CHERI_CAUSE_BOUNDS, XTVAL2_CHERI_CAUSE(resume.tval2));
+		ut_asserteq(EXC_CHERI_INST_ACCESS, resume.code);
 	} else {
 		cheri_exception_instr_length_violation_trigger();
 

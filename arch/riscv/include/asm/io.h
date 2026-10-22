@@ -10,7 +10,7 @@
 #include <linux/types.h>
 #include <asm/barrier.h>
 #include <asm/byteorder.h>
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <asm/cheri.h>
 #endif
 
@@ -385,7 +385,7 @@ static inline void writesl(volatile void __iomem *addr, const void *data,
 #define writeq_relaxed(v, c)	({ __io_rbw(); writeq_cpu((v), (c)); __io_raw(); })
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 static inline void *phys_to_virt(phys_addr_t paddr)
 {
 	/*
@@ -539,7 +539,7 @@ static inline void __iomem *ioremap(resource_size_t offset,
 static inline void iounmap(void __iomem *addr)
 {
 }
-#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* __CHERI__ */
 
 #include <asm-generic/io.h>
 

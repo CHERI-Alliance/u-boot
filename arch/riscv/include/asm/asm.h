@@ -12,52 +12,14 @@
 #define __ASM_STR(x)	#x
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #ifdef __ASSEMBLY__
-# define REG_NUM(r)			c ## r
-
-# define REG_ZERO			cnull
-# define REG(r)				c ## r
-
-# define PREG_NULL			cnull
-# define PREG(r)			c ## r
-
-# define __PCSR(r)			r ## c
-# define PCSR(r)			__PCSR(r)
-#else
-# define REG_NUM(r)			"c" #r
-
-# define REG_ZERO			"cnull"
-# define REG(r)				"c" #r
-
-# define PREG_NULL			"cnull"
-# define PREG(r)			"c" #r
-
-# define PCSR(r)			#r "c"
+# define lla lgy
+# define mv ymv
+# define add yadd
+# define addi yaddi
 #endif
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
-#ifdef __ASSEMBLY__
-# define REG_NUM(r)			x ## r
-
-# define REG_ZERO			zero
-# define REG(r)				r
-
-# define PREG_NULL			zero
-# define PREG(r)			r
-
-# define PCSR(r)			r
-#else
-# define REG_NUM(r)			"x" #r
-
-# define REG_ZERO			"zero"
-# define REG(r)				#r
-
-# define PREG_NULL			"zero"
-# define PREG(r)			 #r
-
-# define PCSR(r)			#r
-#endif
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 #if __riscv_xlen == 64
 #define __REG_SEL(a, b)	__ASM_STR(a)
@@ -67,9 +29,9 @@
 #error "Unexpected __riscv_xlen"
 #endif
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
-#define REG_L		__REG_SEL(lc, lc)
-#define REG_S		__REG_SEL(sc, sc)
+#ifdef __CHERI__
+#define REG_L		__REG_SEL(ly, ly)
+#define REG_S		__REG_SEL(sy, sy)
 #define SZREG		__REG_SEL(16, 8)
 #define LGREG		__REG_SEL(4, 3)
 
@@ -78,15 +40,13 @@
 #define SZXREG		__REG_SEL(8, 4)
 #define LGXREG		__REG_SEL(3, 2)
 
-#define PREG_L		__REG_SEL(lc, lc)
-#define PREG_S		__REG_SEL(sc, sc)
+#define PREG_L		__REG_SEL(ly, ly)
+#define PREG_S		__REG_SEL(sy, sy)
 #define SZPREG		__REG_SEL(16, 8)
 #define LGPREG		__REG_SEL(4, 3)
 
-#define PC_PTR_L	__ASM_STR(llc)
-#define PTR_L		__ASM_STR(lgc)
-
-#define PTR_REG	    "C"
+#define PC_PTR_L	__ASM_STR(lly)
+#define PTR_L		__ASM_STR(lgy)
 
 #if __SIZEOF_POINTER__ == 16
 #ifdef __ASSEMBLY__
@@ -111,7 +71,7 @@
 #else
 #error "Unexpected __SIZEOF_POINTER__"
 #endif
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define REG_L		__REG_SEL(ld, lw)
 #define REG_S		__REG_SEL(sd, sw)
 #define SZREG		__REG_SEL(8, 4)
@@ -129,8 +89,6 @@
 
 #define PC_PTR_L	__ASM_STR(la)
 #define PTR_L		__ASM_STR(la)
-
-#define PTR_REG	    "r"
 
 #if __SIZEOF_POINTER__ == 8
 #ifdef __ASSEMBLY__
@@ -155,7 +113,7 @@
 #else
 #error "Unexpected __SIZEOF_POINTER__"
 #endif
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 #if (__SIZEOF_INT__ == 4)
 #define RISCV_INT		__ASM_STR(.word)

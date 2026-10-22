@@ -157,6 +157,12 @@ config ARCH_RV32I
 	help
 	  Choose this option to target the RV32I base integer instruction set.
 
+config ARCH_RV32Y
+	bool "RV32Y"
+	select 32BIT
+	help
+	  Choose this option to target the RV32Y base CHERI instruction set.
+
 config ARCH_RV64I
 	bool "RV64I"
 	select 64BIT
@@ -164,6 +170,14 @@ config ARCH_RV64I
 	select PHYS_64BIT
 	help
 	  Choose this option to target the RV64I base integer instruction set.
+
+config ARCH_RV64Y
+	bool "RV64Y"
+	select 64BIT
+	select SPL_64BIT if SPL
+	select PHYS_64BIT
+	help
+	  Choose this option to target the RV64Y base CHERI instruction set.
 
 endchoice
 
@@ -272,35 +286,12 @@ config RISCV_ISA_ZBB
 	  of bit-specific operations (count bit population, sign extending,
 	  bitrotation, etc) and enables optimized string routines.
 
-config RISCV_ISA_ZCHERIPURECAP
-	bool "Zcheripurecap extension support"
-	select RISCV_ISA_ZCHERIPURECAP_ABI if !RISCV_ISA_ZCHERIHYBRID
-	help
-	  Adds "Zcheripurecap" to the ISA subsets that the toolchain will
-	  emit Zcheri code based on the Zcheripurecap extension options.
+menu "RVY extension options"
+	depends on ARCH_RV64Y
 
-menu "Zcheripurecap extension options"
-	depends on RISCV_ISA_ZCHERIPURECAP
-
-config RISCV_ISA_ZCHERIHYBRID
-	bool "Zcherihybrid extension support"
-	help
-	  Adds "zcherihybrid" to the ISA string passed to the compiler.
-	  The "zcherihybrid" is an optional extension to  "zcheripurecap"
-	  which enables fine-grained memory protection by using CHERI
-	  capability pointer and also backward compatible to integer pointer.
-
-config RISCV_ISA_ZCHERIPURECAP_ABI
-	bool "Zcheripurecap ABI"
-	depends on RISCV_ISA_ZCHERIPURECAP
-	help
-	  Canges the riscv32 base ABI from ilp32 to il32pc64 and the riscv64
-	  base ABI from lp64 to l64pc128. The compiler will only emit
-	  Zcheripurecap instruction.
-
-config RISCV_ZCHERI_PRE_CAP_RELOCS_INIT
-	bool "Zcheripurecap ABI pre __cap_relocs initialization (experimental)"
-	depends on RISCV_ISA_ZCHERIPURECAP_ABI
+config RISCV_Y_PRE_CAP_RELOCS_INIT
+	bool "RVY ABI pre __cap_relocs initialization (experimental)"
+	depends on ARCH_RV64Y
 	help
 	  Pre __cap_relocs initialization after linking to optimize run-time __cap_relocs
 	  initialization. It is an experimental feature as the capability encoding may be
@@ -308,7 +299,7 @@ config RISCV_ZCHERI_PRE_CAP_RELOCS_INIT
 
 config BOOT_LINUX_KERNEL_IN_CAP_PTR_MODE
 	bool "Boot Linux kernel in capability pointer mode"
-	depends on RISCV_ISA_ZCHERIPURECAP_ABI && RISCV_ISA_ZCHERIHYBRID
+	depends on ARCH_RV64Y
 	help
 	  Boot Linux Kernel in capability pointer mode rather than integer
 	  pointer mode.
@@ -578,7 +569,7 @@ config RISCV_PRIV_1_9
 
 config STACK_SIZE_SHIFT
 	int "Stack size shift"
-	default 15 if RISCV_ISA_ZCHERIPURECAP_ABI
+	default 15 if ARCH_RV64Y
 	default 14
 
 config OF_BOARD_FIXUP

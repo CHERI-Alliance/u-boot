@@ -91,22 +91,11 @@
 #define EXC_LOAD_PAGE_FAULT	13
 #define EXC_STORE_PAGE_FAULT	15
 
-#define EXC_CHERI_FAULT		28
-
-/* XTVAL */
-/* CHERI xtval2 defination */
-#define XTVAL2_CHERI_TYPE(xtval)	((xtval) >> 16 & _AC(0xF, UL))
-#define XTVAL2_CHERI_CAUSE(xtval)	((xtval) & _AC(0x1F, UL))
-
-#define EXC_CHERI_TYPE_INST		0x00
-#define EXC_CHERI_TYPE_DATA		0x01
-#define EXC_CHERI_TYPE_JMP_BRANCH	0x02
-
-#define EXC_CHERI_CAUSE_TAG		0x00
-#define EXC_CHERI_CAUSE_SEAL		0x01
-#define EXC_CHERI_CAUSE_PERM		0x02
-#define EXC_CHERI_CAUSE_INVALID_ADDR	0x03
-#define EXC_CHERI_CAUSE_BOUNDS		0x04
+#define EXC_CHERI_INST_ACCESS	32
+#define EXC_CHERI_LOAD_ACCESS	33
+#define EXC_CHERI_STORE_ACCESS	34
+#define EXC_CHERI_LOAD_CAP_FAULT	35
+#define EXC_CHERI_STORE_PAGE_FAULT	36
 
 /* SIE (Interrupt Enable) and SIP (Interrupt Pending) flags */
 #define MIE_MSIE		(_AC(0x1, UL) << IRQ_M_SOFT)
@@ -232,7 +221,7 @@
 			      : "memory");			\
 })
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define cap_csr_swap(csr, val)					\
 ({								\
 	uintptr_t __v = val;					\

@@ -53,7 +53,7 @@ void qsort(void  *base,
 						break;
 					}
 					k = width;
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 					if (k >= sizeof(uintptr_t) &&
 					    IS_ALIGNED(a, sizeof(uintptr_t)) &&
 					    IS_ALIGNED(b, sizeof(uintptr_t))) {
@@ -72,13 +72,13 @@ void qsort(void  *base,
 						*a++ = *b;
 						*b++ = tmp;
 					}
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 					do {
 						tmp = *a;
 						*a++ = *b;
 						*b++ = tmp;
 					} while (--k);
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 				} while (j >= wgap);
 				i += width;
 			} while (i < nel);

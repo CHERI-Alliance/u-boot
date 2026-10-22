@@ -28,14 +28,14 @@ SECTIONS
 		*(.text*)
 	}
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
 #endif
 	.rodata : { *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*))) }
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
@@ -43,7 +43,7 @@ SECTIONS
 	.data : {
 		*(.data*)
 	}
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
@@ -55,7 +55,7 @@ SECTIONS
 		__got_end = .;
 	}
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(4);
@@ -65,7 +65,7 @@ SECTIONS
 		KEEP(*(SORT(__u_boot_list*)));
 	}
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 #else
 	. = ALIGN(8);
@@ -80,7 +80,7 @@ SECTIONS
 
 	__image_copy_end = .;
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	. = ALIGN(16);
 	__cap_relocs : {
 		__cap_relocs_start = .;

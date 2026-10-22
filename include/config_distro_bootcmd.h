@@ -116,7 +116,11 @@
 #define BOOTEFI_NAME "bootx64.efi"
 #elif defined(CONFIG_ARCH_RV32I)
 #define BOOTEFI_NAME "bootriscv32.efi"
+#elif defined(CONFIG_ARCH_RV32Y)
+#define BOOTEFI_NAME "bootriscv32.efi"
 #elif defined(CONFIG_ARCH_RV64I)
+#define BOOTEFI_NAME "bootriscv64.efi"
+#elif defined(CONFIG_ARCH_RV64Y)
 #define BOOTEFI_NAME "bootriscv64.efi"
 #endif
 #endif

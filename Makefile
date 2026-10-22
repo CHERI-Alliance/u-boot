@@ -2100,10 +2100,10 @@ ifeq ($(CONFIG_KALLSYMS),y)
 endif
 
 ifeq ($(CONFIG_RISCV),y)
-ifneq ($(CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI),y)
+ifneq ($(CONFIG_ARCH_RV64Y),y)
 	@tools/prelink-riscv $@
 else
-ifeq ($(CONFIG_RISCV_ZCHERI_PRE_CAP_RELOCS_INIT),y)
+ifeq ($(CONFIG_RISCV_Y_PRE_CAP_RELOCS_INIT),y)
 	@tools/prerelocs-riscv-cheri $@
 endif
 endif

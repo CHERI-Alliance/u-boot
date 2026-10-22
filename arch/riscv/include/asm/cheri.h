@@ -7,22 +7,22 @@
 #include <cheriintrin.h>
 #include <asm/global_data.h>
 #include <asm/csr.h>
-#else /* __ASSEMBLY__ */
+#endif /* __ASSEMBLY__ */
+
 /* Capability permissions definition for assembly */
-#if defined(__riscv_zcheripurecap)
+#if defined(__CHERI__)
 #define CHERI_PERM_CAP			__CHERI_CAP_PERMISSION_CAPABILITY__
 #define CHERI_PERM_WRITE		__CHERI_CAP_PERMISSION_WRITE__
 #define CHERI_PERM_READ			__CHERI_CAP_PERMISSION_READ__
 #define CHERI_PERM_EXECUTE		__CHERI_CAP_PERMISSION_EXECUTE__
 #define CHERI_PERM_SYSTEM_REGS		__CHERI_CAP_PERMISSION_ACCESS_SYSTEM_REGISTERS__
 #define CHERI_PERM_LOAD_MUTABLE		__CHERI_CAP_PERMISSION_LOAD_MUTABLE__
-#if defined(__riscv_zcherilevels)
-#define CHERI_PERM_ELEVATE_LEVEL	__CHERI_CAP_PERMISSION_ELEVATE_LEVEL__
-#define CHERI_PERM_STORE_LEVEL		__CHERI_CAP_PERMISSION_STORE_LEVEL__
-#define CHERI_PERM_CAPABILITY_LEVEL	__CHERI_CAP_PERMISSION_CAPABILITY_LEVEL__
-#endif /* defined(__riscv_zcherilevels) */
-#endif /* defined(__riscv_zcheripurecap) */
-#endif /* __ASSEMBLY__ */
+#if defined(__riscv_zylg)
+#define CHERI_PERM_LOAD_GLOBAL    __CHERI_CAP_PERMISSION_LOAD_GLOBAL__
+#define CHERI_PERM_STORE_LOCAL    __CHERI_CAP_PERMISSION_STORE_LOCAL__
+#define CHERI_PERM_GLOBAL   __CHERI_CAP_PERMISSION_GLOBAL__
+#endif /* defined(__riscv_zylg) */
+#endif /* defined(__CHERI__) */
 
 /* Capability permissions for Stack */
 #define CHERI_PERM_STACK	(~CHERI_PERM_EXECUTE)
@@ -55,7 +55,7 @@
 #define cheri_is_representable_aligned(x, base)		\
 	(!(~cheri_representable_alignment_mask(x) & (base)))
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 enum cheri_execution_mode {
 	RISCV_CHERI_CAP_PTR_EXE_MODE = 0,
 	RISCV_CHERI_INT_PTR_EXE_MODE,
@@ -64,16 +64,16 @@ enum cheri_execution_mode {
 static inline enum cheri_execution_mode cheri_execution_mode_get(const void *cap)
 {
 	enum cheri_execution_mode mode = RISCV_CHERI_CAP_PTR_EXE_MODE;
-#ifdef CONFIG_RISCV_ISA_ZCHERIHYBRID
-	__asm__ __volatile__("gcmode %0, %1\n" : "+r" (mode) : "C" (cap));
+#ifdef __CHERI__
+	__asm__ __volatile__("ymoder %0, %1\n" : "+r" (mode) : "C" (cap));
 #endif
 	return mode;
 }
 
 static inline void *cheri_execution_mode_set(const void *cap, enum cheri_execution_mode mode)
 {
-#ifdef CONFIG_RISCV_ISA_ZCHERIHYBRID
-	__asm__ __volatile__("scmode %0, %0, %1\n" : "+C" (cap) : "r" (mode));
+#ifdef __CHERI__
+	__asm__ __volatile__("ymodew %0, %0, %1\n" : "+C" (cap) : "r" (mode));
 #endif
 	return (void *)cap;
 }
@@ -121,6 +121,6 @@ static inline void cheri_reset_cap_csr(void)
 		cap_csr_write(CSR_MSCRATCH, 0);
 	}
 }
-#endif /* CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* __CHERI__ */
 #endif /* __ASSEMBLY__ */
 #endif /* _ASM_RISCV_CHERI_H */

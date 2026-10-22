@@ -18,12 +18,12 @@ WEAK(memmove)
 	 */
 	sub	t0, a0, a1
 	bltu	t0, a2, 1f
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
-	PTR_L	PREG(t0), __memcpy
-	jr	PREG(t0)
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#ifdef __CHERI__
+	PTR_L	t0, __memcpy
+	jr	t0
+#else /* !__CHERI__ */
 	tail	__memcpy
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 1:
 
 	/*
@@ -32,9 +32,9 @@ WEAK(memmove)
 	 * a1 - end of uncopied src
 	 * t0 - start of uncopied dst
 	 */
-	mv	PREG(t0), PREG(a0)
-	add	PREG(a0), PREG(a0), a2
-	add	PREG(a1), PREG(a1), a2
+	mv	t0, a0
+	add	a0, a0, a2
+	add	a1, a1, a2
 
 	/*
 	 * Use bytewise copy if too small.
@@ -45,11 +45,11 @@ WEAK(memmove)
 	 * the fixed overhead. For CHERI, it is chosen to be capability aligned
 	 * for tag bit preserved.
 	 */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	li	a3, SZPREG
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 	li	a3, 16
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 	bltu	a2, a3, .Lbyte_copy_tail
 
 	/*
@@ -58,10 +58,10 @@ WEAK(memmove)
 	andi	a2, a0, ~(SZREG-1)
 	beq	a0, a2, 2f
 1:
-	add	PREG(a1), PREG(a1), -1
-	lb	a5, 0(PREG(a1))
-	add	PREG(a0), PREG(a0), -1
-	sb	a5, 0(PREG(a0))
+	add	a1, a1, -1
+	lb	a5, 0(a1)
+	add	a0, a0, -1
+	sb	a5, 0(a0)
 	bne	a0, a2, 1b
 2:
 
@@ -71,23 +71,23 @@ WEAK(memmove)
 	 * word-wise copy.
 	 */
 	andi	a3, a1, SZREG-1
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	bnez	a3, .Lbyte_copy_tail
 #else
 	bnez	a3, .Lmisaligned_word_copy
 #endif
 
 	/* Wordwise copy */
-	add	PREG(t0), PREG(t0), SZREG-1
+	add	t0, t0, SZREG-1
 	bleu	a0, t0, 2f
 1:
-	add	PREG(a1), PREG(a1), -SZREG
-	REG_L	PREG(a5), 0(PREG(a1))
-	add	PREG(a0), PREG(a0), -SZREG
-	REG_S	PREG(a5), 0(PREG(a0))
+	add	a1, a1, -SZREG
+	REG_L	a5, 0(a1)
+	add	a0, a0, -SZREG
+	REG_S	a5, 0(a0)
 	bgtu	a0, t0, 1b
 2:
-	add	PREG(t0), PREG(t0), -(SZREG-1)
+	add	t0, t0, -(SZREG-1)
 
 .Lbyte_copy_tail:
 	/*
@@ -95,14 +95,14 @@ WEAK(memmove)
 	 */
 	beq	a0, t0, 2f
 1:
-	add	PREG(a1), PREG(a1), -1
-	lb	a5, 0(PREG(a1))
-	add	PREG(a0), PREG(a0), -1
-	sb	a5, 0(PREG(a0))
+	add	a1, a1, -1
+	lb	a5, 0(a1)
+	add	a0, a0, -1
+	sb	a5, 0(a0)
 	bne	a0, t0, 1b
 2:
 
-	mv	PREG(a0), PREG(t0)
+	mv	a0, t0
 	ret
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
@@ -127,23 +127,23 @@ WEAK(memmove)
 
 	/* Load the initial value and align a1 */
 	andi	a1, a1, ~(SZXREG-1)
-	XREG_L	a5, 0(PREG(a1))
+	XREG_L	a5, 0(a1)
 
-	add	PREG(t0), PREG(t0), SZXREG-1
+	add	t0, t0, SZXREG-1
 	/* At least one iteration will be executed here, no check */
 1:
 	M_SLL	a4, a5, t4
-	add	PREG(a1), PREG(a1), -SZXREG
-	XREG_L	a5, 0(PREG(a1))
+	add	a1, a1, -SZXREG
+	XREG_L	a5, 0(a1)
 	M_SRL	a2, a5, t3
 	or	a2, a2, a4
-	add	PREG(a0), PREG(a0), -SZXREG
-	XREG_S	a2, 0(PREG(a0))
+	add	a0, a0, -SZXREG
+	XREG_S	a2, 0(a0)
 	bgtu	a0, t0, 1b
 
 	/* Update pointers to correct value */
-	add	PREG(t0), PREG(t0), -(SZXREG-1)
-	add	PREG(a1), PREG(a1), a3
+	add	t0, t0, -(SZXREG-1)
+	add	a1, a1, a3
 
 	j	.Lbyte_copy_tail
 

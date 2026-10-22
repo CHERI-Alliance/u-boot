@@ -19,7 +19,7 @@
 #include <efi.h>
 #include <charset.h>
 #include <pe.h>
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <stdalign.h>
 #endif
 
@@ -294,7 +294,7 @@ struct efi_memory_range_capsule {
 	u64 number_of_memory_ranges;
 	struct efi_memory_range memory_ranges[];
 }
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 __packed __aligned(alignof(void *));
 #else
 __packed;
@@ -508,7 +508,7 @@ struct efi_configuration_table {
 	efi_guid_t guid;
 	void *table;
 }
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 __packed __attribute__((annotate("underaligned_capability")));
 #else
 __packed;

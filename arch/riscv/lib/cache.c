@@ -7,7 +7,7 @@
 #include <cpu_func.h>
 #include <dm.h>
 #include <asm/asm.h>
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #include <asm/cheri.h>
 #endif
 #include <asm/insn-def.h>
@@ -32,17 +32,29 @@ static int zicbom_block_size;
 extern unsigned int riscv_get_cbom_block_size(void);
 static inline void do_cbo_clean(void *base)
 {
-	asm volatile ("mv " PREG(a0) ", %0\n" CBO_CLEAN(%0) :: PTR_REG(base) : PREG(a0), "memory");
+#if defined(__CHERI__)
+	asm volatile ("ymv a0, %0\n" CBO_CLEAN(%0) :: "C"(base) : "ca0", "memory");
+#else
+	asm volatile ("mv a0, %0\n" CBO_CLEAN(%0) :: "r"(base) : "a0", "memory");
+#endif
 }
 
 static inline void do_cbo_flush(void *base)
 {
-	asm volatile ("mv " PREG(a0) ", %0\n" CBO_FLUSH(%0) :: PTR_REG(base) : PREG(a0), "memory");
+#if defined(__CHERI__)
+	asm volatile ("ymv a0, %0\n" CBO_FLUSH(%0) :: "C"(base) : "ca0", "memory");
+#else
+	asm volatile ("mv a0, %0\n" CBO_FLUSH(%0) :: "r"(base) : "a0", "memory");
+#endif
 }
 
 static inline void do_cbo_inval(void *base)
 {
-	asm volatile ("mv " PREG(a0) ", %0\n" CBO_INVAL(%0) :: PTR_REG(base) : PREG(a0), "memory");
+#if defined(__CHERI__)
+	asm volatile ("ymv a0, %0\n" CBO_INVAL(%0) :: "C"(base) : "ca0", "memory");
+#else
+	asm volatile ("mv a0, %0\n" CBO_INVAL(%0) :: "r"(base) : "a0", "memory");
+#endif
 }
 
 static void cbo_op(int op_type, unsigned long start,
@@ -65,7 +77,7 @@ static void cbo_op(int op_type, unsigned long start,
 	}
 	start &= ~(UL(zicbom_block_size - 1));
 
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	base = cheri_build_infinite_cap(start);
 #else
 	base = (void*)start;
@@ -114,7 +126,7 @@ __weak void invalidate_icache_range(unsigned long start, unsigned long end)
 
 __weak void invalidate_dcache_range(unsigned long start, unsigned long end)
 {
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 	cbo_flush(start, end);
 #else
 	cbo_inval(start, end);

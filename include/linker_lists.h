@@ -67,17 +67,17 @@
  *           .y = 4,
  *   };
  */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define ll_entry_declare(_type, _name, _list)				\
 	_type _u_boot_list_2_##_list##_2_##_name			\
 			__attribute__((unused))				\
 			__section("__u_boot_list_2_"#_list"_2_"#_name)
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define ll_entry_declare(_type, _name, _list)				\
 	_type _u_boot_list_2_##_list##_2_##_name __aligned(4)		\
 			__attribute__((unused))				\
 			__section("__u_boot_list_2_"#_list"_2_"#_name)
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 /**
  * ll_entry_declare_list() - Declare a list of link-generated array entries
@@ -97,17 +97,17 @@
  *        { .x = 1, .y = 7 }
  *   };
  */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define ll_entry_declare_list(_type, _name, _list)			\
 	_type _u_boot_list_2_##_list##_2_##_name[]			\
 			__attribute__((unused))				\
 			__section("__u_boot_list_2_"#_list"_2_"#_name)
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define ll_entry_declare_list(_type, _name, _list)			\
 	_type _u_boot_list_2_##_list##_2_##_name[] __aligned(4)		\
 			__attribute__((unused))				\
 			__section("__u_boot_list_2_"#_list"_2_"#_name)
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 /*
  * We need a 0-byte-size type for iterator symbols, and the compiler
@@ -136,7 +136,7 @@
  *
  *   struct my_sub_cmd *msc = ll_entry_start(struct my_sub_cmd, cmd_sub);
  */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define ll_entry_start(_type, _list)					\
 ({									\
 	static _type start[0]						\
@@ -146,7 +146,7 @@
 	asm("" : "+C"(tmp));						\
 	tmp;								\
 })
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define ll_entry_start(_type, _list)					\
 ({									\
 	static char start[0] __aligned(CONFIG_LINKER_LIST_ALIGN)	\
@@ -156,7 +156,7 @@
 	asm("":"+r"(tmp));						\
 	tmp;								\
 })
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 /**
  * ll_entry_end() - Point after last entry of linker-generated array
@@ -177,7 +177,7 @@
  *
  *   struct my_sub_cmd *msc = ll_entry_end(struct my_sub_cmd, cmd_sub);
  */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define ll_entry_end(_type, _list)					\
 ({									\
 	static _type end[0] __attribute__((unused))			\
@@ -186,7 +186,7 @@
 	asm("" : "+C"(tmp));						\
 	tmp;								\
 })
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define ll_entry_end(_type, _list)					\
 ({									\
 	static char end[0] __aligned(4) __attribute__((unused))		\
@@ -195,7 +195,7 @@
 	asm("":"+r"(tmp));						\
 	tmp;								\
 })
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 /**
  * ll_entry_count() - Return the number of elements in linker-generated array
@@ -342,7 +342,7 @@
  *
  *   struct my_sub_cmd *msc = ll_start(struct my_sub_cmd);
  */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define ll_start(_type)							\
 ({									\
 	static _type start[0] __attribute__((unused))			\
@@ -351,7 +351,7 @@
 	asm("" : "+C"(tmp));						\
 	tmp;								\
 })
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define ll_start(_type)							\
 ({									\
 	static char start[0] __aligned(4) __attribute__((unused))	\
@@ -360,7 +360,7 @@
 	asm("":"+r"(tmp));						\
 	tmp;								\
 })
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 /**
  * ll_end() - Point after last entry of last linker-generated array
@@ -378,7 +378,7 @@
  *
  *   struct my_sub_cmd *msc = ll_end(struct my_sub_cmd);
  */
-#ifdef CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI
+#ifdef __CHERI__
 #define ll_end(_type)							\
 ({									\
 	static _type end[0] __attribute__((unused))			\
@@ -387,7 +387,7 @@
 	asm("" : "+C"(tmp));						\
 	tmp;								\
 })
-#else /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#else /* !__CHERI__ */
 #define ll_end(_type)							\
 ({									\
 	static char end[0] __aligned(4) __attribute__((unused))		\
@@ -396,7 +396,7 @@
 	asm("":"+r"(tmp));						\
 	tmp;								\
 })
-#endif /* !CONFIG_RISCV_ISA_ZCHERIPURECAP_ABI */
+#endif /* !__CHERI__ */
 
 #endif /* __ASSEMBLY__ */
 
